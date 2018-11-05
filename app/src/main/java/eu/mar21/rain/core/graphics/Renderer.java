@@ -13,32 +13,35 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
-import eu.mar21.rain.core.scene.EmptyScene;
-import eu.mar21.rain.core.scene.Intro;
 import eu.mar21.rain.core.scene.Scene;
 import eu.mar21.rain.core.utils.Resources;
 
+@SuppressWarnings("unused")
 public class Renderer extends View {
 
     private Scene activeScene;
     private Scene activeOverlay;
+
+    private boolean sheduledAny;
+    private Class<? extends Scene> sheduledOverlay;
+    private Class<? extends Scene> sheduledScene;
 
     private Activity parent;
     private GestureDetector gestureDetector;
 
     private Map<Class<? extends Scene>, Object> scenes;
 
-    private Object threadLock;
-
-    private long lastFrameMs;
+    private long beginFrameMs;
     {
-        lastFrameMs = System.currentTimeMillis();
         scenes = new HashMap<>();
 
         activeOverlay = null;
         activeScene = null;
 
-        threadLock = new Object();
+        sheduledOverlay = null;
+        sheduledScene = null;
+
+        sheduledAny = false;
     }
 
     public Renderer(Context c) {
@@ -55,18 +58,13 @@ public class Renderer extends View {
 
     public void setParentActivity(Activity parent) {
         this.parent = parent;
-
-        registerScene(EmptyScene.class);
-        registerScene(Intro.class);
-
-        setActiveScene(EmptyScene.class);
-        setActiveOverlay(Intro.class);
     }
 
     private <T extends GestureDetector.SimpleOnGestureListener> void setGestureListener(T listener) {
         this.gestureDetector = new GestureDetector(this.parent, listener);
         setOnTouchListener(new View.OnTouchListener() {
             @Override
+            @SuppressWarnings("all")
             public boolean onTouch(View v, MotionEvent e) {
                 gestureDetector.onTouchEvent(e);
                 return true;
@@ -90,71 +88,85 @@ public class Renderer extends View {
         }
     }
 
-    public void setActiveScene(Class<? extends Scene> scene) {
-        synchronized (threadLock) {
-            Log.i("AppSetScene", "" + scene);
+    public void sheduleActiveOverlay(Class<? extends Scene> overlay) {
+        this.sheduledOverlay = overlay;
+        this.sheduledAny = true;
+    }
+
+    public void sheduleActiveScene(Class<? extends Scene> scene) {
+        this.sheduledScene = scene;
+        this.sheduledAny = true;
+    }
+
+    private void setActiveScene(Class<? extends Scene> scene) {
+        Log.i("AppSetScene", "" + scene);
+        if (this.activeScene != null) {
+            this.activeScene.end();
+        }
+
+        this.activeScene = (Scene) this.scenes.get(scene);
+        this.activeScene.begin();
+
+        if (this.activeOverlay == null) {
+            setGestureListener(this.activeScene);
+        }
+    }
+
+    private void setActiveOverlay(Class<? extends Scene> overlay) {
+        Log.i("AppSetOverlay", "" + overlay);
+        if (overlay == null) {
+            this.activeOverlay.end();
+            if (this.activeScene != null) {
+                this.activeScene.begin();
+                setGestureListener(this.activeScene);
+            }
+
+            this.activeOverlay = null;
+        } else {
+            this.activeOverlay = (Scene) this.scenes.get(overlay);
+            this.activeOverlay.begin();
+            setGestureListener(this.activeOverlay);
+
             if (this.activeScene != null) {
                 this.activeScene.end();
             }
-
-            this.activeScene = (Scene) this.scenes.get(scene);
-            this.activeScene.begin();
-
-            if (this.activeOverlay == null) {
-                setGestureListener(this.activeScene);
-            }
         }
     }
 
-    public void setActiveOverlay(Class<? extends Scene> overlay) {
-        synchronized (threadLock) {
-            Log.i("AppSetOverlay", "" + overlay);
-            if (overlay == null) {
-                this.activeOverlay.end();
-                if (this.activeScene != null) {
-                    this.activeScene.begin();
-                    setGestureListener(this.activeScene);
-                }
-
-                this.activeOverlay = null;
-            } else {
-                this.activeOverlay = (Scene) this.scenes.get(overlay);
-                this.activeOverlay.begin();
-                setGestureListener(this.activeOverlay);
-
-                if (this.activeScene != null) {
-                    this.activeScene.end();
-                }
+    private void updateSheduled() {
+        if (this.sheduledAny) {
+            if (this.activeOverlay != scenes.get(this.sheduledOverlay)) {
+                setActiveOverlay(this.sheduledOverlay);
             }
-        }
-    }
 
-    @Override
-    protected void onSizeChanged(int w, int h, int ow, int oh) {
-        super.onSizeChanged(w, h, ow, oh);
+            if (this.activeScene != scenes.get(this.sheduledScene)) {
+                setActiveScene(this.sheduledScene);
+            }
+
+            this.sheduledAny = false;
+        }
     }
 
     @Override
     protected void onDraw(Canvas c) {
+        this.beginFrameMs = System.currentTimeMillis();
+
         c.drawRGB(0, 0, 0);
 
-        synchronized (threadLock) {
-            if (this.activeScene != null) {
-                this.activeScene.update(null);
-                this.activeScene.draw(c);
-            }
-
-            if (this.activeOverlay != null) {
-                this.activeOverlay.update(this.activeScene);
-                this.activeOverlay.draw(c);
-            }
+        if (this.activeScene != null) {
+            this.activeScene.update(null);
+            this.activeScene.draw(c);
         }
 
-        final long thisFrameMs = System.currentTimeMillis();
-        c.drawText("" + (thisFrameMs - lastFrameMs), 10, 30, Resources.FONT);
+        if (this.activeOverlay != null) {
+            this.activeOverlay.update(this.activeScene);
+            this.activeOverlay.draw(c);
+        }
 
-        lastFrameMs = thisFrameMs;
+        c.drawText("" +(System.currentTimeMillis() - beginFrameMs), 10, 30, Resources.FONT);
 
+
+        updateSheduled();
         invalidate();
     }
 }

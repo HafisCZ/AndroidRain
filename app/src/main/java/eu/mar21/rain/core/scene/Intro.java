@@ -19,11 +19,11 @@ public class Intro extends Scene {
     @Override
     public void update(Scene s) {
         if (this.fadeOut) {
-            this.alpha -= 3;
+            this.alpha -= 4;
             if (this.alpha < 0) {
                 this.alpha = 0;
 
-                renderer.setActiveOverlay(null);
+                renderer.sheduleActiveOverlay(null);
             }
         } else {
             this.alpha += 2;
@@ -31,7 +31,7 @@ public class Intro extends Scene {
                 this.alpha = 255;
                 this.fadeOut = true;
 
-                renderer.setActiveScene(Game.class);
+                renderer.sheduleActiveScene(Game.class);
             }
         }
     }
@@ -49,9 +49,9 @@ public class Intro extends Scene {
 
     @Override
     public void draw(Canvas c) {
-        Resources.ALPHA_ONLY_PAINT.setAlpha(this.alpha);
+        Resources.ALPHA_ONLY.setAlpha(this.alpha);
 
         final Bitmap logo = Resources.LOGO;
-        c.drawBitmap(logo, c.getWidth() / 2 - logo.getWidth()/ 2, c.getHeight() / 2 - logo.getHeight() / 2, Resources.ALPHA_ONLY_PAINT);
+        c.drawBitmap(logo, c.getWidth() / 2 - logo.getWidth()/ 2, c.getHeight() / 2 - logo.getHeight() / 2, Resources.ALPHA_ONLY);
     }
 }
