@@ -1,9 +1,8 @@
 package eu.mar21.rain.core.scene;
 
 import android.graphics.Canvas;
-import android.util.Log;
 
-import eu.mar21.rain.core.Level.Level;
+import eu.mar21.rain.core.level.Level;
 import eu.mar21.rain.core.graphics.Renderer;
 import eu.mar21.rain.core.utils.Input;
 import eu.mar21.rain.core.utils.Resources;
@@ -25,10 +24,6 @@ public class Game extends Scene {
     }
 
     public void draw(Canvas c) {
-        for (int i = 0; i < 8; i++) {
-            c.drawBitmap(Resources.BACKGROUND[i], 0,0, null);
-        }
-
         this.level.draw(c);
     }
 

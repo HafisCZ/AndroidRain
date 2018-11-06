@@ -1,6 +1,6 @@
 package eu.mar21.rain.core.entity.spawner;
 
-import eu.mar21.rain.core.Level.Level;
+import eu.mar21.rain.core.level.Level;
 import eu.mar21.rain.core.entity.Entity;
 
 public abstract class Spawner extends Entity {

@@ -2,7 +2,7 @@ package eu.mar21.rain.core.entity.mob;
 
 import java.util.Objects;
 
-import eu.mar21.rain.core.Level.Level;
+import eu.mar21.rain.core.level.Level;
 import eu.mar21.rain.core.entity.Entity;
 import eu.mar21.rain.core.graphics.sprite.Sprite;
 

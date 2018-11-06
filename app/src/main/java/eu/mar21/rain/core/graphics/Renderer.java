@@ -19,169 +19,109 @@ import eu.mar21.rain.core.utils.Resources;
 @SuppressWarnings("unused")
 public class Renderer extends View {
 
-    private Scene activeScene;
-    private Scene activeOverlay;
+    private Scene scene = null;
+    private Scene overlay = null;
 
-    private boolean sheduledAny;
-    private Class<? extends Scene> sheduledOverlay;
-    private Class<? extends Scene> sheduledScene;
+    private boolean requested = false;
+    private Class<? extends Scene> requestedOverlay;
+    private Class<? extends Scene> requestedScene;
 
-    private Activity parent;
-    private GestureDetector gestureDetector;
+    private final Map<Class<? extends Scene>, Object> scenes = new HashMap<>();
 
-    private Map<Class<? extends Scene>, Object> scenes;
-
-    private long beginFrameMs;
-    {
-        scenes = new HashMap<>();
-
-        activeOverlay = null;
-        activeScene = null;
-
-        sheduledOverlay = null;
-        sheduledScene = null;
-
-        sheduledAny = false;
-    }
-
-    public Renderer(Context c) {
-        super(c);
-    }
-
-    public Renderer(Context c, AttributeSet s) {
-        super(c, s);
-    }
-
-    public Renderer(Context c, AttributeSet s, int d) {
-        super(c, s, d);
-    }
-
-    public void setParentActivity(Activity parent) {
-        this.parent = parent;
-    }
-
-    private void setTouchListener(Scene scene) {
-        this.gestureDetector = null;
-        setOnTouchListener(scene.getDedicatedListener());
-    }
-
-    @SuppressWarnings("all")
-    private <T extends GestureDetector.SimpleOnGestureListener> void setGestureListener(T listener) {
-        this.gestureDetector = new GestureDetector(this.parent, listener);
-        setOnTouchListener((View v, MotionEvent e) -> {
-            gestureDetector.onTouchEvent(e);
-            return true;
-        });
+    public Renderer(Context context) {
+        super(context);
     }
 
     public Scene getActiveScene() {
-        return this.activeScene;
+        return this.scene;
     }
 
     public Scene getActiveOverlay() {
-        return this.activeOverlay;
+        return this.overlay;
     }
 
-    public void registerScene(Class<? extends Scene> scene) {
+    public void registerScene(Class<? extends Scene> ... scenes) {
         try {
-            scenes.put(scene, scene.getConstructor(Renderer.class).newInstance(this));
+            for (Class<? extends Scene> scene : scenes) {
+                this.scenes.put(scene, scene.getConstructor(Renderer.class).newInstance(this));
+            }
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException exception) {
             Log.i("AppSceneRegFail", Log.getStackTraceString(exception));
         }
     }
 
-    public void sheduleActiveOverlay(Class<? extends Scene> overlay) {
-        this.sheduledOverlay = overlay;
-        this.sheduledAny = true;
+    public void requestScene(Class<? extends Scene> scene) {
+        this.requested = true;
+        this.requestedScene = scene;
     }
 
-    public void sheduleActiveScene(Class<? extends Scene> scene) {
-        this.sheduledScene = scene;
-        this.sheduledAny = true;
+    public void requestOverlay(Class<? extends Scene> overlay) {
+        this.requested = true;
+        this.requestedOverlay = overlay;
     }
 
-    private void setActiveScene(Class<? extends Scene> scene) {
-        Log.i("AppSetScene", "" + scene);
-        if (this.activeScene != null) {
-            this.activeScene.end();
+    private void setScene(Class<? extends Scene> scene) {
+        if (this.scene != null) {
+            this.scene.end();
+            this.scene = null;
         }
 
-        this.activeScene = (Scene) this.scenes.get(scene);
-        this.activeScene.begin();
+        if (scene != null) {
+            this.scene = (Scene) this.scenes.get(scene);
+            this.scene.begin();
 
-        if (this.activeOverlay == null) {
-            if (this.activeScene.getDedicatedListener() == null) {
-                setGestureListener(this.activeScene);
-            } else {
-                setTouchListener(this.activeScene);
-            }
-        }
-    }
-
-    private void setActiveOverlay(Class<? extends Scene> overlay) {
-        Log.i("AppSetOverlay", "" + overlay);
-        if (overlay == null) {
-            this.activeOverlay.end();
-            if (this.activeScene != null) {
-                this.activeScene.begin();
-                if (this.activeScene.getDedicatedListener() == null) {
-                    setGestureListener(this.activeScene);
-                } else {
-                    setTouchListener(this.activeScene);
-                }
-            }
-
-            this.activeOverlay = null;
+            setOnTouchListener(this.scene.getDedicatedListener());
         } else {
-            this.activeOverlay = (Scene) this.scenes.get(overlay);
-            this.activeOverlay.begin();
-
-            if (this.activeOverlay.getDedicatedListener() == null) {
-                setGestureListener(this.activeOverlay);
-            } else {
-                setTouchListener(this.activeOverlay);
-            }
-
-            if (this.activeScene != null) {
-                this.activeScene.end();
-            }
+            setOnTouchListener(null);
         }
     }
 
-    private void updateSheduled() {
-        if (this.sheduledAny) {
-            if (this.activeOverlay != scenes.get(this.sheduledOverlay)) {
-                setActiveOverlay(this.sheduledOverlay);
+    private void setOverlay(Class<? extends Scene> overlay) {
+        if (this.overlay != null) {
+            this.overlay.end();
+            this.overlay = null;
+        }
+
+        if (overlay != null) {
+            this.overlay = (Scene) this.scenes.get(overlay);
+            this.overlay.begin();
+        }
+    }
+
+    private void processRequests() {
+        if (this.requested) {
+            if (this.scene != this.scenes.get(this.requestedScene)) {
+                setScene(this.requestedScene);
             }
 
-            if (this.activeScene != scenes.get(this.sheduledScene)) {
-                setActiveScene(this.sheduledScene);
+            if (this.overlay != this.scenes.get(this.requestedOverlay)) {
+                setScene(this.requestedOverlay);
             }
 
-            this.sheduledAny = false;
+            this.requested = false;
         }
     }
 
     @Override
     protected void onDraw(Canvas c) {
-        this.beginFrameMs = System.currentTimeMillis();
+        long ubegin = System.currentTimeMillis();
 
-        c.drawRGB(0, 0, 0);
+        if (this.scene != null) this.scene.update(null);
+        if (this.overlay != null) this.overlay.update(this.scene);
 
-        if (this.activeScene != null) {
-            this.activeScene.update(null);
-            this.activeScene.draw(c);
-        }
+        long dbegin = System.currentTimeMillis();
 
-        if (this.activeOverlay != null) {
-            this.activeOverlay.update(this.activeScene);
-            this.activeOverlay.draw(c);
-        }
+        c.drawColor(0xFF000000);
 
-        c.drawText("" +(System.currentTimeMillis() - beginFrameMs), 10, 30, Resources.FONT);
+        if (this.scene != null) this.scene.draw(c);
+        if (this.overlay != null) this.overlay.draw(c);
 
+        long end = System.currentTimeMillis();
 
-        updateSheduled();
+        c.drawText("U" + Long.toString(dbegin - ubegin), 10, 30, Resources.FONT);
+        c.drawText("D" + Long.toString(end - dbegin), 10, 60, Resources.FONT);
+
+        processRequests();
         invalidate();
     }
 }

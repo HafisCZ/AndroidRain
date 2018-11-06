@@ -23,7 +23,11 @@ public class Intro extends Scene {
             if (this.alpha < 0) {
                 this.alpha = 0;
 
-                renderer.sheduleActiveOverlay(null);
+                if (Resources.DONE){
+                    renderer.requestScene(Game.class);
+                } else {
+                    this.fadeOut = false;
+                }
             }
         } else {
             this.alpha += 2;
@@ -31,7 +35,6 @@ public class Intro extends Scene {
                 this.alpha = 255;
                 this.fadeOut = true;
 
-                renderer.sheduleActiveScene(Game.class);
             }
         }
     }

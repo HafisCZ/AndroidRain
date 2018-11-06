@@ -3,9 +3,8 @@ package eu.mar21.rain.core.entity.particle;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
 
-import eu.mar21.rain.core.Level.Level;
+import eu.mar21.rain.core.level.Level;
 import eu.mar21.rain.core.utils.Resources;
 
 public class RainParticle extends Particle {

@@ -1,11 +1,10 @@
 package eu.mar21.rain.core.entity;
 
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
 import java.util.Random;
 
-import eu.mar21.rain.core.Level.Level;
+import eu.mar21.rain.core.level.Level;
 import eu.mar21.rain.core.graphics.Drawable;
 import eu.mar21.rain.core.graphics.sprite.Sprite;
 

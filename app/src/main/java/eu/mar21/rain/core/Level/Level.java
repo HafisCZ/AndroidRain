@@ -1,4 +1,4 @@
-package eu.mar21.rain.core.Level;
+package eu.mar21.rain.core.level;
 
 import android.graphics.Canvas;
 
@@ -27,7 +27,7 @@ public class Level {
         this.spawners.add(new RainSpawner(0, -20, Resources.SCREEN_WIDTH, 0, this, 1, 0, 5));
         this.input = input;
 
-        this.mobs.add(new Player((Resources.SCREEN_WIDTH - Player.WIDTH) / 2, Resources.SCREEN_HEIGHT, this));
+        this.mobs.add(new Player((Resources.SCREEN_WIDTH - Resources.PLAYER.getWidth()) / 2, Resources.SCREEN_HEIGHT, this));
     }
 
     public void add(Entity e) {
@@ -45,6 +45,16 @@ public class Level {
     }
 
     public void draw(Canvas c) {
+        if (getPlayer() != null) {
+            for (int i = 0; i < 8; i++) {
+                c.drawBitmap(Resources.BACKGROUND[i], (int) ((getPlayer().getCenterX() - Resources.SCREEN_WIDTH / 2) / (Resources.SCREEN_WIDTH / 8) * -Math.pow(1.55, i) - 100 / 2), 0, null);
+            }
+        } else {
+            for (int i = 0; i < 8; i++) {
+                c.drawBitmap(Resources.BACKGROUND[i], 0,0, null);
+            }
+        }
+
         for (Entity p : this.particles) {
             p.draw(c);
         }

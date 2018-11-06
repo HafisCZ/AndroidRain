@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 
 import eu.mar21.rain.core.graphics.Renderer;
@@ -14,10 +13,11 @@ import eu.mar21.rain.core.utils.Resources;
 
 public class Application extends Activity {
 
+    private Renderer renderer = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_application);
 
         getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -28,18 +28,17 @@ public class Application extends Activity {
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
         );
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
+        Resources.preload(getResources());
         Resources.loadAll(getResources(), getWindowManager());
 
-        final Renderer renderer = findViewById(R.id.renderer);
+        this.renderer = new Renderer(this);
+        setContentView(this.renderer);
 
-        renderer.setParentActivity(this);
+        this.renderer.registerScene(Intro.class);
+        this.renderer.registerScene(Game.class);
 
-        renderer.registerScene(Intro.class);
-        renderer.registerScene(Game.class);
-
-        renderer.sheduleActiveOverlay(Intro.class);
+        this.renderer.requestScene(Intro.class);
     }
 }
