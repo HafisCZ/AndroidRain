@@ -1,6 +1,7 @@
-package eu.mar21.rain.core.entity;
+package eu.mar21.rain.core.entity.item;
 
 import eu.mar21.rain.core.Level.Level;
+import eu.mar21.rain.core.entity.Entity;
 import eu.mar21.rain.core.graphics.sprite.Sprite;
 
 public abstract class Item extends Entity {

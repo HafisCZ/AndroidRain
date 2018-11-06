@@ -1,20 +1,18 @@
 package eu.mar21.rain.core.Level;
 
-import android.content.ClipData;
 import android.graphics.Canvas;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import eu.mar21.rain.core.entity.Entity;
-import eu.mar21.rain.core.entity.Item;
+import eu.mar21.rain.core.entity.item.Item;
 import eu.mar21.rain.core.entity.mob.Mob;
 import eu.mar21.rain.core.entity.mob.Player;
 import eu.mar21.rain.core.entity.particle.Particle;
 import eu.mar21.rain.core.entity.spawner.RainSpawner;
 import eu.mar21.rain.core.entity.spawner.Spawner;
+import eu.mar21.rain.core.utils.Input;
 import eu.mar21.rain.core.utils.Resources;
 
 public class Level {
@@ -23,8 +21,13 @@ public class Level {
     private final List<Entity> particles = new ArrayList<>();
     private final List<Spawner> spawners = new ArrayList<>();
 
-    public Level() {
-        this.spawners.add(new RainSpawner(0, -20, Resources.SCREEN_WIDTH, 0, this, 0, 0, 5));
+    private Input input;
+
+    public Level(Input input) {
+        this.spawners.add(new RainSpawner(0, -20, Resources.SCREEN_WIDTH, 0, this, 1, 0, 5));
+        this.input = input;
+
+        this.mobs.add(new Player((Resources.SCREEN_WIDTH - Player.WIDTH) / 2, Resources.SCREEN_HEIGHT, this));
     }
 
     public void add(Entity e) {
@@ -35,6 +38,10 @@ public class Level {
         } else if (e instanceof Spawner) {
             this.spawners.add((Spawner) e);
         }
+    }
+
+    public Input getInput() {
+        return this.input;
     }
 
     public void draw(Canvas c) {

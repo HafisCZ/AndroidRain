@@ -16,6 +16,8 @@ public class Resources {
     public static Bitmap BACKGROUND[];
     public static Bitmap BACKGROUND_ALL;
 
+    public static Bitmap PLAYER;
+
     public static Bitmap LOGO;
 
     public static Paint FONT;
@@ -49,6 +51,8 @@ public class Resources {
         FONT = new Paint();
         FONT.setTextSize(30.0f);
         FONT.setColor(Color.WHITE);
+
+        PLAYER = BitmapFactory.decodeResource(c, R.drawable.player);
 
         ALPHA_ONLY = new Paint();
 

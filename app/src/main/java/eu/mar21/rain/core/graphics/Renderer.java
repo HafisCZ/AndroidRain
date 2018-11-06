@@ -60,15 +60,17 @@ public class Renderer extends View {
         this.parent = parent;
     }
 
+    private void setTouchListener(Scene scene) {
+        this.gestureDetector = null;
+        setOnTouchListener(scene.getDedicatedListener());
+    }
+
+    @SuppressWarnings("all")
     private <T extends GestureDetector.SimpleOnGestureListener> void setGestureListener(T listener) {
         this.gestureDetector = new GestureDetector(this.parent, listener);
-        setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            @SuppressWarnings("all")
-            public boolean onTouch(View v, MotionEvent e) {
-                gestureDetector.onTouchEvent(e);
-                return true;
-            }
+        setOnTouchListener((View v, MotionEvent e) -> {
+            gestureDetector.onTouchEvent(e);
+            return true;
         });
     }
 
@@ -108,7 +110,11 @@ public class Renderer extends View {
         this.activeScene.begin();
 
         if (this.activeOverlay == null) {
-            setGestureListener(this.activeScene);
+            if (this.activeScene.getDedicatedListener() == null) {
+                setGestureListener(this.activeScene);
+            } else {
+                setTouchListener(this.activeScene);
+            }
         }
     }
 
@@ -118,14 +124,23 @@ public class Renderer extends View {
             this.activeOverlay.end();
             if (this.activeScene != null) {
                 this.activeScene.begin();
-                setGestureListener(this.activeScene);
+                if (this.activeScene.getDedicatedListener() == null) {
+                    setGestureListener(this.activeScene);
+                } else {
+                    setTouchListener(this.activeScene);
+                }
             }
 
             this.activeOverlay = null;
         } else {
             this.activeOverlay = (Scene) this.scenes.get(overlay);
             this.activeOverlay.begin();
-            setGestureListener(this.activeOverlay);
+
+            if (this.activeOverlay.getDedicatedListener() == null) {
+                setGestureListener(this.activeOverlay);
+            } else {
+                setTouchListener(this.activeOverlay);
+            }
 
             if (this.activeScene != null) {
                 this.activeScene.end();
