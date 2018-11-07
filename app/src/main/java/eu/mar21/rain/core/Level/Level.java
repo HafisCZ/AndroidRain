@@ -3,6 +3,7 @@ package eu.mar21.rain.core.level;
 import android.graphics.Canvas;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import eu.mar21.rain.core.entity.Entity;
@@ -10,6 +11,7 @@ import eu.mar21.rain.core.entity.item.Item;
 import eu.mar21.rain.core.entity.mob.Mob;
 import eu.mar21.rain.core.entity.mob.Player;
 import eu.mar21.rain.core.entity.particle.Particle;
+import eu.mar21.rain.core.entity.spawner.AcidSpawner;
 import eu.mar21.rain.core.entity.spawner.RainSpawner;
 import eu.mar21.rain.core.entity.spawner.Spawner;
 import eu.mar21.rain.core.utils.Input;
@@ -21,13 +23,16 @@ public class Level {
     private final List<Entity> particles = new ArrayList<>();
     private final List<Spawner> spawners = new ArrayList<>();
 
+    private final List<Entity> buffer = Collections.synchronizedList(new ArrayList<Entity>());
+
     private Input input;
 
     public Level(Input input) {
         this.spawners.add(new RainSpawner(0, -20, Resources.SCREEN_WIDTH, 0, this, 1, 0, 5));
         this.input = input;
 
-        this.mobs.add(new Player((Resources.SCREEN_WIDTH - Resources.PLAYER.getWidth()) / 2, Resources.SCREEN_HEIGHT, this));
+        this.mobs.add(new Player((Resources.SCREEN_WIDTH - Resources.PLAYER[0].getWidth()) / 2, Resources.SCREEN_HEIGHT, this));
+        this.spawners.add(new AcidSpawner(0, -50, Resources.SCREEN_WIDTH, 0, this, 10, 5, 2));
     }
 
     public void add(Entity e) {
@@ -38,6 +43,10 @@ public class Level {
         } else if (e instanceof Spawner) {
             this.spawners.add((Spawner) e);
         }
+    }
+
+    public void addLater(Entity e) {
+        this.buffer.add(e);
     }
 
     public Input getInput() {
@@ -106,5 +115,10 @@ public class Level {
                 this.spawners.remove(e);
             }
         }
+
+        for (Entity e : buffer) {
+            add(e);
+        }
+        buffer.clear();
     }
 }

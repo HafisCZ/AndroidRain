@@ -14,8 +14,6 @@ public class Resources {
 
     public static Bitmap BACKGROUND[];
 
-    public static Bitmap PLAYER;
-
     public static Bitmap LOGO;
 
     public static Paint FONT;
@@ -25,6 +23,9 @@ public class Resources {
     public static double SCREEN_HEIGHT;
 
     public static boolean DONE = false;
+
+    public static Bitmap PLAYER[] = new Bitmap[9];
+    public static Bitmap ACID[] = new Bitmap[4];
 
     private static Rect RECTANGLE;
 
@@ -54,7 +55,13 @@ public class Resources {
         FONT.setTextSize(30.0f);
         FONT.setColor(Color.WHITE);
 
-        PLAYER = BitmapFactory.decodeResource(c, R.drawable.player);
+        for (int i = 0; i < 9; i++) {
+            PLAYER[i] = BitmapFactory.decodeResource(c, R.drawable.player0);
+        }
+
+        for (int i = 0; i < 3; i++) {
+            ACID[i] = BitmapFactory.decodeResource(c, R.drawable.acid0);
+        }
 
         ALPHA_ONLY = new Paint();
 
