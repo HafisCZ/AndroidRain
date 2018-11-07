@@ -1,6 +1,8 @@
 package eu.mar21.rain.core.entity.mob;
 
-import eu.mar21.rain.core.graphics.sprite.Sprite;
+import android.util.Log;
+
+import eu.mar21.rain.core.graphics.sprite.AnimatedSprite;
 import eu.mar21.rain.core.level.Level;
 import eu.mar21.rain.core.utils.Resources;
 
@@ -17,15 +19,16 @@ public class Player extends Mob {
     public static final double SPRITE_X_OFFSET = -4;
     public static final double SPRITE_Y_OFFSET = -1;
 
-    public static final int IMAGE_ROWS = 2;
-    public static final int IMAGE_COLS = 4;
     public static final int ANIMATION_DELTA = 8;
+    public static final int ANIMATION_FRAMEGROUP_0[] = { 0 };
+    public static final int ANIMATION_FRAMEGROUP_1[] = { 1, 2, 3, 4 };
+    public static final int ANIMATION_FRAMEGROUP_2[] = { 5, 6, 7, 8 };
 
     private final double speed;
     private boolean jump = true;
 
     public Player(double x, double y, Level level) {
-        super(x, y, Resources.PLAYER[0].getWidth(), Resources.PLAYER[0].getHeight(), new Sprite(Resources.PLAYER[0], 1, 1), SPRITE_X_OFFSET, SPRITE_Y_OFFSET, level);
+        super(x, y, Resources.PLAYER[0].getWidth(), Resources.PLAYER[0].getHeight(), new AnimatedSprite(Resources.PLAYER, ANIMATION_DELTA, ANIMATION_FRAMEGROUP_0, ANIMATION_FRAMEGROUP_1, ANIMATION_FRAMEGROUP_2), SPRITE_X_OFFSET, SPRITE_Y_OFFSET, level);
 
         this.speed = SPEED_X_INCREMENT;
     }
@@ -55,9 +58,11 @@ public class Player extends Mob {
             }
         }
 
+        /*
         if (this.level.getInput().isPressed(0, 0, 20, 20)) {
-            //this.level.getPlayerProperties().activateSkill(this, this.level);
+            this.level.getData().skill(this.level);
         }
+        */
 
         this.x += this.dx;
         this.y += this.dy;
@@ -83,15 +88,14 @@ public class Player extends Mob {
 
             this.jump = false;
         }
-/*
+
         if (this.dx != 0) {
-            // invert this.sprite.setScale((this.dx > 0 ? 1 : -1), 1);
-            ((AnimatedSprite) this.sprite).play();
+            ((AnimatedSprite) this.sprite).play(this.dx > 0 ? 2 : 1);
         } else {
             ((AnimatedSprite) this.sprite).stop();
         }
 
-        ((AnimatedSprite) this.sprite).tick();*/
+        ((AnimatedSprite) this.sprite).tick();
     }
 
 }

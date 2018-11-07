@@ -14,6 +14,7 @@ import eu.mar21.rain.core.entity.particle.Particle;
 import eu.mar21.rain.core.entity.spawner.AcidSpawner;
 import eu.mar21.rain.core.entity.spawner.RainSpawner;
 import eu.mar21.rain.core.entity.spawner.Spawner;
+import eu.mar21.rain.core.level.data.PlayerData;
 import eu.mar21.rain.core.utils.Input;
 import eu.mar21.rain.core.utils.Resources;
 
@@ -26,10 +27,12 @@ public class Level {
     private final List<Entity> buffer = Collections.synchronizedList(new ArrayList<Entity>());
 
     private Input input;
+    private PlayerData data;
 
     public Level(Input input) {
         this.spawners.add(new RainSpawner(0, -20, Resources.SCREEN_WIDTH, 0, this, 1, 0, 5));
         this.input = input;
+        this.data = new PlayerData();
 
         this.mobs.add(new Player((Resources.SCREEN_WIDTH - Resources.PLAYER[0].getWidth()) / 2, Resources.SCREEN_HEIGHT, this));
         this.spawners.add(new AcidSpawner(0, -50, Resources.SCREEN_WIDTH, 0, this, 10, 5, 2));
@@ -51,6 +54,10 @@ public class Level {
 
     public Input getInput() {
         return this.input;
+    }
+
+    public PlayerData getData() {
+        return this.data;
     }
 
     public void draw(Canvas c) {

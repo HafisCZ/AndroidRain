@@ -12,7 +12,7 @@ public abstract class Spawner extends Entity {
     protected int frameCount = 0;
     protected int frameLimit;
 
-    protected Spawner(double x, double y, double width, double height, Level level, int rate, int variation, int count) {
+    public Spawner(double x, double y, double width, double height, Level level, int rate, int variation, int count) {
         super(x, y, width, height, level);
 
         this.count = count;

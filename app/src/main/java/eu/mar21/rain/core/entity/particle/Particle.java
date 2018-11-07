@@ -5,7 +5,7 @@ import eu.mar21.rain.core.entity.Entity;
 
 public abstract class Particle extends Entity {
 
-    protected Particle(double x, double y, double width, double height, Level level) {
+    public Particle(double x, double y, double width, double height, Level level) {
         super(x, y, width, height, level);
     }
 

@@ -9,7 +9,7 @@ public abstract class Item extends Entity {
     public static final double DEFAULT_SPEED_X = 0;
     public static final double DEFAULT_SPEED_Y = 4;
 
-    protected Item(double x, double y, double width, double height, Sprite sprite, double offsetX, double offsetY, double dx, double dy, Level level) {
+    public Item(double x, double y, double width, double height, Sprite sprite, double offsetX, double offsetY, double dx, double dy, Level level) {
         super(x, y, width, height, sprite, offsetX, offsetY, level);
 
         this.dx = dx;

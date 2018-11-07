@@ -1,6 +1,7 @@
 package eu.mar21.rain.core.entity.mob;
 
 import eu.mar21.rain.core.entity.particle.AcidParticle;
+import eu.mar21.rain.core.graphics.sprite.AnimatedSprite;
 import eu.mar21.rain.core.graphics.sprite.Sprite;
 import eu.mar21.rain.core.level.Level;
 import eu.mar21.rain.core.utils.Resources;
@@ -12,17 +13,17 @@ public class Acid extends Mob {
     public static final double SPEED_X_DEFAULT = 0;
     public static final double SPEED_Y_DEFAULT = 10;
 
-    public static final int IMAGE_ROWS = 1;
-    public static final int IMAGE_COLS = 4;
     public static final double SPRITE_X_OFFSET = -1;
     public static final double SPRITE_Y_OFFSET = -14;
-    public static final int ANIMATION_DELTA = 10;
 
     public static final int PARTICLE_COUNT = 5;
 
+    public static final int ANIMATION_DELTA = 10;
+    public static final int ANIMATION_FRAMEGROUP_0[] = { 0, 1, 2, 3 };
+
     public Acid(double x, double y, double dx, double dy, Level level) {
-        super(x, y, WIDTH, HEIGHT, new Sprite(Resources.ACID[0], 1, 1), SPRITE_X_OFFSET, SPRITE_Y_OFFSET, level);
-        // ((AnimatedSprite) this.sprite).play();
+        super(x, y, WIDTH, HEIGHT, new AnimatedSprite(Resources.ACID, ANIMATION_DELTA, ANIMATION_FRAMEGROUP_0), SPRITE_X_OFFSET, SPRITE_Y_OFFSET, level);
+        ((AnimatedSprite) this.sprite).play(0);
 
         this.dx = dx;
         this.dy = dy;
@@ -45,18 +46,18 @@ public class Acid extends Mob {
         }
 
         if (this.level.isCollidingPlayerAABB(this)) {
-            //this.level.getPlayerProperties().damage();
+            this.level.getData().damage();
 
             this.y -= this.height;
 
-           // if (this.level.getPlayerProperties().getHealth() > 0) {
-            spawnParticles(PARTICLE_COUNT, -1);
-            //}
+            if (this.level.getData().getHealth() > 0) {
+                spawnParticles(PARTICLE_COUNT, -1);
+            }
 
             kill();
         }
 
-        //((AnimatedSprite) this.sprite).tick();
+        ((AnimatedSprite) this.sprite).tick();
     }
 
     protected void spawnParticles(int amount, double ySpeed) {

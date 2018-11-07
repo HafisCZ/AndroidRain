@@ -10,7 +10,7 @@ public class Sprite {
     private final int colCount;
     private int tileWidth;
     private int tileHeight;
-    private final Bitmap image;
+    protected Bitmap image;
 
     private int selectedRow = 0;
     private int selectedCol = 0;

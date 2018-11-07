@@ -56,11 +56,11 @@ public class Resources {
         FONT.setColor(Color.WHITE);
 
         for (int i = 0; i < 9; i++) {
-            PLAYER[i] = BitmapFactory.decodeResource(c, R.drawable.player0);
+            PLAYER[i] = BitmapFactory.decodeResource(c, R.drawable.player0 + i);
         }
 
-        for (int i = 0; i < 3; i++) {
-            ACID[i] = BitmapFactory.decodeResource(c, R.drawable.acid0);
+        for (int i = 0; i < 4; i++) {
+            ACID[i] = BitmapFactory.decodeResource(c, R.drawable.acid0 + i);
         }
 
         ALPHA_ONLY = new Paint();
