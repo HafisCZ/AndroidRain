@@ -12,12 +12,15 @@ import static eu.mar21.rain.core.utils.Input.UP;
 
 public class Player extends Mob {
 
+    public static final double WIDTH = 94;
+    public static final double HEIGHT = 130;
+
     public static final double SPEED_X_LIMIT = 20;
     public static final double SPEED_Y_LIMIT = -10;
     public static final double SPEED_X_INCREMENT = 2.5;
     public static final double SPEED_Y_INCREMENT = 0.4;
-    public static final double SPRITE_X_OFFSET = -4;
-    public static final double SPRITE_Y_OFFSET = -1;
+    public static final double SPRITE_X_OFFSET = -8;
+    public static final double SPRITE_Y_OFFSET = -2;
 
     public static final int ANIMATION_DELTA = 8;
     public static final int ANIMATION_FRAMEGROUP_0[] = { 0 };
@@ -28,7 +31,7 @@ public class Player extends Mob {
     private boolean jump = true;
 
     public Player(double x, double y, Level level) {
-        super(x, y, Resources.PLAYER[0].getWidth(), Resources.PLAYER[0].getHeight(), new AnimatedSprite(Resources.PLAYER, ANIMATION_DELTA, ANIMATION_FRAMEGROUP_0, ANIMATION_FRAMEGROUP_1, ANIMATION_FRAMEGROUP_2), SPRITE_X_OFFSET, SPRITE_Y_OFFSET, level);
+        super(x, y, WIDTH, HEIGHT, new AnimatedSprite(Resources.PLAYER, ANIMATION_DELTA, ANIMATION_FRAMEGROUP_0, ANIMATION_FRAMEGROUP_1, ANIMATION_FRAMEGROUP_2), SPRITE_X_OFFSET, SPRITE_Y_OFFSET, level);
 
         this.speed = SPEED_X_INCREMENT;
     }

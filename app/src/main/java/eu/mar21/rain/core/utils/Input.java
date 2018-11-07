@@ -34,9 +34,12 @@ public class Input implements View.OnTouchListener {
 
     public boolean isHeld(int action) {
         switch (action) {
-            case UP: return isInside(0, 0, Resources.SCREEN_WIDTH, Resources.SCREEN_HEIGHT / 2);
-            case LEFT: return isInside(0, Resources.SCREEN_HEIGHT / 2, Resources.SCREEN_WIDTH / 2, Resources.SCREEN_HEIGHT);
-            case RIGHT: return isInside(Resources.SCREEN_WIDTH / 2, Resources.SCREEN_HEIGHT / 2, Resources.SCREEN_WIDTH, Resources.SCREEN_HEIGHT);
+            case UP:
+                return isInside(0, Resources.SCREEN_HEIGHT / 2, Resources.SCREEN_WIDTH, 3 * Resources.SCREEN_HEIGHT / 4);
+            case LEFT:
+                return isInside(0, 3 * Resources.SCREEN_HEIGHT / 4, Resources.SCREEN_WIDTH / 2, Resources.SCREEN_HEIGHT);
+            case RIGHT:
+                return isInside(Resources.SCREEN_WIDTH / 2, 3 * Resources.SCREEN_HEIGHT / 4, Resources.SCREEN_WIDTH, Resources.SCREEN_HEIGHT);
             default: return false;
         }
     }

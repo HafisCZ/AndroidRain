@@ -26,6 +26,7 @@ public class Resources {
 
     public static Bitmap PLAYER[] = new Bitmap[9];
     public static Bitmap ACID[] = new Bitmap[4];
+    public static Bitmap STAR, ENERGY, SHIELD;
 
     private static Rect RECTANGLE;
 
@@ -62,6 +63,10 @@ public class Resources {
         for (int i = 0; i < 4; i++) {
             ACID[i] = BitmapFactory.decodeResource(c, R.drawable.acid0 + i);
         }
+
+        STAR = BitmapFactory.decodeResource(c, R.drawable.star);
+        SHIELD = BitmapFactory.decodeResource(c, R.drawable.armor);
+        ENERGY = BitmapFactory.decodeResource(c, R.drawable.energy);
 
         ALPHA_ONLY = new Paint();
 

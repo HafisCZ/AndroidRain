@@ -15,6 +15,10 @@ public class Sprite {
     private int selectedRow = 0;
     private int selectedCol = 0;
 
+    public Sprite(Bitmap image) {
+        this(image, 1, 1);
+    }
+
     public Sprite(Bitmap image, int rowCount, int colCount) {
         if (rowCount < 1 || colCount < 1) {
             throw new IllegalArgumentException("Sprite has to have at least 1 row and 1 column!");

@@ -12,8 +12,11 @@ import eu.mar21.rain.core.entity.mob.Mob;
 import eu.mar21.rain.core.entity.mob.Player;
 import eu.mar21.rain.core.entity.particle.Particle;
 import eu.mar21.rain.core.entity.spawner.AcidSpawner;
+import eu.mar21.rain.core.entity.spawner.ArmorSpawner;
+import eu.mar21.rain.core.entity.spawner.EnergySpawner;
 import eu.mar21.rain.core.entity.spawner.RainSpawner;
 import eu.mar21.rain.core.entity.spawner.Spawner;
+import eu.mar21.rain.core.entity.spawner.StarSpawner;
 import eu.mar21.rain.core.level.data.PlayerData;
 import eu.mar21.rain.core.utils.Input;
 import eu.mar21.rain.core.utils.Resources;
@@ -35,7 +38,11 @@ public class Level {
         this.data = new PlayerData();
 
         this.mobs.add(new Player((Resources.SCREEN_WIDTH - Resources.PLAYER[0].getWidth()) / 2, Resources.SCREEN_HEIGHT, this));
-        this.spawners.add(new AcidSpawner(0, -50, Resources.SCREEN_WIDTH, 0, this, 10, 5, 2));
+
+        this.spawners.add(new AcidSpawner(0, -50, Resources.SCREEN_WIDTH, 0, this, 20, 5, 2));
+        this.spawners.add(new ArmorSpawner(0, -50, Resources.SCREEN_WIDTH, 0, this, (60 * 60) >> 1, 10 * 60, 1));
+        this.spawners.add(new EnergySpawner(0, -50, Resources.SCREEN_WIDTH, 0, this, 60, 60, 1));
+        this.spawners.add(new StarSpawner(0, -50, Resources.SCREEN_WIDTH, 0, this, 20 * 60, 0, 1));
     }
 
     public void add(Entity e) {
@@ -78,6 +85,8 @@ public class Level {
         for (Entity m : this.mobs) {
             m.draw(c);
         }
+
+        this.data.drawDebug(c);
     }
 
     public List<Entity> getMobs() {

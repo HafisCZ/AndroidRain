@@ -3,6 +3,7 @@ package eu.mar21.rain.core.entity.item;
 import eu.mar21.rain.core.level.Level;
 import eu.mar21.rain.core.entity.Entity;
 import eu.mar21.rain.core.graphics.sprite.Sprite;
+import eu.mar21.rain.core.utils.Resources;
 
 public abstract class Item extends Entity {
 
@@ -25,7 +26,7 @@ public abstract class Item extends Entity {
         this.x += this.dx;
         this.y += this.dy;
 
-        if (this.y + this.height > 500) {
+        if (this.y + this.height > Resources.SCREEN_HEIGHT) {
             kill();
         }
 

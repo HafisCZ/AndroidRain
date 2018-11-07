@@ -2,19 +2,18 @@ package eu.mar21.rain.core.entity.mob;
 
 import eu.mar21.rain.core.entity.particle.AcidParticle;
 import eu.mar21.rain.core.graphics.sprite.AnimatedSprite;
-import eu.mar21.rain.core.graphics.sprite.Sprite;
 import eu.mar21.rain.core.level.Level;
 import eu.mar21.rain.core.utils.Resources;
 
 public class Acid extends Mob {
 
-    public static final double WIDTH = 10;
-    public static final double HEIGHT = 10;
+    public static final double WIDTH = 20;
+    public static final double HEIGHT = 20;
     public static final double SPEED_X_DEFAULT = 0;
     public static final double SPEED_Y_DEFAULT = 10;
 
-    public static final double SPRITE_X_OFFSET = -1;
-    public static final double SPRITE_Y_OFFSET = -14;
+    public static final double SPRITE_X_OFFSET = -2;
+    public static final double SPRITE_Y_OFFSET = -28;
 
     public static final int PARTICLE_COUNT = 5;
 
