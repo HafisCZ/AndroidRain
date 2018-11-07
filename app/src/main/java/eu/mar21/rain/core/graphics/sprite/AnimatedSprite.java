@@ -40,6 +40,8 @@ public class AnimatedSprite extends Sprite {
             this.currentTime = 0;
 
             selectTile(group, 0);
+        } else if (this.groupIndex != group) {
+            this.groupIndex = group;
         }
     }
 

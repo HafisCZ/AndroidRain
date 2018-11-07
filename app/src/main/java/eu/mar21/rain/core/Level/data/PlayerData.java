@@ -2,6 +2,7 @@ package eu.mar21.rain.core.level.data;
 
 import android.graphics.Canvas;
 
+import eu.mar21.rain.core.graphics.sprite.Sprite;
 import eu.mar21.rain.core.level.Level;
 import eu.mar21.rain.core.utils.Resources;
 
@@ -12,11 +13,61 @@ public class PlayerData {
     private int experience;
     private int energy;
 
+    private boolean consume = false;
+
+    private final Sprite icons[] = new Sprite[3];
+    private final Sprite frames[] = new Sprite[1];
+    private final Sprite bars[] = new Sprite[5];
+    private final int yoffset;
+    private final int xoffset;
+
     public PlayerData() {
         this.health = 5;
         this.shield = 5;
         this.energy = 0;
         this.experience = 0;
+
+        frames[0] = new Sprite(Resources.BARS[0]);
+
+        for (int i = 0; i < 3; i++) {
+            icons[i] = new Sprite(Resources.ICONS[i]);
+        }
+
+        bars[0] = new Sprite(Resources.BARS[1], 1, 10);
+        bars[1] = new Sprite(Resources.BARS[3], 1, 10);
+        bars[2] = new Sprite(Resources.BARS[2], 1, 100);
+        bars[3] = new Sprite(Resources.BARS[4], 1, 100);
+        bars[4] = new Sprite(Resources.BARS[5], 1, 100);
+
+        this.yoffset = Resources.BARS[0].getHeight() + 5;
+        this.xoffset = Resources.ICONS[0].getWidth();
+    }
+
+    public void draw(Canvas c) {
+        for (int i = 0; i < 3; i++) {
+            icons[i].draw(c, xoffset, 10 + yoffset * i);
+        }
+
+        for (int i = 0; i < 3; i++) {
+            frames[0].draw(c, xoffset * 2, 10 + yoffset * i);
+        }
+
+        bars[0].setSpan(1, this.health);
+        bars[0].draw(c, xoffset * 2, 10);
+
+        bars[1].setSpan(1, this.shield);
+        bars[1].draw(c, xoffset * 2, 10);
+
+        bars[2].setSpan(1, this.experience);
+        bars[2].draw(c, xoffset * 2, 10 + yoffset);
+
+        if (this.consume) {
+            bars[4].setSpan(1, this.energy);
+            bars[4].draw(c, xoffset * 2, 10 + yoffset * 2);
+        } else {
+            bars[3].setSpan(1, this.energy);
+            bars[3].draw(c, xoffset * 2, 10 + yoffset * 2);
+        }
     }
 
     public void damage() {
@@ -29,11 +80,17 @@ public class PlayerData {
         }
     }
 
-    public void drawDebug(Canvas c) {
-        c.drawText("HP: " + Integer.toString(this.health), c.getWidth() - 150, 30, Resources.FONT);
-        c.drawText("AR: " + Integer.toString(this.shield), c.getWidth() - 150, 60, Resources.FONT);
-        c.drawText("EN: " + Integer.toString(this.energy), c.getWidth() - 150, 90, Resources.FONT);
-        c.drawText("XP: " + Integer.toString(this.experience), c.getWidth() - 150, 120, Resources.FONT);
+    public void tick() {
+        this.experience++;
+        if (this.experience > 100) {
+            this.experience = 0;
+        }
+
+        if (this.consume) {
+            if (--this.energy < 1) {
+                this.consume = false;
+            }
+        }
     }
 
     public int getHealth() {
@@ -57,14 +114,26 @@ public class PlayerData {
     }
 
     public void addEnergy(int amount) {
-        this.energy += amount;
+        if (!this.consume) {
+            this.energy += amount * 2;
+            if (this.energy > 100) {
+                this.energy = 100;
+                this.consume = true;
+            }
+        }
     }
 
     public void addShield() {
-        this.shield++;
+        if (this.shield < this.health) {
+            this.shield++;
+        }
     }
 
     public void addExperience(int amount) {
         this.experience += amount;
+        if (this.experience > 100) {
+            this.experience = 0;
+        }
     }
+
 }

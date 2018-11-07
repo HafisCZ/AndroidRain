@@ -1,6 +1,7 @@
 package eu.mar21.rain.core.level;
 
 import android.graphics.Canvas;
+import android.graphics.Rect;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -68,7 +69,7 @@ public class Level {
     }
 
     public void draw(Canvas c) {
-        if (getPlayer() != null) {
+        if (this.mobs.size() > 0) {
             for (int i = 0; i < 8; i++) {
                 c.drawBitmap(Resources.BACKGROUND[i], (int) ((getPlayer().getCenterX() - Resources.SCREEN_WIDTH / 2) / (Resources.SCREEN_WIDTH / 8) * -Math.pow(1.55, i) - 100 / 2), 0, null);
             }
@@ -86,7 +87,7 @@ public class Level {
             m.draw(c);
         }
 
-        this.data.drawDebug(c);
+        this.data.draw(c);
     }
 
     public List<Entity> getMobs() {
@@ -136,5 +137,7 @@ public class Level {
             add(e);
         }
         buffer.clear();
+
+        this.data.tick();
     }
 }

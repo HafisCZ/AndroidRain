@@ -26,6 +26,9 @@ public class Resources {
 
     public static Bitmap PLAYER[] = new Bitmap[9];
     public static Bitmap ACID[] = new Bitmap[4];
+    public static Bitmap ICONS[] = new Bitmap[3];
+    public static Bitmap BARS[] = new Bitmap[6];
+
     public static Bitmap STAR, ENERGY, SHIELD;
 
     private static Rect RECTANGLE;
@@ -66,7 +69,27 @@ public class Resources {
 
         STAR = BitmapFactory.decodeResource(c, R.drawable.star);
         SHIELD = BitmapFactory.decodeResource(c, R.drawable.armor);
-        ENERGY = BitmapFactory.decodeResource(c, R.drawable.energy);
+        ENERGY = BitmapFactory.decodeResource(c, R.drawable.ienergy);
+
+        ICONS[0] = BitmapFactory.decodeResource(c, R.drawable.health);
+        ICONS[1] = BitmapFactory.decodeResource(c, R.drawable.experience);
+        ICONS[2] = BitmapFactory.decodeResource(c, R.drawable.energy);
+
+        BARS[0] = BitmapFactory.decodeResource(c, R.drawable.framebar);
+        BARS[1] = BitmapFactory.decodeResource(c, R.drawable.healthbar);
+        BARS[2] = BitmapFactory.decodeResource(c, R.drawable.experiencebar);
+        BARS[3] = BitmapFactory.decodeResource(c, R.drawable.armorbar);
+        BARS[4] = BitmapFactory.decodeResource(c, R.drawable.energybar0);
+        BARS[5] = BitmapFactory.decodeResource(c, R.drawable.energybar1);
+
+        for (int i = 0; i < BARS.length; i++) {
+            BARS[i] = Bitmap.createScaledBitmap(BARS[i], (int) (BARS[i].getWidth() * 0.9), (int) (BARS[i].getHeight() * 0.9), true);
+        }
+
+        for (int i = 0; i < ICONS.length; i++) {
+            ICONS[i] = Bitmap.createScaledBitmap(ICONS[i], (int) (ICONS[i].getWidth() * 0.9), (int) (ICONS[i].getHeight() * 0.9), true);
+        }
+
 
         ALPHA_ONLY = new Paint();
 

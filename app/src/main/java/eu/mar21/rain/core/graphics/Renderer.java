@@ -104,22 +104,12 @@ public class Renderer extends View {
 
     @Override
     protected void onDraw(Canvas c) {
-        long ubegin = System.currentTimeMillis();
-
         if (this.scene != null) this.scene.update(null);
         if (this.overlay != null) this.overlay.update(this.scene);
 
-        long dbegin = System.currentTimeMillis();
-
         c.drawColor(0xFF000000);
-
         if (this.scene != null) this.scene.draw(c);
         if (this.overlay != null) this.overlay.draw(c);
-
-        long end = System.currentTimeMillis();
-
-        c.drawText("U" + Long.toString(dbegin - ubegin), 10, 30, Resources.FONT);
-        c.drawText("D" + Long.toString(end - dbegin), 10, 60, Resources.FONT);
 
         processRequests();
         invalidate();

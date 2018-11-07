@@ -5,7 +5,6 @@ import android.graphics.Canvas;
 import eu.mar21.rain.core.level.Level;
 import eu.mar21.rain.core.graphics.Renderer;
 import eu.mar21.rain.core.utils.Input;
-import eu.mar21.rain.core.utils.Resources;
 
 public class Game extends Scene {
 

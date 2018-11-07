@@ -1,7 +1,5 @@
 package eu.mar21.rain.core.entity.mob;
 
-import android.util.Log;
-
 import eu.mar21.rain.core.graphics.sprite.AnimatedSprite;
 import eu.mar21.rain.core.level.Level;
 import eu.mar21.rain.core.utils.Resources;
@@ -12,12 +10,9 @@ import static eu.mar21.rain.core.utils.Input.UP;
 
 public class Player extends Mob {
 
-    public static final double WIDTH = 94;
-    public static final double HEIGHT = 130;
-
     public static final double SPEED_X_LIMIT = 20;
     public static final double SPEED_Y_LIMIT = -10;
-    public static final double SPEED_X_INCREMENT = 2.5;
+    public static final double SPEED_X_INCREMENT = 1.6;
     public static final double SPEED_Y_INCREMENT = 0.4;
     public static final double SPRITE_X_OFFSET = -8;
     public static final double SPRITE_Y_OFFSET = -2;
@@ -29,21 +24,26 @@ public class Player extends Mob {
 
     private final double speed;
     private boolean jump = true;
+    private int move = 0;
 
     public Player(double x, double y, Level level) {
-        super(x, y, WIDTH, HEIGHT, new AnimatedSprite(Resources.PLAYER, ANIMATION_DELTA, ANIMATION_FRAMEGROUP_0, ANIMATION_FRAMEGROUP_1, ANIMATION_FRAMEGROUP_2), SPRITE_X_OFFSET, SPRITE_Y_OFFSET, level);
+        super(x, y, Resources.PLAYER[0].getWidth(), Resources.PLAYER[0].getHeight(), new AnimatedSprite(Resources.PLAYER, ANIMATION_DELTA, ANIMATION_FRAMEGROUP_0, ANIMATION_FRAMEGROUP_1, ANIMATION_FRAMEGROUP_2), SPRITE_X_OFFSET, SPRITE_Y_OFFSET, level);
 
         this.speed = SPEED_X_INCREMENT;
     }
 
     @Override
     public void tick() {
+        this.move = 0;
+
         if (this.level.getInput().isHeld(RIGHT) && !this.level.getInput().isHeld(LEFT)) {
             this.dx = Math.min(this.dx + this.speed, SPEED_X_LIMIT);
+            this.move = 1;
         }
 
         if (this.level.getInput().isHeld(LEFT) && !this.level.getInput().isHeld(RIGHT)) {
             this.dx = Math.max(this.dx - this.speed, -SPEED_X_LIMIT);
+            this.move = -1;
         }
 
         if (!this.level.getInput().isHeld(LEFT) && !this.level.getInput().isHeld(RIGHT)) {
@@ -93,7 +93,7 @@ public class Player extends Mob {
         }
 
         if (this.dx != 0) {
-            ((AnimatedSprite) this.sprite).play(this.dx > 0 ? 2 : 1);
+            ((AnimatedSprite) this.sprite).play(this.move == 0 ? (this.dx > 0 ? 2 : 1) : (this.move > 0 ? 2 : 1));
         } else {
             ((AnimatedSprite) this.sprite).stop();
         }
