@@ -1,7 +1,7 @@
 package eu.mar21.rain.core.entity.particle;
 
-import eu.mar21.rain.core.level.Level;
 import eu.mar21.rain.core.entity.Entity;
+import eu.mar21.rain.core.level.Level;
 
 public abstract class Particle extends Entity {
 

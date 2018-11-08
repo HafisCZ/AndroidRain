@@ -3,7 +3,6 @@ package eu.mar21.rain.core.graphics.sprite;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
-import android.util.Log;
 
 public class Sprite {
 

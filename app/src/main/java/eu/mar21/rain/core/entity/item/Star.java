@@ -1,8 +1,8 @@
 package eu.mar21.rain.core.entity.item;
 
 import eu.mar21.rain.core.graphics.Notification;
-import eu.mar21.rain.core.level.Level;
 import eu.mar21.rain.core.graphics.sprite.Sprite;
+import eu.mar21.rain.core.level.Level;
 import eu.mar21.rain.core.utils.Resources;
 
 public class Star extends Item {

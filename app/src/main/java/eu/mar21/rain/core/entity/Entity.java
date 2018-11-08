@@ -4,9 +4,9 @@ import android.graphics.Canvas;
 
 import java.util.Random;
 
-import eu.mar21.rain.core.level.Level;
 import eu.mar21.rain.core.graphics.Drawable;
 import eu.mar21.rain.core.graphics.sprite.Sprite;
+import eu.mar21.rain.core.level.Level;
 
 public abstract class Entity implements Drawable {
 

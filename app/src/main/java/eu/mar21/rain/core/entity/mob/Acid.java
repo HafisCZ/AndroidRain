@@ -21,7 +21,7 @@ public class Acid extends Mob {
     public static final int ANIMATION_FRAMEGROUP_0[] = { 0, 1, 2, 3 };
 
     public Acid(double x, double y, double dx, double dy, Level level) {
-        super(x, y, WIDTH, HEIGHT, new AnimatedSprite(Resources.ACID, ANIMATION_DELTA, ANIMATION_FRAMEGROUP_0), SPRITE_X_OFFSET, SPRITE_Y_OFFSET, level);
+        super(x, y, WIDTH, HEIGHT, new AnimatedSprite(Resources.ACID, RANDOM.nextInt(ANIMATION_DELTA) + ANIMATION_DELTA, ANIMATION_FRAMEGROUP_0), SPRITE_X_OFFSET, SPRITE_Y_OFFSET, level);
         ((AnimatedSprite) this.sprite).play(0);
 
         this.dx = dx;

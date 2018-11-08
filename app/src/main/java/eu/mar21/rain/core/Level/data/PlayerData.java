@@ -3,6 +3,7 @@ package eu.mar21.rain.core.level.data;
 import android.graphics.Canvas;
 
 import eu.mar21.rain.core.entity.Entity;
+import eu.mar21.rain.core.graphics.Notification;
 import eu.mar21.rain.core.graphics.sprite.Sprite;
 import eu.mar21.rain.core.level.Level;
 import eu.mar21.rain.core.utils.Resources;
@@ -13,7 +14,16 @@ public class PlayerData {
     private int shield;
     private int experience;
     private int energy;
-    private int skill;
+    private int boost;
+    private int boostDuration;
+
+    private Skill skill;
+
+    private int level;
+    private int level_exp_pool;
+
+    private static final double EXP_POOL = 40 * 60;
+    private static final double EXP_POOL_MOD = 1.2;
 
     private boolean consume = false;
 
@@ -25,12 +35,20 @@ public class PlayerData {
     private final int yoffset;
     private final int xoffset;
 
-    public PlayerData() {
+    private final Level glevel;
+
+    public PlayerData(Level glevel) {
+        this.glevel = glevel;
         this.health = 5;
         this.shield = 5;
         this.energy = 0;
         this.experience = 0;
-        this.skill = 1;
+        this.skill = null;
+        this.boost = 1;
+        this.boostDuration = 0;
+
+        this.level = 1;
+        this.level_exp_pool = (int) EXP_POOL;
 
         frames[0] = new Sprite(Resources.BARS[0]);
         frames[1] = new Sprite(Resources.SKILLF);
@@ -52,11 +70,8 @@ public class PlayerData {
     }
 
     public void draw(Canvas c) {
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < (this.skill != null ? 3 : 2); i++) {
             icons[i].draw(c, xoffset - 10, 10 + yoffset * i);
-        }
-
-        for (int i = 0; i < 3; i++) {
             frames[0].draw(c, xoffset * 2, 10 + yoffset * i);
         }
 
@@ -66,20 +81,20 @@ public class PlayerData {
         bars[1].setSpan(1, this.shield);
         bars[1].draw(c, xoffset * 2, 10);
 
-        bars[2].setSpan(1, this.experience / 100);
+        bars[2].setSpan(1, (int) (100.0 * (double) this.experience / (double) this.level_exp_pool));
         bars[2].draw(c, xoffset * 2, 10 + yoffset);
 
-        if (this.consume || this.energy >= 100) {
-            bars[4].setSpan(1, this.energy);
-            bars[4].draw(c, xoffset * 2, 10 + yoffset * 2);
-        } else {
-            bars[3].setSpan(1, this.energy);
-            bars[3].draw(c, xoffset * 2, 10 + yoffset * 2);
-        }
+        if (this.skill != null) {
+            if (this.consume || this.energy >= 100) {
+                bars[4].setSpan(1, this.energy);
+                bars[4].draw(c, xoffset * 2, 10 + yoffset * 2);
+            } else {
+                bars[3].setSpan(1, this.energy);
+                bars[3].draw(c, xoffset * 2, 10 + yoffset * 2);
+            }
 
-        if (this.skill > 0) {
             frames[1].draw(c, xoffset * 2, 10 + yoffset * 3);
-            skills.selectTile(0, this.skill - 1);
+            skills.selectTile(0, this.skill.ordinal());
             skills.draw(c, xoffset * 2 + Resources.SKILLF.getWidth() / 2 - Resources.SKILL.getWidth() / 8, 10 + yoffset * 3 + Resources.SKILLF.getWidth() / 2 - Resources.SKILL.getWidth() / 8);
         }
     }
@@ -94,10 +109,38 @@ public class PlayerData {
         }
     }
 
+    public void setSkill(int ord) {
+        if (!this.consume) {
+            if (ord == 0) {
+                this.skill = null;
+            } else {
+                this.skill = Skill.values()[ord - 1];
+            }
+
+            this.energy = 0;
+        }
+    }
+
+    public void addExperienceBoost(int boost, int duration) {
+        this.boost = boost;
+        this.boostDuration = duration;
+    }
+
     public void tick() {
-        this.experience++;
-        if (this.experience > 10000) {
+        if (this.boostDuration > 0) {
+            this.boostDuration--;
+            this.experience += this.boost;
+        } else {
+            this.experience++;
+        }
+
+        if (this.experience >= this.level_exp_pool) {
             this.experience = 0;
+
+            this.level++;
+            this.level_exp_pool = (int) (EXP_POOL * Math.pow(EXP_POOL_MOD, this.level));
+
+            this.glevel.showNotification(new Notification("LEVEL UP!", "YOU REACHED LEVEL " + this.level, null));
         }
 
         if (this.consume) {
@@ -123,16 +166,20 @@ public class PlayerData {
         return this.energy;
     }
 
+    public int selectedSkill() {
+        return this.skill == null ? 0 : this.skill.ordinal() + 1;
+    }
+
     public void skill(Level level, Entity caster) {
-        if (this.skill > 0 && !this.consume && this.energy >= 100) {
-            Skill.SHOCKWAVE.applyEffect(caster.getCenterX(), caster.getCenterY(), level);
+        if (this.skill != null && !this.consume && this.energy >= 100) {
+            this.skill.applyEffect(caster.getCenterX(), caster.getCenterY(), level);
             this.consume = true;
         }
     }
 
     public void addEnergy(int amount) {
-        if (!this.consume) {
-            this.energy += amount * 5;
+        if (!this.consume && this.skill != null) {
+            this.energy += amount * this.skill.getRateMultiplier();
             if (this.energy >= 100) {
                 this.energy = 100;
             }
@@ -147,9 +194,6 @@ public class PlayerData {
 
     public void addExperience(int amount) {
         this.experience += amount;
-        if (this.experience > 10000) {
-            this.experience = 0;
-        }
     }
 
 }

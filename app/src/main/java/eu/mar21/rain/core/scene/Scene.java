@@ -1,6 +1,5 @@
 package eu.mar21.rain.core.scene;
 
-import android.graphics.Canvas;
 import android.view.GestureDetector;
 
 import eu.mar21.rain.core.graphics.Drawable;

@@ -11,9 +11,12 @@ import eu.mar21.rain.core.scene.Game;
 import eu.mar21.rain.core.scene.Intro;
 import eu.mar21.rain.core.utils.Resources;
 
+@SuppressWarnings("unchecked")
 public class Application extends Activity {
 
     private Renderer renderer = null;
+
+    public static Thread LOADER_THREAD = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,14 +34,19 @@ public class Application extends Activity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         Resources.preload(getResources());
-        Resources.loadAll(getResources(), getWindowManager());
 
         this.renderer = new Renderer(this);
         setContentView(this.renderer);
 
         this.renderer.registerScene(Intro.class);
-        this.renderer.registerScene(Game.class);
-
         this.renderer.requestScene(Intro.class);
+
+        LOADER_THREAD = new Thread(() -> {
+            Resources.loadAll(getResources(), getWindowManager());
+            this.renderer.registerScene(Game.class);
+            this.renderer.requestScene(Game.class);
+        });
+
+        LOADER_THREAD.start();
     }
 }

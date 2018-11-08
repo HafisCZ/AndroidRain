@@ -1,13 +1,11 @@
 package eu.mar21.rain.core.entity.mob;
 
+import eu.mar21.rain.core.graphics.Notification;
 import eu.mar21.rain.core.graphics.sprite.AnimatedSprite;
 import eu.mar21.rain.core.level.Level;
+import eu.mar21.rain.core.level.data.Skill;
+import eu.mar21.rain.core.utils.Input;
 import eu.mar21.rain.core.utils.Resources;
-
-import static eu.mar21.rain.core.utils.Input.LEFT;
-import static eu.mar21.rain.core.utils.Input.RIGHT;
-import static eu.mar21.rain.core.utils.Input.SKILL;
-import static eu.mar21.rain.core.utils.Input.UP;
 
 public class Player extends Mob {
 
@@ -37,17 +35,17 @@ public class Player extends Mob {
     public void tick() {
         this.move = 0;
 
-        if (this.level.getInput().isHeld(RIGHT) && !this.level.getInput().isHeld(LEFT)) {
+        if (this.level.getInput().held(Input.ZONE.FOURTH_ROW_R) && !this.level.getInput().held(Input.ZONE.FOURTH_ROW_L)) {
             this.dx = Math.min(this.dx + this.speed, SPEED_X_LIMIT);
             this.move = 1;
         }
 
-        if (this.level.getInput().isHeld(LEFT) && !this.level.getInput().isHeld(RIGHT)) {
+        if (this.level.getInput().held(Input.ZONE.FOURTH_ROW_L) && !this.level.getInput().held(Input.ZONE.FOURTH_ROW_R)) {
             this.dx = Math.max(this.dx - this.speed, -SPEED_X_LIMIT);
             this.move = -1;
         }
 
-        if (!this.level.getInput().isHeld(LEFT) && !this.level.getInput().isHeld(RIGHT)) {
+        if (!this.level.getInput().held(Input.ZONE.FOURTH_ROW_L) && !this.level.getInput().held(Input.ZONE.FOURTH_ROW_R)) {
             if (this.dx > 0) {
                 this.dx = Math.max(this.dx - this.speed, 0);
             } else if (this.dx < 0) {
@@ -55,15 +53,24 @@ public class Player extends Mob {
             }
         }
 
-        if (this.level.getInput().isHeld(UP)) {
+        if (this.level.getInput().held(Input.ZONE.THIRD_ROW)) {
             if (!this.jump) {
                 this.jump = true;
                 this.dy = SPEED_Y_LIMIT;
             }
         }
 
-        if (this.level.getInput().isHeld(SKILL)) {
+        if (this.level.getInput().pressed(Input.ZONE.LEFT_UP_QUAD)) {
             this.level.getData().skill(this.level, this);
+        }
+
+        if (this.level.getInput().pressed(Input.ZONE.RIGHT_UP_QUAD)) {
+            if (this.level.getData().selectedSkill() >= 3) {
+                this.level.getData().setSkill(0);
+            } else {
+                this.level.getData().setSkill(this.level.getData().selectedSkill() + 1);
+                this.level.showNotification(new Notification("SKILL SELECTED", Skill.values()[this.level.getData().selectedSkill() - 1].name(), null));
+            }
         }
 
         this.x += this.dx;

@@ -1,12 +1,8 @@
 package eu.mar21.rain.core.graphics;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.util.AttributeSet;
 import android.util.Log;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
 import android.view.View;
 
 import java.lang.reflect.InvocationTargetException;
@@ -14,7 +10,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import eu.mar21.rain.core.scene.Scene;
-import eu.mar21.rain.core.utils.Resources;
 
 @SuppressWarnings("unused")
 public class Renderer extends View {

@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
 
@@ -17,7 +16,7 @@ public class Resources {
     public static Bitmap LOGO;
 
     public static Paint FONT;
-    public static Paint ALPHA_ONLY;
+    public static Paint ALPHA_ONLY = new Paint();
 
     public static double SCREEN_WIDTH;
     public static double SCREEN_HEIGHT;
@@ -31,13 +30,6 @@ public class Resources {
     public static Bitmap SKILLF, SKILL;
 
     public static Bitmap STAR, ENERGY, SHIELD;
-
-    private static Rect RECTANGLE;
-
-    public static Rect RECTANGLE(double x, double y, double w, double h) {
-        RECTANGLE.set((int) x, (int) y, (int) (x + w), (int) (y + h));
-        return RECTANGLE;
-    }
 
     public static void preload(android.content.res.Resources c) {
         LOGO = BitmapFactory.decodeResource(c, R.drawable.logo);
@@ -93,11 +85,6 @@ public class Resources {
         for (int i = 0; i < ICONS.length; i++) {
             ICONS[i] = Bitmap.createScaledBitmap(ICONS[i], (int) (ICONS[i].getWidth() * 0.9), (int) (ICONS[i].getHeight() * 0.9), true);
         }
-
-
-        ALPHA_ONLY = new Paint();
-
-        RECTANGLE = new Rect();
 
         DONE = true;
     }

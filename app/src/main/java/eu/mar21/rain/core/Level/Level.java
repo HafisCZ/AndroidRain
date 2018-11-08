@@ -1,18 +1,12 @@
 package eu.mar21.rain.core.level;
 
 import android.graphics.Canvas;
-import android.graphics.Rect;
-import android.support.annotation.NonNull;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import java.util.Stack;
 
 import eu.mar21.rain.core.entity.Entity;
 import eu.mar21.rain.core.entity.item.Item;
@@ -26,7 +20,6 @@ import eu.mar21.rain.core.entity.spawner.RainSpawner;
 import eu.mar21.rain.core.entity.spawner.Spawner;
 import eu.mar21.rain.core.entity.spawner.StarSpawner;
 import eu.mar21.rain.core.graphics.Notification;
-import eu.mar21.rain.core.graphics.Renderer;
 import eu.mar21.rain.core.level.data.PlayerData;
 import eu.mar21.rain.core.utils.Input;
 import eu.mar21.rain.core.utils.Resources;
@@ -61,7 +54,7 @@ public class Level {
             }
         }
 
-        this.data = new PlayerData();
+        this.data = new PlayerData(this);
         this.mobs.add(new Player((Resources.SCREEN_WIDTH - Resources.PLAYER[0].getWidth()) / 2, Resources.SCREEN_HEIGHT, this));
 
         this.spawners.add(new AcidSpawner(0, -50, Resources.SCREEN_WIDTH, 0, this, 20, 5, 2));
@@ -69,6 +62,7 @@ public class Level {
         this.spawners.add(new EnergySpawner(0, -50, Resources.SCREEN_WIDTH, 0, this, 60, 60, 1));
         this.spawners.add(new StarSpawner(0, -50, Resources.SCREEN_WIDTH, 0, this, 20 * 60, 0, 1));
 
+        this.notifications.clear();
         showNotification(new Notification("NEW GAME", null, null));
     }
 
