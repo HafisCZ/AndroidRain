@@ -6,6 +6,7 @@ import eu.mar21.rain.core.utils.Resources;
 
 import static eu.mar21.rain.core.utils.Input.LEFT;
 import static eu.mar21.rain.core.utils.Input.RIGHT;
+import static eu.mar21.rain.core.utils.Input.SKILL;
 import static eu.mar21.rain.core.utils.Input.UP;
 
 public class Player extends Mob {
@@ -61,11 +62,9 @@ public class Player extends Mob {
             }
         }
 
-        /*
-        if (this.level.getInput().isPressed(0, 0, 20, 20)) {
-            this.level.getData().skill(this.level);
+        if (this.level.getInput().isHeld(SKILL)) {
+            this.level.getData().skill(this.level, this);
         }
-        */
 
         this.x += this.dx;
         this.y += this.dy;

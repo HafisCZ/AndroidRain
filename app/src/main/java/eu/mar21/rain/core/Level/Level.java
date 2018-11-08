@@ -36,8 +36,22 @@ public class Level {
     public Level(Input input) {
         this.spawners.add(new RainSpawner(0, -20, Resources.SCREEN_WIDTH, 0, this, 1, 0, 5));
         this.input = input;
-        this.data = new PlayerData();
 
+
+        reset();
+    }
+
+    private void reset() {
+        this.buffer.clear();
+        this.mobs.clear();
+        this.spawners.subList(1, this.spawners.size()).clear();
+        for (Object e : this.particles.toArray()) {
+            if (((Entity) e).isDead()) {
+                this.particles.remove(e);
+            }
+        }
+
+        this.data = new PlayerData();
         this.mobs.add(new Player((Resources.SCREEN_WIDTH - Resources.PLAYER[0].getWidth()) / 2, Resources.SCREEN_HEIGHT, this));
 
         this.spawners.add(new AcidSpawner(0, -50, Resources.SCREEN_WIDTH, 0, this, 20, 5, 2));
@@ -139,5 +153,9 @@ public class Level {
         buffer.clear();
 
         this.data.tick();
+
+        if (this.data.getHealth() <= 0) {
+            reset();
+        }
     }
 }

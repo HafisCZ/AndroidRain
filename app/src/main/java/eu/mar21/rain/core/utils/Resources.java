@@ -28,6 +28,7 @@ public class Resources {
     public static Bitmap ACID[] = new Bitmap[4];
     public static Bitmap ICONS[] = new Bitmap[3];
     public static Bitmap BARS[] = new Bitmap[6];
+    public static Bitmap SKILLF, SKILL;
 
     public static Bitmap STAR, ENERGY, SHIELD;
 
@@ -66,6 +67,9 @@ public class Resources {
         for (int i = 0; i < 4; i++) {
             ACID[i] = BitmapFactory.decodeResource(c, R.drawable.acid0 + i);
         }
+
+        SKILLF = BitmapFactory.decodeResource(c, R.drawable.frame);
+        SKILL = BitmapFactory.decodeResource(c, R.drawable.ability);
 
         STAR = BitmapFactory.decodeResource(c, R.drawable.star);
         SHIELD = BitmapFactory.decodeResource(c, R.drawable.armor);

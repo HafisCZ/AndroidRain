@@ -31,6 +31,7 @@ public class Input implements View.OnTouchListener {
     public static final int UP = 1;
     public static final int LEFT = 2;
     public static final int RIGHT = 3;
+    public static final int SKILL = 4;
 
     public boolean isHeld(int action) {
         switch (action) {
@@ -40,6 +41,8 @@ public class Input implements View.OnTouchListener {
                 return isInside(0, 3 * Resources.SCREEN_HEIGHT / 4, Resources.SCREEN_WIDTH / 2, Resources.SCREEN_HEIGHT);
             case RIGHT:
                 return isInside(Resources.SCREEN_WIDTH / 2, 3 * Resources.SCREEN_HEIGHT / 4, Resources.SCREEN_WIDTH, Resources.SCREEN_HEIGHT);
+            case SKILL:
+                return isInside(0, 0, 200, 200);
             default: return false;
         }
     }

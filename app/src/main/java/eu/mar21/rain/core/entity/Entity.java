@@ -38,8 +38,8 @@ public abstract class Entity implements Drawable {
         this.height = height;
 
         this.sprite = sprite;
-        this.xOffset = xOffset;
-        this.yOffset = yOffset;
+        this.xOffset = 0;//xOffset;
+        this.yOffset = 0;//yOffset;
 
         this.level = level;
     }
@@ -47,7 +47,7 @@ public abstract class Entity implements Drawable {
     @Override
     public void draw(Canvas c) {
         if (this.sprite != null) {
-            this.sprite.draw(c, (int) (this.x + this.xOffset), (int)(this.y + this.yOffset));
+            this.sprite.draw(c, (int) (this.x), (int)(this.y));
         }
     }
 

@@ -2,6 +2,7 @@ package eu.mar21.rain.core.level.data;
 
 import android.graphics.Canvas;
 
+import eu.mar21.rain.core.entity.Entity;
 import eu.mar21.rain.core.graphics.sprite.Sprite;
 import eu.mar21.rain.core.level.Level;
 import eu.mar21.rain.core.utils.Resources;
@@ -12,12 +13,15 @@ public class PlayerData {
     private int shield;
     private int experience;
     private int energy;
+    private int skill;
 
     private boolean consume = false;
 
     private final Sprite icons[] = new Sprite[3];
-    private final Sprite frames[] = new Sprite[1];
+    private final Sprite frames[] = new Sprite[2];
     private final Sprite bars[] = new Sprite[5];
+    private final Sprite skills;
+
     private final int yoffset;
     private final int xoffset;
 
@@ -26,8 +30,12 @@ public class PlayerData {
         this.shield = 5;
         this.energy = 0;
         this.experience = 0;
+        this.skill = 1;
 
         frames[0] = new Sprite(Resources.BARS[0]);
+        frames[1] = new Sprite(Resources.SKILLF);
+
+        skills = new Sprite(Resources.SKILL, 1, 4);
 
         for (int i = 0; i < 3; i++) {
             icons[i] = new Sprite(Resources.ICONS[i]);
@@ -45,7 +53,7 @@ public class PlayerData {
 
     public void draw(Canvas c) {
         for (int i = 0; i < 3; i++) {
-            icons[i].draw(c, xoffset, 10 + yoffset * i);
+            icons[i].draw(c, xoffset - 10, 10 + yoffset * i);
         }
 
         for (int i = 0; i < 3; i++) {
@@ -58,15 +66,21 @@ public class PlayerData {
         bars[1].setSpan(1, this.shield);
         bars[1].draw(c, xoffset * 2, 10);
 
-        bars[2].setSpan(1, this.experience);
+        bars[2].setSpan(1, this.experience / 100);
         bars[2].draw(c, xoffset * 2, 10 + yoffset);
 
-        if (this.consume) {
+        if (this.consume || this.energy >= 100) {
             bars[4].setSpan(1, this.energy);
             bars[4].draw(c, xoffset * 2, 10 + yoffset * 2);
         } else {
             bars[3].setSpan(1, this.energy);
             bars[3].draw(c, xoffset * 2, 10 + yoffset * 2);
+        }
+
+        if (this.skill > 0) {
+            frames[1].draw(c, xoffset * 2, 10 + yoffset * 3);
+            skills.selectTile(0, this.skill - 1);
+            skills.draw(c, xoffset * 2 + Resources.SKILLF.getWidth() / 2 - Resources.SKILL.getWidth() / 8, 10 + yoffset * 3 + Resources.SKILLF.getWidth() / 2 - Resources.SKILL.getWidth() / 8);
         }
     }
 
@@ -82,7 +96,7 @@ public class PlayerData {
 
     public void tick() {
         this.experience++;
-        if (this.experience > 100) {
+        if (this.experience > 10000) {
             this.experience = 0;
         }
 
@@ -109,16 +123,18 @@ public class PlayerData {
         return this.energy;
     }
 
-    public void skill(Level level) {
-
+    public void skill(Level level, Entity caster) {
+        if (this.skill > 0 && !this.consume && this.energy >= 100) {
+            Skill.SHOCKWAVE.applyEffect(caster.getCenterX(), caster.getCenterY(), level);
+            this.consume = true;
+        }
     }
 
     public void addEnergy(int amount) {
         if (!this.consume) {
-            this.energy += amount * 2;
-            if (this.energy > 100) {
+            this.energy += amount * 5;
+            if (this.energy >= 100) {
                 this.energy = 100;
-                this.consume = true;
             }
         }
     }
@@ -131,7 +147,7 @@ public class PlayerData {
 
     public void addExperience(int amount) {
         this.experience += amount;
-        if (this.experience > 100) {
+        if (this.experience > 10000) {
             this.experience = 0;
         }
     }
