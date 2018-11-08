@@ -1,5 +1,6 @@
 package eu.mar21.rain.core.utils;
 
+import android.graphics.Canvas;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -45,6 +46,10 @@ public class Input implements View.OnTouchListener {
                 return isInside(0, 0, 200, 200);
             default: return false;
         }
+    }
+
+    public void drawZones(Canvas c) {
+        // draw control zones
     }
 
     private boolean isInside(double x, double y, double w, double h) {

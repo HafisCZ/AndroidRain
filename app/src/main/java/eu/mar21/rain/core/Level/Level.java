@@ -2,10 +2,17 @@ package eu.mar21.rain.core.level;
 
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.support.annotation.NonNull;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
+import java.util.Stack;
 
 import eu.mar21.rain.core.entity.Entity;
 import eu.mar21.rain.core.entity.item.Item;
@@ -18,6 +25,8 @@ import eu.mar21.rain.core.entity.spawner.EnergySpawner;
 import eu.mar21.rain.core.entity.spawner.RainSpawner;
 import eu.mar21.rain.core.entity.spawner.Spawner;
 import eu.mar21.rain.core.entity.spawner.StarSpawner;
+import eu.mar21.rain.core.graphics.Notification;
+import eu.mar21.rain.core.graphics.Renderer;
 import eu.mar21.rain.core.level.data.PlayerData;
 import eu.mar21.rain.core.utils.Input;
 import eu.mar21.rain.core.utils.Resources;
@@ -33,15 +42,16 @@ public class Level {
     private Input input;
     private PlayerData data;
 
+    private Queue<Notification> notifications;
+
     public Level(Input input) {
         this.spawners.add(new RainSpawner(0, -20, Resources.SCREEN_WIDTH, 0, this, 1, 0, 5));
         this.input = input;
 
-
-        reset();
+        this.notifications = new LinkedList<>();
     }
 
-    private void reset() {
+    public void reset() {
         this.buffer.clear();
         this.mobs.clear();
         this.spawners.subList(1, this.spawners.size()).clear();
@@ -58,6 +68,8 @@ public class Level {
         this.spawners.add(new ArmorSpawner(0, -50, Resources.SCREEN_WIDTH, 0, this, (60 * 60) >> 1, 10 * 60, 1));
         this.spawners.add(new EnergySpawner(0, -50, Resources.SCREEN_WIDTH, 0, this, 60, 60, 1));
         this.spawners.add(new StarSpawner(0, -50, Resources.SCREEN_WIDTH, 0, this, 20 * 60, 0, 1));
+
+        showNotification(new Notification("NEW GAME", null, null));
     }
 
     public void add(Entity e) {
@@ -68,6 +80,10 @@ public class Level {
         } else if (e instanceof Spawner) {
             this.spawners.add((Spawner) e);
         }
+    }
+
+    public void showNotification(Notification notification) {
+        this.notifications.add(notification);
     }
 
     public void addLater(Entity e) {
@@ -101,7 +117,13 @@ public class Level {
             m.draw(c);
         }
 
-        this.data.draw(c);
+        if (this.mobs.size() > 0) {
+            this.data.draw(c);
+        }
+
+        if (!this.notifications.isEmpty()) {
+            this.notifications.peek().draw(c);
+        }
     }
 
     public List<Entity> getMobs() {
@@ -152,10 +174,19 @@ public class Level {
         }
         buffer.clear();
 
-        this.data.tick();
+        if (this.mobs.size() > 0) {
+            this.data.tick();
 
-        if (this.data.getHealth() <= 0) {
-            reset();
+            if (this.data.getHealth() <= 0) {
+                reset();
+            }
+        }
+
+        if (!this.notifications.isEmpty()) {
+            this.notifications.peek().update();
+            if (this.notifications.peek().isDead()) {
+                this.notifications.remove();
+            }
         }
     }
 }

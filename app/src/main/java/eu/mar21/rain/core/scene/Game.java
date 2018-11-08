@@ -32,7 +32,7 @@ public class Game extends Scene {
     }
 
     public void begin() {
-
+        this.level.reset();
     }
 
     public void end() {
