@@ -172,6 +172,7 @@ public class Level {
             this.data.tick();
 
             if (this.data.getHealth() <= 0) {
+                this.data.save();
                 this.exit = true;
             }
         }

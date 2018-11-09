@@ -3,6 +3,8 @@ package eu.mar21.rain.core.scene.menu;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.support.annotation.NonNull;
+import android.util.Log;
 
 import eu.mar21.rain.core.graphics.Renderer;
 import eu.mar21.rain.core.scene.Game;
@@ -15,7 +17,7 @@ public class Menu extends Scene {
     private static final Paint BACKGROUND = new Paint();
     private static final Paint FONT = new Paint();
     static {
-        BACKGROUND.setColor(0x108FBC8F);
+        BACKGROUND.setColor(0x0F8FBC8F);
         FONT.setColor(0xA4FFFFFF);
         FONT.setTextSize(50);
         FONT.setTypeface(Typeface.MONOSPACE);
@@ -44,6 +46,10 @@ public class Menu extends Scene {
         c.drawText(text, this.rx / 3, this.sh + row * (this.bh + 10) + 50 + 25, FONT);
     }
 
+    private boolean isButtonDown(int row) {
+        return this.input.inside(this.lx, this.sh + row * this.bh + 10 * row, this.rx, this.sh + (row + 1) * this.bh + 10 * row);
+    }
+
     @Override
     public void draw(Canvas c) {
         for (int i = 0; i < Resources.BACKGROUND.length; i++) {
@@ -52,14 +58,31 @@ public class Menu extends Scene {
 
         drawButton(c, "PLAY", 0);
         drawButton(c, "UPGRADES", 1);
-        drawButton(c, "SETTINGS", 2);
-        drawButton(c, "EXIT", 3);
+        drawButton(c, "STATISTICS", 2);
+        drawButton(c, "SETTINGS", 3);
+        drawButton(c, "EXIT", 4);
     }
 
     @Override
     public void update(Scene s) {
-        if (this.input.pressed(Input.ZONE.FIRST_ROW)) {
+        if (isButtonDown(0)) {
             this.renderer.requestScene(Game.class);
+        }
+
+        if (isButtonDown(1)) {
+
+        }
+
+        if (isButtonDown(2)) {
+
+        }
+
+        if (isButtonDown(3)) {
+
+        }
+
+        if (isButtonDown(4)) {
+            this.renderer.getParentActivity().finish();
         }
     }
 

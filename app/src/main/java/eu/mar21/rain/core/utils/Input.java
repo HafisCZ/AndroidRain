@@ -70,12 +70,25 @@ public class Input implements View.OnTouchListener {
 
     }
 
+    public boolean inside(int x, int y, int w, int h) {
+        boolean is = false;
+        for (int i = 0; i < 5; i++) {
+            if (this.presses[i][0] != null) {
+                is |= (this.presses[i][0] > x && this.presses[i][0] < w && this.presses[i][1] > y && this.presses[i][1] < h);
+            }
+        }
+
+        for (int i = 0; i < 5 && is; i++) {
+            this.presses[i][0] = this.presses[i][1] = null;
+        }
+
+        return is;
+    }
+
     private boolean inside(ZONE zone) {
         boolean is = false;
         for (int i = 0; i < 5; i++) {
-            if (this.presses[i][0] == null) {
-                continue;
-            } else {
+            if (this.presses[i][0] != null) {
                 is |= zone.inside(this.presses[i][0], this.presses[i][1]);
             }
         }

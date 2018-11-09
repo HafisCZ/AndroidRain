@@ -9,6 +9,7 @@ import eu.mar21.rain.core.entity.Entity;
 import eu.mar21.rain.core.graphics.Notification;
 import eu.mar21.rain.core.graphics.sprite.Sprite;
 import eu.mar21.rain.core.level.Level;
+import eu.mar21.rain.core.utils.DataStorage;
 import eu.mar21.rain.core.utils.Resources;
 
 public class PlayerData {
@@ -51,17 +52,21 @@ public class PlayerData {
 
     public PlayerData(Level glevel) {
         this.glevel = glevel;
-        this.health = 5;
-        this.shield = 5;
+
+        this.health = DataStorage.INSTANCE.get("max_health", 5);
+        this.shield = DataStorage.INSTANCE.get("max_shield", 5);
+
         this.energy = 0;
         this.experience = 0;
         this.skill = null;
-        this.score = 0;
+
+        this.score = DataStorage.INSTANCE.get("score", 5);
+
         this.boost = 1;
         this.boostDuration = 0;
 
-        this.level = 1;
-        this.level_exp_pool = (int) EXP_POOL;
+        this.level = DataStorage.INSTANCE.get("level", 1);
+        this.level_exp_pool = (int) (EXP_POOL * Math.pow(EXP_POOL_MOD, this.level));
 
         frames[0] = new Sprite(Resources.BARS[0]);
         frames[1] = new Sprite(Resources.SKILLF);
@@ -80,6 +85,11 @@ public class PlayerData {
 
         this.yoffset = Resources.BARS[0].getHeight() + 5;
         this.xoffset = Resources.ICONS[0].getWidth();
+    }
+
+    public void save() {
+        DataStorage.INSTANCE.set("score", this.score);
+        DataStorage.INSTANCE.set("level", this.level);
     }
 
     public void draw(Canvas c) {

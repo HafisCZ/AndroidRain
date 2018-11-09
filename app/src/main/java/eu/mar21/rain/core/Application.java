@@ -10,6 +10,7 @@ import eu.mar21.rain.core.graphics.Renderer;
 import eu.mar21.rain.core.scene.Game;
 import eu.mar21.rain.core.scene.Intro;
 import eu.mar21.rain.core.scene.menu.Menu;
+import eu.mar21.rain.core.utils.DataStorage;
 import eu.mar21.rain.core.utils.Resources;
 
 @SuppressWarnings("unchecked")
@@ -44,6 +45,8 @@ public class Application extends Activity {
 
         LOADER_THREAD = new Thread(() -> {
             Resources.loadAll(getResources(), getWindowManager());
+            DataStorage.init(this);
+
             this.renderer.registerScene(Game.class);
             this.renderer.registerScene(Menu.class);
             this.renderer.requestScene(Menu.class);

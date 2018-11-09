@@ -1,5 +1,6 @@
 package eu.mar21.rain.core.graphics;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.Log;
@@ -23,12 +24,20 @@ public class Renderer extends View {
     private Class<? extends Scene> requestedOverlay;
     private Class<? extends Scene> requestedScene;
 
+    private Activity activity;
+
     private final Map<Class<? extends Scene>, Object> scenes = new HashMap<>();
 
     private FrameCounter meter = new FrameCounter();
 
-    public Renderer(Context context) {
-        super(context);
+    public Renderer(Activity activity) {
+        super(activity);
+
+        this.activity = activity;
+    }
+
+    public Activity getParentActivity() {
+        return this.activity;
     }
 
     public Scene getActiveScene() {
