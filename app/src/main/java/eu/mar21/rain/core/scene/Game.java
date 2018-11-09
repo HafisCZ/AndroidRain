@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 
 import eu.mar21.rain.core.graphics.Renderer;
 import eu.mar21.rain.core.level.Level;
+import eu.mar21.rain.core.scene.menu.Menu;
 import eu.mar21.rain.core.utils.Input;
 
 public class Game extends Scene {
@@ -20,6 +21,11 @@ public class Game extends Scene {
 
     public void update(Scene s) {
         this.level.tick();
+
+        if (this.level.isExiting()) {
+            this.level.reset();
+            this.renderer.requestScene(Menu.class);
+        }
     }
 
     public void draw(Canvas c) {
@@ -36,6 +42,10 @@ public class Game extends Scene {
     }
 
     public void end() {
+
+    }
+
+    public void init() {
 
     }
 

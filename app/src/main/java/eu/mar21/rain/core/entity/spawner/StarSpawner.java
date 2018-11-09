@@ -2,11 +2,12 @@ package eu.mar21.rain.core.entity.spawner;
 
 import eu.mar21.rain.core.entity.item.Star;
 import eu.mar21.rain.core.level.Level;
+import eu.mar21.rain.core.utils.Resources;
 
 public class StarSpawner extends Spawner {
 
     public StarSpawner(double x, double y, double width, double height, Level level, int rate, int variation, int count) {
-        super(x, y, width, height, level, rate, variation, count);
+        super(x, y, width - Resources.STAR.getWidth(), height, level, rate, variation, count);
     }
 
     @Override

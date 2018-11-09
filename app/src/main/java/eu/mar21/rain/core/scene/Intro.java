@@ -22,12 +22,7 @@ public class Intro extends Scene {
             this.alpha -= 4;
             if (this.alpha < 0) {
                 this.alpha = 0;
-
-                if (Resources.DONE){
-                    renderer.requestScene(Game.class);
-                } else {
-                    this.fadeOut = false;
-                }
+                this.fadeOut = false;
             }
         } else {
             this.alpha += 2;
@@ -37,6 +32,11 @@ public class Intro extends Scene {
 
             }
         }
+    }
+
+    @Override
+    public void init() {
+
     }
 
     @Override

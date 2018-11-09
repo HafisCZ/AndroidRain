@@ -1,6 +1,9 @@
 package eu.mar21.rain.core.level.data;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Typeface;
 
 import eu.mar21.rain.core.entity.Entity;
 import eu.mar21.rain.core.graphics.Notification;
@@ -16,6 +19,7 @@ public class PlayerData {
     private int energy;
     private int boost;
     private int boostDuration;
+    private int score;
 
     private Skill skill;
 
@@ -25,7 +29,15 @@ public class PlayerData {
     private static final double EXP_POOL = 40 * 60;
     private static final double EXP_POOL_MOD = 1.2;
 
-    private boolean consume = false;
+    private static final Paint FONT_TEXT = new Paint();
+    static {
+        FONT_TEXT.setTextAlign(Paint.Align.CENTER);
+        FONT_TEXT.setTextSize(20);
+        FONT_TEXT.setTypeface(Typeface.MONOSPACE);
+        FONT_TEXT.setColor(Color.YELLOW);
+    }
+
+    private int burnout = 0;
 
     private final Sprite icons[] = new Sprite[3];
     private final Sprite frames[] = new Sprite[2];
@@ -44,6 +56,7 @@ public class PlayerData {
         this.energy = 0;
         this.experience = 0;
         this.skill = null;
+        this.score = 0;
         this.boost = 1;
         this.boostDuration = 0;
 
@@ -70,6 +83,8 @@ public class PlayerData {
     }
 
     public void draw(Canvas c) {
+        c.drawText("" + (this.score / 60), c.getWidth() / 2, 30, FONT_TEXT);
+
         for (int i = 0; i < (this.skill != null ? 3 : 2); i++) {
             icons[i].draw(c, xoffset - 10, 10 + yoffset * i);
             frames[0].draw(c, xoffset * 2, 10 + yoffset * i);
@@ -85,8 +100,8 @@ public class PlayerData {
         bars[2].draw(c, xoffset * 2, 10 + yoffset);
 
         if (this.skill != null) {
-            if (this.consume || this.energy >= 100) {
-                bars[4].setSpan(1, this.energy);
+            if (this.burnout > 0) {
+                bars[4].setSpan(1, (int) (100.0 * (double) this.burnout / (double) this.skill.getDuration()));
                 bars[4].draw(c, xoffset * 2, 10 + yoffset * 2);
             } else {
                 bars[3].setSpan(1, this.energy);
@@ -110,7 +125,7 @@ public class PlayerData {
     }
 
     public void setSkill(int ord) {
-        if (!this.consume) {
+        if (this.burnout <= 0) {
             if (ord == 0) {
                 this.skill = null;
             } else {
@@ -124,9 +139,13 @@ public class PlayerData {
     public void addExperienceBoost(int boost, int duration) {
         this.boost = boost;
         this.boostDuration = duration;
+
+        this.score += 100 * 60;
     }
 
     public void tick() {
+        this.score += 5;
+
         if (this.boostDuration > 0) {
             this.boostDuration--;
             this.experience += this.boost;
@@ -143,10 +162,8 @@ public class PlayerData {
             this.glevel.showNotification(new Notification("LEVEL UP!", "YOU REACHED LEVEL " + this.level, null));
         }
 
-        if (this.consume) {
-            if (--this.energy < 1) {
-                this.consume = false;
-            }
+        if (this.burnout > 0) {
+            this.burnout--;
         }
     }
 
@@ -171,25 +188,30 @@ public class PlayerData {
     }
 
     public void skill(Level level, Entity caster) {
-        if (this.skill != null && !this.consume && this.energy >= 100) {
+        if (this.skill != null && this.burnout <= 0 && this.energy >= 100) {
             this.skill.applyEffect(caster.getCenterX(), caster.getCenterY(), level);
-            this.consume = true;
+            this.burnout = this.skill.getDuration();
+            this.energy = 0;
         }
     }
 
     public void addEnergy(int amount) {
-        if (!this.consume && this.skill != null) {
+        if (this.burnout <= 0 && this.skill != null) {
             this.energy += amount * this.skill.getRateMultiplier();
             if (this.energy >= 100) {
                 this.energy = 100;
             }
         }
+
+        this.score += 25 * 60;
     }
 
     public void addShield() {
         if (this.shield < this.health) {
             this.shield++;
         }
+
+        this.score += 100 * 60;
     }
 
     public void addExperience(int amount) {

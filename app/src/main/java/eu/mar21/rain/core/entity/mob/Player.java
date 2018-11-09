@@ -13,8 +13,6 @@ public class Player extends Mob {
     public static final double SPEED_Y_LIMIT = -10;
     public static final double SPEED_X_INCREMENT = 1.6;
     public static final double SPEED_Y_INCREMENT = 0.4;
-    public static final double SPRITE_X_OFFSET = -8;
-    public static final double SPRITE_Y_OFFSET = -2;
 
     public static final int ANIMATION_DELTA = 8;
     public static final int ANIMATION_FRAMEGROUP_0[] = { 0 };
@@ -23,26 +21,25 @@ public class Player extends Mob {
 
     private final double speed;
     private boolean jump = true;
-    private int move = 0;
 
     public Player(double x, double y, Level level) {
-        super(x, y, Resources.PLAYER[0].getWidth(), Resources.PLAYER[0].getHeight(), new AnimatedSprite(Resources.PLAYER, ANIMATION_DELTA, ANIMATION_FRAMEGROUP_0, ANIMATION_FRAMEGROUP_1, ANIMATION_FRAMEGROUP_2), SPRITE_X_OFFSET, SPRITE_Y_OFFSET, level);
+        super(x, y, Resources.PLAYER[0].getWidth(), Resources.PLAYER[0].getHeight(), new AnimatedSprite(Resources.PLAYER, ANIMATION_DELTA, ANIMATION_FRAMEGROUP_0, ANIMATION_FRAMEGROUP_1, ANIMATION_FRAMEGROUP_2), 0, 0, level);
 
         this.speed = SPEED_X_INCREMENT;
     }
 
     @Override
     public void tick() {
-        this.move = 0;
+        int move = 0;
 
         if (this.level.getInput().held(Input.ZONE.FOURTH_ROW_R) && !this.level.getInput().held(Input.ZONE.FOURTH_ROW_L)) {
             this.dx = Math.min(this.dx + this.speed, SPEED_X_LIMIT);
-            this.move = 1;
+            move = 1;
         }
 
         if (this.level.getInput().held(Input.ZONE.FOURTH_ROW_L) && !this.level.getInput().held(Input.ZONE.FOURTH_ROW_R)) {
             this.dx = Math.max(this.dx - this.speed, -SPEED_X_LIMIT);
-            this.move = -1;
+            move = -1;
         }
 
         if (!this.level.getInput().held(Input.ZONE.FOURTH_ROW_L) && !this.level.getInput().held(Input.ZONE.FOURTH_ROW_R)) {
@@ -99,7 +96,7 @@ public class Player extends Mob {
         }
 
         if (this.dx != 0) {
-            ((AnimatedSprite) this.sprite).play(this.move == 0 ? (this.dx > 0 ? 2 : 1) : (this.move > 0 ? 2 : 1));
+            ((AnimatedSprite) this.sprite).play(move == 0 ? (this.dx > 0 ? 2 : 1) : (move > 0 ? 2 : 1));
         } else {
             ((AnimatedSprite) this.sprite).stop();
         }

@@ -16,6 +16,7 @@ public abstract class Scene extends GestureDetector.SimpleOnGestureListener impl
 
     public abstract void update(Scene s);
 
+    public abstract void init();
     public abstract void begin();
     public abstract void end();
 

@@ -4,9 +4,11 @@ import android.graphics.Canvas;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.stream.Collectors;
 
 import eu.mar21.rain.core.entity.Entity;
 import eu.mar21.rain.core.entity.item.Item;
@@ -35,6 +37,8 @@ public class Level {
     private Input input;
     private PlayerData data;
 
+    private boolean exit = false;
+
     private Queue<Notification> notifications;
 
     public Level(Input input) {
@@ -45,6 +49,8 @@ public class Level {
     }
 
     public void reset() {
+        this.exit = false;
+
         this.buffer.clear();
         this.mobs.clear();
         this.spawners.subList(1, this.spawners.size()).clear();
@@ -95,7 +101,7 @@ public class Level {
     public void draw(Canvas c) {
         if (this.mobs.size() > 0) {
             for (int i = 0; i < 8; i++) {
-                c.drawBitmap(Resources.BACKGROUND[i], (int) ((getPlayer().getCenterX() - Resources.SCREEN_WIDTH / 2) / (Resources.SCREEN_WIDTH / 8) * -Math.pow(1.55, i) - 100 / 2), 0, null);
+                c.drawBitmap(Resources.BACKGROUND[i], (int) ((getPlayer().getCenterX() - Resources.SCREEN_WIDTH / 2) / (Resources.SCREEN_WIDTH / 8) * - Math.pow(1.55, i) - 100 / 2), 0, null);
             }
         } else {
             for (int i = 0; i < 8; i++) {
@@ -133,33 +139,27 @@ public class Level {
     }
 
     public void tick() {
-        for (Spawner s : this.spawners) {
-            s.tick();
-        }
-
-        for (Entity m : this.mobs) {
-            m.tick();
-        }
-
-        for (Entity p : this.particles) {
-            p.tick();
-        }
-
-        for (Object e : this.mobs.toArray()) {
-            if (((Entity) e).isDead()) {
-                this.mobs.remove(e);
+        for (Iterator<Spawner> iterator = this.spawners.iterator(); iterator.hasNext();) {
+            Spawner spawner = iterator.next();
+            spawner.tick();
+            if (spawner.isDead()) {
+                iterator.remove();
             }
         }
 
-        for (Object e : this.particles.toArray()) {
-            if (((Entity) e).isDead()) {
-                this.particles.remove(e);
+        for (Iterator<Entity> iterator = this.mobs.iterator(); iterator.hasNext();) {
+            Entity entity = iterator.next();
+            entity.tick();
+            if (entity.isDead()) {
+                iterator.remove();
             }
         }
 
-        for (Object e : this.spawners.toArray()) {
-            if (((Entity) e).isDead()) {
-                this.spawners.remove(e);
+        for (Iterator<Entity> iterator = this.particles.iterator(); iterator.hasNext();) {
+            Entity entity = iterator.next();
+            entity.tick();
+            if (entity.isDead()) {
+                iterator.remove();
             }
         }
 
@@ -172,7 +172,7 @@ public class Level {
             this.data.tick();
 
             if (this.data.getHealth() <= 0) {
-                reset();
+                this.exit = true;
             }
         }
 
@@ -182,5 +182,9 @@ public class Level {
                 this.notifications.remove();
             }
         }
+    }
+
+    public boolean isExiting() {
+        return this.exit;
     }
 }

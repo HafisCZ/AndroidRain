@@ -4,6 +4,8 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 
+import eu.mar21.rain.core.utils.Resources;
+
 public class Sprite {
 
     private final int rowCount;

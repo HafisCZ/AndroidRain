@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import eu.mar21.rain.core.scene.Scene;
+import eu.mar21.rain.core.utils.FrameCounter;
+import eu.mar21.rain.core.utils.Resources;
 
 @SuppressWarnings("unused")
 public class Renderer extends View {
@@ -22,6 +24,8 @@ public class Renderer extends View {
     private Class<? extends Scene> requestedScene;
 
     private final Map<Class<? extends Scene>, Object> scenes = new HashMap<>();
+
+    private FrameCounter meter = new FrameCounter();
 
     public Renderer(Context context) {
         super(context);
@@ -99,12 +103,16 @@ public class Renderer extends View {
 
     @Override
     protected void onDraw(Canvas c) {
+        meter.sample(System.nanoTime());
+
         if (this.scene != null) this.scene.update(null);
         if (this.overlay != null) this.overlay.update(this.scene);
 
         c.drawColor(0xFF000000);
         if (this.scene != null) this.scene.draw(c);
         if (this.overlay != null) this.overlay.draw(c);
+
+        c.drawText("" + (int) meter.getAverageFPS(), 5, c.getHeight() - 15, Resources.FONT_DEBUG);
 
         processRequests();
         invalidate();

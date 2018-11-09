@@ -4,12 +4,20 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
 
 import eu.mar21.rain.core.R;
 
 public class Resources {
+
+    public static final Paint FONT_DEBUG = new Paint();
+    static {
+        FONT_DEBUG.setColor(0xFFFFFFFF);
+        FONT_DEBUG.setTypeface(Typeface.MONOSPACE);
+        FONT_DEBUG.setTextSize(20);
+    }
 
     public static Bitmap BACKGROUND[];
 

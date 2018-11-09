@@ -7,13 +7,8 @@ import eu.mar21.rain.core.utils.Resources;
 
 public class Star extends Item {
 
-    public static final double WIDTH = 14;
-    public static final double HEIGHT = 14;
-    public static final double SPRITE_X_OFFSET = -4;
-    public static final double SPRITE_Y_OFFSET = -4;
-
     public Star(double x, double y, Level level) {
-        super(x, y, WIDTH, HEIGHT, new Sprite(Resources.STAR), SPRITE_X_OFFSET, SPRITE_Y_OFFSET, level);
+        super(x, y, Resources.STAR.getWidth(), Resources.STAR.getHeight(), new Sprite(Resources.STAR), 0, 0, level);
     }
 
     @Override

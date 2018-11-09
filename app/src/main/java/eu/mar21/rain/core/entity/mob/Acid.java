@@ -7,13 +7,8 @@ import eu.mar21.rain.core.utils.Resources;
 
 public class Acid extends Mob {
 
-    public static final double WIDTH = 20;
-    public static final double HEIGHT = 20;
     public static final double SPEED_X_DEFAULT = 0;
     public static final double SPEED_Y_DEFAULT = 10;
-
-    public static final double SPRITE_X_OFFSET = -2;
-    public static final double SPRITE_Y_OFFSET = -28;
 
     public static final int PARTICLE_COUNT = 5;
 
@@ -21,7 +16,7 @@ public class Acid extends Mob {
     public static final int ANIMATION_FRAMEGROUP_0[] = { 0, 1, 2, 3 };
 
     public Acid(double x, double y, double dx, double dy, Level level) {
-        super(x, y, WIDTH, HEIGHT, new AnimatedSprite(Resources.ACID, RANDOM.nextInt(ANIMATION_DELTA) + ANIMATION_DELTA, ANIMATION_FRAMEGROUP_0), SPRITE_X_OFFSET, SPRITE_Y_OFFSET, level);
+        super(x, y, Resources.ACID[0].getWidth(), Resources.ACID[0].getHeight() / 2, new AnimatedSprite(Resources.ACID, RANDOM.nextInt(ANIMATION_DELTA) + ANIMATION_DELTA, ANIMATION_FRAMEGROUP_0), 0, -Resources.ACID[0].getHeight() / 2, level);
         ((AnimatedSprite) this.sprite).play(0);
 
         this.dx = dx;
