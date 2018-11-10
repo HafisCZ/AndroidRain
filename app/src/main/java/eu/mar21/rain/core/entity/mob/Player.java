@@ -4,6 +4,7 @@ import eu.mar21.rain.core.graphics.Notification;
 import eu.mar21.rain.core.graphics.sprite.AnimatedSprite;
 import eu.mar21.rain.core.level.Level;
 import eu.mar21.rain.core.level.data.Skill;
+import eu.mar21.rain.core.level.data.Statistics;
 import eu.mar21.rain.core.utils.Input;
 import eu.mar21.rain.core.utils.Resources;
 
@@ -54,19 +55,18 @@ public class Player extends Mob {
             if (!this.jump) {
                 this.jump = true;
                 this.dy = SPEED_Y_LIMIT;
+
+                Statistics.STAT_COUNT_JUMP.add();
             }
         }
 
         if (this.level.getInput().pressed(Input.ZONE.LEFT_UP_QUAD)) {
-            this.level.getData().skill(this.level, this);
+            this.level.getData().useSkill(this);
         }
 
         if (this.level.getInput().pressed(Input.ZONE.RIGHT_UP_QUAD)) {
-            if (this.level.getData().selectedSkill() >= 3) {
-                this.level.getData().setSkill(0);
-            } else {
-                this.level.getData().setSkill(this.level.getData().selectedSkill() + 1);
-                this.level.showNotification(new Notification("SKILL SELECTED", Skill.values()[this.level.getData().selectedSkill() - 1].name(), null));
+            if (this.level.getData().selectNextSkill()) {
+                this.level.showNotification(new Notification("SKILL SELECTED", Skill.values()[this.level.getData().getSelectedSkill()].name(), null));
             }
         }
 

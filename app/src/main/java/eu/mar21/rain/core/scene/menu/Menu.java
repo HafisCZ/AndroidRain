@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import eu.mar21.rain.core.graphics.Renderer;
+import eu.mar21.rain.core.level.data.Statistics;
 import eu.mar21.rain.core.scene.Game;
 import eu.mar21.rain.core.scene.Scene;
 import eu.mar21.rain.core.utils.Input;
@@ -74,7 +75,7 @@ public class Menu extends Scene {
         }
 
         if (isButtonDown(2)) {
-
+            this.renderer.requestScene(Stat.class);
         }
 
         if (isButtonDown(3)) {

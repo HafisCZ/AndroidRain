@@ -3,6 +3,7 @@ package eu.mar21.rain.core.entity.item;
 import eu.mar21.rain.core.graphics.Notification;
 import eu.mar21.rain.core.graphics.sprite.Sprite;
 import eu.mar21.rain.core.level.Level;
+import eu.mar21.rain.core.level.data.Statistics;
 import eu.mar21.rain.core.utils.Resources;
 
 public class Star extends Item {
@@ -27,6 +28,7 @@ public class Star extends Item {
                 break;
         }
 
+        Statistics.STAT_COUNT_STARS.add();
         this.level.showNotification(new Notification("ITEM RECEIVED", selector == 0 ? "ENERGY" : ( selector == 1 ? "SHIELD" : "EXPERIENCE"), null));
     }
 

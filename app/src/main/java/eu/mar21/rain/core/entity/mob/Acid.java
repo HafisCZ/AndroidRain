@@ -44,7 +44,7 @@ public class Acid extends Mob {
 
             this.y -= this.height;
 
-            if (this.level.getData().getHealth() > 0) {
+            if (this.level.getData().getPlayerHealth() > 0) {
                 spawnParticles(PARTICLE_COUNT, -1);
             }
 

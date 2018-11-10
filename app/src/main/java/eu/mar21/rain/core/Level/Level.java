@@ -171,7 +171,7 @@ public class Level {
         if (this.mobs.size() > 0) {
             this.data.tick();
 
-            if (this.data.getHealth() <= 0) {
+            if (this.data.getPlayerHealth() <= 0) {
                 this.data.save();
                 this.exit = true;
             }

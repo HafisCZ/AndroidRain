@@ -10,6 +10,7 @@ import eu.mar21.rain.core.graphics.Renderer;
 import eu.mar21.rain.core.scene.Game;
 import eu.mar21.rain.core.scene.Intro;
 import eu.mar21.rain.core.scene.menu.Menu;
+import eu.mar21.rain.core.scene.menu.Stat;
 import eu.mar21.rain.core.utils.DataStorage;
 import eu.mar21.rain.core.utils.Resources;
 
@@ -49,6 +50,7 @@ public class Application extends Activity {
 
             this.renderer.registerScene(Game.class);
             this.renderer.registerScene(Menu.class);
+            this.renderer.registerScene(Stat.class);
             this.renderer.requestScene(Menu.class);
         });
 
