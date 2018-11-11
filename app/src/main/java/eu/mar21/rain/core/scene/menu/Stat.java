@@ -5,22 +5,22 @@ import android.graphics.Canvas;
 import eu.mar21.rain.core.graphics.Renderer;
 import eu.mar21.rain.core.level.data.Statistics;
 import eu.mar21.rain.core.scene.Scene;
-import eu.mar21.rain.core.utils.Input;
+import eu.mar21.rain.core.utils.InputListener;
 import eu.mar21.rain.core.utils.Resources;
 
 public class Stat extends Scene {
 
-    private Input input;
+    private InputListener input;
 
     public Stat(Renderer r) {
         super(r);
 
-        this.input = new Input();
+        this.input = new InputListener();
     }
 
     @Override
     public void update(Scene s) {
-        if (this.input.inside(0, 0, (int) Resources.SCREEN_WIDTH, (int) Resources.SCREEN_HEIGHT)) {
+        if (this.input.isHeld(InputListener.ControlZone.WHOLE_SCREEN)) {
             this.renderer.requestScene(Menu.class);
         }
     }
@@ -32,7 +32,7 @@ public class Stat extends Scene {
 
     @Override
     public void begin() {
-
+        this.input.reset();
     }
 
     @Override
@@ -41,7 +41,7 @@ public class Stat extends Scene {
     }
 
     @Override
-    public Input getDedicatedListener() {
+    public InputListener getDedicatedListener() {
         return this.input;
     }
 

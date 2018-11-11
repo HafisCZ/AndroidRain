@@ -8,7 +8,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import java.util.stream.Collectors;
 
 import eu.mar21.rain.core.entity.Entity;
 import eu.mar21.rain.core.entity.item.Item;
@@ -23,7 +22,7 @@ import eu.mar21.rain.core.entity.spawner.Spawner;
 import eu.mar21.rain.core.entity.spawner.StarSpawner;
 import eu.mar21.rain.core.graphics.Notification;
 import eu.mar21.rain.core.level.data.PlayerData;
-import eu.mar21.rain.core.utils.Input;
+import eu.mar21.rain.core.utils.InputListener;
 import eu.mar21.rain.core.utils.Resources;
 
 public class Level {
@@ -34,14 +33,14 @@ public class Level {
 
     private final List<Entity> buffer = Collections.synchronizedList(new ArrayList<Entity>());
 
-    private Input input;
+    private InputListener input;
     private PlayerData data;
 
     private boolean exit = false;
 
     private Queue<Notification> notifications;
 
-    public Level(Input input) {
+    public Level(InputListener input) {
         this.spawners.add(new RainSpawner(0, -20, Resources.SCREEN_WIDTH, 0, this, 1, 0, 5));
         this.input = input;
 
@@ -69,7 +68,7 @@ public class Level {
         this.spawners.add(new StarSpawner(0, -50, Resources.SCREEN_WIDTH, 0, this, 20 * 60, 0, 1));
 
         this.notifications.clear();
-        showNotification(new Notification("NEW GAME", null, null));
+        showNotification(new Notification(Notification.NotificationStyle.PLAIN,"NEW GAME", null));
     }
 
     public void add(Entity e) {
@@ -90,7 +89,7 @@ public class Level {
         this.buffer.add(e);
     }
 
-    public Input getInput() {
+    public InputListener getInput() {
         return this.input;
     }
 

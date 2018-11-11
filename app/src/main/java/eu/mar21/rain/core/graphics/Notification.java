@@ -1,15 +1,49 @@
 package eu.mar21.rain.core.graphics;
 
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 
 public class Notification implements Drawable {
 
+    private static final Paint PAINT_BG = new Paint();
+    private static final Paint PAINT0 = new Paint();
+    private static final Paint PAINT1 = new Paint();
+    private static final Paint PAINT2 = new Paint();
+    static {
+        PAINT_BG.setColor(0x108FBC8F);
+
+        PAINT0.setStyle(Paint.Style.STROKE);
+        PAINT1.setStyle(Paint.Style.STROKE);
+        PAINT2.setStyle(Paint.Style.STROKE);
+
+        PAINT0.setColor(0);
+        PAINT1.setColor(Color.GREEN);
+        PAINT2.setColor(Color.YELLOW);
+
+        PAINT1.setAlpha(0xA0);
+        PAINT2.setAlpha(0xA0);
+    }
+
+    public enum NotificationStyle {
+
+        PLAIN(PAINT_BG, PAINT0),
+        GREEN(PAINT_BG, PAINT1),
+        YELLOW(PAINT_BG, PAINT2);
+
+        private final Paint paint;
+        private final Paint bg;
+
+        NotificationStyle(Paint bg, Paint paint) {
+            this.paint = paint;
+            this.bg = bg;
+        }
+    }
+
     private final String title;
     private final String description;
-    private final Bitmap icon;
+    private final NotificationStyle style;
 
     private int position = 0;
     private int time = 0;
@@ -21,11 +55,9 @@ public class Notification implements Drawable {
     private static final int Y_OFFSET = 20;
     private static final int Y_HEIGHT = 100;
 
-    private static final Paint BACKGROUND = new Paint();
     private static final Paint FONT = new Paint();
     private static final Paint FONT_SMALL = new Paint();
     static {
-        BACKGROUND.setColor(0x108FBC8F);
         FONT.setColor(0xA4FFFFFF);
         FONT.setTextSize(30);
         FONT.setTypeface(Typeface.MONOSPACE);
@@ -33,15 +65,17 @@ public class Notification implements Drawable {
         FONT_SMALL.setTextSize(20);
     }
 
-    public Notification(String title, String description, Bitmap icon) {
+    public Notification(NotificationStyle style, String title, String description) {
         this.title = title;
         this.description = description;
-        this.icon = icon;
+        this.style = style;
     }
 
     @Override
     public void draw(Canvas c) {
-        c.drawRect(c.getWidth() - this.position, Y_OFFSET, c.getWidth(), Y_OFFSET + Y_HEIGHT, BACKGROUND);
+        c.drawRect(c.getWidth() - this.position, Y_OFFSET, c.getWidth(), Y_OFFSET + Y_HEIGHT, this.style.bg);
+        c.drawRect(c.getWidth() - this.position, Y_OFFSET, c.getWidth(), Y_OFFSET + Y_HEIGHT, this.style.paint);
+
         c.drawText(this.title, c.getWidth() - this.position + Y_OFFSET, Y_OFFSET + 40, FONT);
         if (this.description != null) {
             c.drawText(this.description, c.getWidth() - this.position + Y_OFFSET, Y_OFFSET + 80, FONT_SMALL);

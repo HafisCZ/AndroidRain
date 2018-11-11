@@ -4,7 +4,7 @@ import android.view.GestureDetector;
 
 import eu.mar21.rain.core.graphics.Drawable;
 import eu.mar21.rain.core.graphics.Renderer;
-import eu.mar21.rain.core.utils.Input;
+import eu.mar21.rain.core.utils.InputListener;
 
 public abstract class Scene extends GestureDetector.SimpleOnGestureListener implements Drawable {
 
@@ -20,7 +20,7 @@ public abstract class Scene extends GestureDetector.SimpleOnGestureListener impl
     public abstract void begin();
     public abstract void end();
 
-    public Input getDedicatedListener() {
+    public InputListener getDedicatedListener() {
         return null;
     }
 

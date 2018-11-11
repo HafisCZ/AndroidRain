@@ -3,14 +3,11 @@ package eu.mar21.rain.core.scene.menu;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Typeface;
-import android.support.annotation.NonNull;
-import android.util.Log;
 
 import eu.mar21.rain.core.graphics.Renderer;
-import eu.mar21.rain.core.level.data.Statistics;
 import eu.mar21.rain.core.scene.Game;
 import eu.mar21.rain.core.scene.Scene;
-import eu.mar21.rain.core.utils.Input;
+import eu.mar21.rain.core.utils.InputListener;
 import eu.mar21.rain.core.utils.Resources;
 
 public class Menu extends Scene {
@@ -29,12 +26,12 @@ public class Menu extends Scene {
     private final int bh;
     private final int sh;
 
-    private Input input;
+    private InputListener input;
 
     public Menu(Renderer r) {
         super(r);
 
-        this.input = new Input();
+        this.input = new InputListener();
 
         this.lx = (int) (Resources.SCREEN_WIDTH / 10.0);
         this.rx = (int) (Resources.SCREEN_WIDTH / 2.0);
@@ -48,7 +45,7 @@ public class Menu extends Scene {
     }
 
     private boolean isButtonDown(int row) {
-        return this.input.inside(this.lx, this.sh + row * this.bh + 10 * row, this.rx, this.sh + (row + 1) * this.bh + 10 * row);
+        return this.input.isPressed(this.lx, this.sh + row * this.bh + 10 * row, this.rx, this.sh + (row + 1) * this.bh + 10 * row);
     }
 
     @Override
@@ -94,7 +91,7 @@ public class Menu extends Scene {
 
     @Override
     public void begin() {
-
+        this.input.reset();
     }
 
     @Override
@@ -103,7 +100,7 @@ public class Menu extends Scene {
     }
 
     @Override
-    public Input getDedicatedListener() {
+    public InputListener getDedicatedListener() {
         return this.input;
     }
 

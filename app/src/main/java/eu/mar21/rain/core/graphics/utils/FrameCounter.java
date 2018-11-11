@@ -1,4 +1,4 @@
-package eu.mar21.rain.core.utils;
+package eu.mar21.rain.core.graphics.utils;
 
 public class FrameCounter {
 

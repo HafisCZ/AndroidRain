@@ -130,10 +130,10 @@ public class PlayerData {
 
         if (this.selectedSkill != null) {
             if (this.playerEnergyBurnout > 0) {
-                this.barBars[4].setSpan(1, (int) (100.0 * (double) this.playerEnergyBurnout / (double) this.selectedSkill.getDuration()));
+                this.barBars[4].setSpan(1, Math.min(100, (int) (100.0 * (double) this.playerEnergyBurnout / (double) this.selectedSkill.getDuration())));
                 this.barBars[4].draw(c, xoff * 2, yoff * 2 + 10);
             } else {
-                this.barBars[3].setSpan(1, (int) (100.0 * (double) this.playerEnergy / (double) this.selectedSkill.getPowerRequired()));
+                this.barBars[3].setSpan(1, Math.min(100, (int) (100.0 * (double) this.playerEnergy / (double) this.selectedSkill.getPowerRequired())));
                 this.barBars[3].draw(c, xoff * 2, yoff * 2 + 10);
             }
 
@@ -182,7 +182,7 @@ public class PlayerData {
     }
 
     public boolean selectNextSkill() {
-        if (this.availableSkills.size() > 0) {
+        if (this.availableSkills.size() > 0 && this.playerEnergyBurnout <= 0) {
             if (this.selectedSkill == null) {
                 this.selectedSkill = this.availableSkills.get(0);
             } else {
@@ -241,7 +241,7 @@ public class PlayerData {
 
             this.playerNextLevelExp = (int) (EXP_POOL * Math.pow(EXP_POOL_MOD, Statistics.PLAYER_LEVEL.get()));
 
-            this.level.showNotification(new Notification("LEVEL UP!", "YOU REACHED LEVEL " + Statistics.PLAYER_LEVEL.get(), null));
+            this.level.showNotification(new Notification(Notification.NotificationStyle.YELLOW,"LEVEL UP!", "YOU REACHED LEVEL " + Statistics.PLAYER_LEVEL.get()));
         }
 
         if (this.playerEnergyBurnout > 0) {

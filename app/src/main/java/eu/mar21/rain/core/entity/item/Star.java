@@ -29,7 +29,7 @@ public class Star extends Item {
         }
 
         Statistics.STAT_COUNT_STARS.add();
-        this.level.showNotification(new Notification("ITEM RECEIVED", selector == 0 ? "ENERGY" : ( selector == 1 ? "SHIELD" : "EXPERIENCE"), null));
+        this.level.showNotification(new Notification(Notification.NotificationStyle.GREEN,"ITEM RECEIVED", selector == 0 ? "ENERGY" : ( selector == 1 ? "SHIELD" : "EXPERIENCE")));
     }
 
 }

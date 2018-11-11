@@ -5,7 +5,7 @@ import eu.mar21.rain.core.graphics.sprite.AnimatedSprite;
 import eu.mar21.rain.core.level.Level;
 import eu.mar21.rain.core.level.data.Skill;
 import eu.mar21.rain.core.level.data.Statistics;
-import eu.mar21.rain.core.utils.Input;
+import eu.mar21.rain.core.utils.InputListener;
 import eu.mar21.rain.core.utils.Resources;
 
 public class Player extends Mob {
@@ -33,17 +33,17 @@ public class Player extends Mob {
     public void tick() {
         int move = 0;
 
-        if (this.level.getInput().held(Input.ZONE.FOURTH_ROW_R) && !this.level.getInput().held(Input.ZONE.FOURTH_ROW_L)) {
+        if (this.level.getInput().isTouch(InputListener.ControlZone.ROW4) == InputListener.Direction.RIGHT) {
             this.dx = Math.min(this.dx + this.speed, SPEED_X_LIMIT);
             move = 1;
         }
 
-        if (this.level.getInput().held(Input.ZONE.FOURTH_ROW_L) && !this.level.getInput().held(Input.ZONE.FOURTH_ROW_R)) {
+        if (this.level.getInput().isTouch(InputListener.ControlZone.ROW4) == InputListener.Direction.LEFT) {
             this.dx = Math.max(this.dx - this.speed, -SPEED_X_LIMIT);
             move = -1;
         }
 
-        if (!this.level.getInput().held(Input.ZONE.FOURTH_ROW_L) && !this.level.getInput().held(Input.ZONE.FOURTH_ROW_R)) {
+        if (this.level.getInput().isTouch(InputListener.ControlZone.ROW4) == InputListener.Direction.NONE) {
             if (this.dx > 0) {
                 this.dx = Math.max(this.dx - this.speed, 0);
             } else if (this.dx < 0) {
@@ -51,7 +51,7 @@ public class Player extends Mob {
             }
         }
 
-        if (this.level.getInput().held(Input.ZONE.THIRD_ROW)) {
+        if (this.level.getInput().isPressed(InputListener.ControlZone.ROW3)) {
             if (!this.jump) {
                 this.jump = true;
                 this.dy = SPEED_Y_LIMIT;
@@ -60,13 +60,13 @@ public class Player extends Mob {
             }
         }
 
-        if (this.level.getInput().pressed(Input.ZONE.LEFT_UP_QUAD)) {
+        if (this.level.getInput().isPressed(InputListener.ControlZone.LU_QUAD)) {
             this.level.getData().useSkill(this);
         }
 
-        if (this.level.getInput().pressed(Input.ZONE.RIGHT_UP_QUAD)) {
+        if (this.level.getInput().isPressed(InputListener.ControlZone.RU_QUAD)) {
             if (this.level.getData().selectNextSkill()) {
-                this.level.showNotification(new Notification("SKILL SELECTED", Skill.values()[this.level.getData().getSelectedSkill()].name(), null));
+                this.level.showNotification(new Notification(Notification.NotificationStyle.PLAIN,"SKILL SELECTED", Skill.values()[this.level.getData().getSelectedSkill()].name()));
             }
         }
 

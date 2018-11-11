@@ -5,17 +5,17 @@ import android.graphics.Canvas;
 import eu.mar21.rain.core.graphics.Renderer;
 import eu.mar21.rain.core.level.Level;
 import eu.mar21.rain.core.scene.menu.Menu;
-import eu.mar21.rain.core.utils.Input;
+import eu.mar21.rain.core.utils.InputListener;
 
 public class Game extends Scene {
 
     private Level level;
-    private Input input;
+    private InputListener input;
 
     public Game(Renderer r) {
         super(r);
 
-        this.input = new Input();
+        this.input = new InputListener();
         this.level = new Level(input);
     }
 
@@ -33,7 +33,7 @@ public class Game extends Scene {
     }
 
     @Override
-    public Input getDedicatedListener() {
+    public InputListener getDedicatedListener() {
         return this.input;
     }
 
