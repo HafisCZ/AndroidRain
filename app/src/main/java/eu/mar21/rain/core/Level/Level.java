@@ -14,6 +14,7 @@ import eu.mar21.rain.core.entity.item.Item;
 import eu.mar21.rain.core.entity.mob.Mob;
 import eu.mar21.rain.core.entity.mob.Player;
 import eu.mar21.rain.core.entity.particle.Particle;
+import eu.mar21.rain.core.entity.particle.RainParticle;
 import eu.mar21.rain.core.entity.spawner.AcidSpawner;
 import eu.mar21.rain.core.entity.spawner.ArmorSpawner;
 import eu.mar21.rain.core.entity.spawner.EnergySpawner;
@@ -54,7 +55,7 @@ public class Level {
         this.mobs.clear();
         this.spawners.subList(1, this.spawners.size()).clear();
         for (Object e : this.particles.toArray()) {
-            if (((Entity) e).isDead()) {
+            if (((Entity) e).isDead() || !(e instanceof RainParticle)) {
                 this.particles.remove(e);
             }
         }

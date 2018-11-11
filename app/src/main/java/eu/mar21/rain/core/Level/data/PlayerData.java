@@ -3,6 +3,8 @@ package eu.mar21.rain.core.level.data;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.graphics.Typeface;
 
 import java.util.ArrayList;
@@ -16,15 +18,17 @@ import eu.mar21.rain.core.utils.Resources;
 
 public class PlayerData {
 
-    private static final double EXP_POOL = 40 * 60;
+    private static final double EXP_POOL = 40;
     private static final double EXP_POOL_MOD = 1.2;
 
     private static final Paint FONT_TEXT = new Paint();
+    private static final Paint EXP_BOOST_HIGHLIGHT = new Paint();
     static {
         FONT_TEXT.setTextAlign(Paint.Align.CENTER);
         FONT_TEXT.setTextSize(20);
         FONT_TEXT.setTypeface(Typeface.MONOSPACE);
         FONT_TEXT.setColor(Color.YELLOW);
+        EXP_BOOST_HIGHLIGHT.setColorFilter(new PorterDuffColorFilter(0xFFFD6A02, PorterDuff.Mode.MULTIPLY));
     }
 
     private final Level level;
@@ -55,6 +59,8 @@ public class PlayerData {
     private int xoff;
     private int yoff;
 
+    private int counter = 0;
+
     public PlayerData(Level level) {
         this.level = level;
 
@@ -63,7 +69,7 @@ public class PlayerData {
 
         this.playerEnergy = 0;
         this.playerEnergyBurnout = 0;
-        this.playerEnergyRate = Statistics.PLAYER_SKILL_BETTER_NODES.get() != 0 ? 2 : 1;
+        this.playerEnergyRate = Statistics.PLAYER_UPGRADE_BETTER_NODES.get() != 0 ? 2 : 1;
 
         this.playerExp = 0;
         this.playerNextLevelExp = (int) (EXP_POOL * Math.pow(EXP_POOL_MOD, Statistics.PLAYER_LEVEL.get()));
@@ -113,7 +119,7 @@ public class PlayerData {
     }
 
     public void draw(Canvas c) {
-        c.drawText("" + Statistics.PLAYER_SCORE.get() / 60, c.getWidth() / 2, 30, FONT_TEXT);
+        c.drawText("" + Statistics.PLAYER_SCORE.get(), c.getWidth() / 2, 30, FONT_TEXT);
 
         for (int i = 0; i < (this.selectedSkill == null ? 2 : 3); i++) {
             this.iconSmall[i].draw(c, yoff - 10, yoff * i + 10);
@@ -126,11 +132,13 @@ public class PlayerData {
 
         this.barBars[0].draw(c, xoff * 2, 10);
         this.barBars[1].draw(c, xoff * 2, 10);
+
+        this.barBars[2].setPaint(this.playerExpBoostDuration > 0 ? EXP_BOOST_HIGHLIGHT : null);
         this.barBars[2].draw(c, xoff * 2, yoff + 10);
 
         if (this.selectedSkill != null) {
             if (this.playerEnergyBurnout > 0) {
-                this.barBars[4].setSpan(1, Math.min(100, (int) (100.0 * (double) this.playerEnergyBurnout / (double) this.selectedSkill.getDuration())));
+                this.barBars[4].setSpan(1, Math.min(100, (int) (100.0 * (double) this.playerEnergyBurnout / (double) (this.selectedSkill.getDuration() * 60))));
                 this.barBars[4].draw(c, xoff * 2, yoff * 2 + 10);
             } else {
                 this.barBars[3].setSpan(1, Math.min(100, (int) (100.0 * (double) this.playerEnergy / (double) this.selectedSkill.getPowerRequired())));
@@ -164,17 +172,25 @@ public class PlayerData {
         this.playerExpBoost = multiplier;
         this.playerExpBoostDuration = duration;
 
-        Statistics.PLAYER_SCORE.add(200 * 60);
+        Statistics.PLAYER_SCORE.add(200);
     }
 
     public int getSelectedSkill() {
         return this.selectedSkill == null ? -1 : this.selectedSkill.ordinal();
     }
 
+    public int getRequiredExperience() {
+        return this.playerNextLevelExp;
+    }
+
+    public Skill getSkill() {
+        return this.selectedSkill;
+    }
+
     public void useSkill(Entity caster) {
         if (this.selectedSkill != null && this.playerEnergyBurnout <= 0 && this.playerEnergy >= this.selectedSkill.getPowerRequired()) {
             this.selectedSkill.applyEffect(caster.getCenterX(), caster.getCenterY(), this.level);
-            this.playerEnergyBurnout = this.selectedSkill.getDuration();
+            this.playerEnergyBurnout = this.selectedSkill.getDuration() * 60;
             this.playerEnergy = 0;
 
             Statistics.STAT_COUNT_ACTIVATE.add();
@@ -208,7 +224,7 @@ public class PlayerData {
             }
         }
 
-        Statistics.PLAYER_SCORE.add(25 * 60);
+        Statistics.PLAYER_SCORE.add(25);
     }
 
     public void addShield() {
@@ -216,7 +232,7 @@ public class PlayerData {
             this.playerShield++;
         }
 
-        Statistics.PLAYER_SCORE.add(100 * 60);
+        Statistics.PLAYER_SCORE.add(100);
     }
 
     public void addExperience(int amount) {
@@ -224,29 +240,37 @@ public class PlayerData {
     }
 
     public void tick() {
-        Statistics.PLAYER_SCORE.add(5);
+        if (counter++ > 60) {
+            counter = 0;
 
-        if (this.playerExpBoostDuration > 0) {
-            this.playerExpBoostDuration--;
-            this.playerExp += this.playerExpBoost;
-        } else {
-            this.playerExp++;
-        }
+            Statistics.PLAYER_SCORE.add(2);
 
-        if (this.playerExp >= this.playerNextLevelExp) {
-            this.playerExp = 0;
+            if (this.playerExpBoostDuration > 0) {
+                this.playerExpBoostDuration--;
+                this.playerExp += this.playerExpBoost;
+            } else {
+                this.playerExp++;
+            }
 
-            Statistics.PLAYER_LEVEL.add();
-            Statistics.PLAYER_SPENDABLE_POINTS.add();
+            if (this.playerExp >= this.playerNextLevelExp) {
+                this.playerExp = 0;
 
-            this.playerNextLevelExp = (int) (EXP_POOL * Math.pow(EXP_POOL_MOD, Statistics.PLAYER_LEVEL.get()));
+                Statistics.PLAYER_LEVEL.add();
+                Statistics.PLAYER_SPENDABLE_POINTS.add();
 
-            this.level.showNotification(new Notification(Notification.NotificationStyle.YELLOW,"LEVEL UP!", "YOU REACHED LEVEL " + Statistics.PLAYER_LEVEL.get()));
+                this.playerNextLevelExp = (int) (EXP_POOL * Math.pow(EXP_POOL_MOD, Statistics.PLAYER_LEVEL.get()));
+
+                this.level.showNotification(new Notification(Notification.NotificationStyle.YELLOW,"LEVEL UP!", "YOU REACHED LEVEL " + Statistics.PLAYER_LEVEL.get()));
+            }
         }
 
         if (this.playerEnergyBurnout > 0) {
             this.playerEnergyBurnout--;
         }
+    }
+
+    public void addPoint() {
+        Statistics.PLAYER_SPENDABLE_POINTS.add();
     }
 
 }

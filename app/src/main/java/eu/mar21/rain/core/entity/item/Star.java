@@ -14,22 +14,48 @@ public class Star extends Item {
 
     @Override
     public void applyEffect() {
-        int selector = RANDOM.nextInt(3);
-
-        switch (selector) {
-            case 0:
-                this.level.getData().addEnergy(5);
-                break;
-            case 1:
-                this.level.getData().addShield();
-                break;
-            case 2:
-                this.level.getData().addExperience(10 * 60);
-                break;
-        }
-
         Statistics.STAT_COUNT_STARS.add();
-        this.level.showNotification(new Notification(Notification.NotificationStyle.GREEN,"ITEM RECEIVED", selector == 0 ? "ENERGY" : ( selector == 1 ? "SHIELD" : "EXPERIENCE")));
+
+        switch (RANDOM.nextInt(5)) {
+            case 0:
+            {
+                if (RANDOM.nextInt(20) == 0) {
+                    this.level.getData().addPoint();
+                    this.level.showNotification(new Notification(Notification.NotificationStyle.YELLOW,"ITEM RECEIVED", "LEVEL POINT"));
+                    break;
+                }
+            }
+            case 1:
+            {
+                if (this.level.getData().getSkill() != null) {
+                    int energy = 4 + RANDOM.nextInt(this.level.getData().getSkill().getPowerRequired() / 4);
+
+                    this.level.getData().addEnergy(energy);
+                    this.level.showNotification(new Notification(Notification.NotificationStyle.GREEN,"ITEM RECEIVED", energy + " ENERGY"));
+                    break;
+                }
+            }
+            case 2:
+            {
+                this.level.getData().addShield();
+                this.level.showNotification(new Notification(Notification.NotificationStyle.GREEN,"ITEM RECEIVED", "SHIELD"));
+                break;
+            }
+            case 3:
+            {
+                int experience = 5 + RANDOM.nextInt(this.level.getData().getRequiredExperience() / 5);
+                this.level.getData().addExperience(experience);
+                this.level.showNotification(new Notification(Notification.NotificationStyle.GREEN,"ITEM RECEIVED", experience + " EXP"));
+                break;
+            }
+            case 4:
+            {
+                int multiplier = 2 + RANDOM.nextInt(9);
+                this.level.getData().addExperienceBoost(multiplier, 10);
+                this.level.showNotification(new Notification(Notification.NotificationStyle.GREEN, "ITEM RECEIVED", multiplier + "X EXP FOR 10 SECONDS"));
+                break;
+            }
+        }
     }
 
 }

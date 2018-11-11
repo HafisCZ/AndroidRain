@@ -2,9 +2,8 @@ package eu.mar21.rain.core.graphics.sprite;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.Rect;
-
-import eu.mar21.rain.core.utils.Resources;
 
 public class Sprite {
 
@@ -23,6 +22,8 @@ public class Sprite {
     private int selectedCol = 0;
     private int spanRow = 1;
     private int spanCol = 1;
+
+    private Paint paint = null;
 
     public Sprite(Bitmap image) {
         this(image, 1, 1);
@@ -51,7 +52,11 @@ public class Sprite {
 
         dr.set(x, y, x + (int) (this.spanCol * this.tileWidth), y + (int) (this.spanRow * this.tileHeight));
 
-        c.drawBitmap(this.image, sr, dr,null);
+        c.drawBitmap(this.image, sr, dr, paint);
+    }
+
+    public void setPaint(Paint paint) {
+        this.paint = paint;
     }
 
     public void selectTile(int row, int col) {

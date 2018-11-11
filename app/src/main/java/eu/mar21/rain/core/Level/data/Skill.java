@@ -7,9 +7,9 @@ import eu.mar21.rain.core.utils.TriConsumer;
 
 public enum Skill {
 
-    SHOCKWAVE((X, Y, L) -> L.add(new ShockParticle(X, Resources.SCREEN_HEIGHT, 0, 0, L)), 2 * 60, 15),
-    SHIELD_SPAWN((X, Y, L) -> L.getData().addShield(), 60 >> 1, 40),
-    EXPERIENCE_SPAWN((X, Y, L) -> L.getData().addExperienceBoost(2, 60 * 60), 60 * 60, 60);
+    SHOCKWAVE((X, Y, L) -> L.add(new ShockParticle(X, Resources.SCREEN_HEIGHT, 0, 0, L)), 5, 15),
+    SHIELD_SPAWN((X, Y, L) -> L.getData().addShield(), 1, 40),
+    EXPERIENCE_SPAWN((X, Y, L) -> L.getData().addExperienceBoost(2, 60), 60, 60);
 
     private final TriConsumer<Double, Double, Level> effect;
     private final int duration;

@@ -3,7 +3,12 @@ package eu.mar21.rain.core.utils;
 import android.view.MotionEvent;
 import android.view.View;
 
-import java.util.ResourceBundle;
+import static android.view.MotionEvent.ACTION_CANCEL;
+import static android.view.MotionEvent.ACTION_DOWN;
+import static android.view.MotionEvent.ACTION_MOVE;
+import static android.view.MotionEvent.ACTION_POINTER_DOWN;
+import static android.view.MotionEvent.ACTION_POINTER_UP;
+import static android.view.MotionEvent.ACTION_UP;
 
 public class InputListener implements View.OnTouchListener {
 
@@ -19,35 +24,36 @@ public class InputListener implements View.OnTouchListener {
     @SuppressWarnings("all")
     @Override
     public boolean onTouch(View v, MotionEvent e) {
-        for (int i = 0; i < MAX_CURSORS; i++) {
-            if (i < e.getPointerCount()) {
-                switch (e.getActionMasked()) {
-                    case MotionEvent.ACTION_DOWN:
-                    case MotionEvent.ACTION_POINTER_DOWN:
-                    {
-                        this.cursorsB[i][0] = (int) e.getX(i);
-                        this.cursorsB[i][1] = (int) e.getY(i);
-                        break;
-                    }
-                    case MotionEvent.ACTION_MOVE:
-                    {
-                        this.cursorsE[i][0] = (int) e.getX(i);
-                        this.cursorsE[i][1] = (int) e.getY(i);
-                        break;
-                    }
-                    default:
-                    {
-                        this.cursorsB[i][0] = null;
-                        this.cursorsB[i][1] = null;
-                        this.cursorsE[i][0] = null;
-                        this.cursorsE[i][1] = null;
-                    }
-                }
-            } else {
-                this.cursorsB[i][0] = null;
-                this.cursorsB[i][1] = null;
-                this.cursorsE[i][0] = null;
-                this.cursorsE[i][1] = null;
+        int index = e.getActionIndex();
+        int ptrid = e.getPointerId(index);
+        int msact = e.getActionMasked();
+
+        if (ptrid >= MAX_CURSORS) {
+            return false;
+        }
+
+        switch (msact) {
+            case ACTION_DOWN:
+            case ACTION_POINTER_DOWN:
+            {
+                this.cursorsB[ptrid][0] = (int) e.getX(index);
+                this.cursorsB[ptrid][1] = (int) e.getY(index);
+                break;
+            }
+            case ACTION_MOVE:
+            {
+                this.cursorsE[ptrid][0] = (int) e.getX(index);
+                this.cursorsE[ptrid][1] = (int) e.getY(index);
+                break;
+            }
+            case ACTION_UP:
+            case ACTION_POINTER_UP:
+            case ACTION_CANCEL:
+            {
+                this.cursorsB[ptrid][0] = null;
+                this.cursorsB[ptrid][1] = null;
+                this.cursorsE[ptrid][0] = null;
+                this.cursorsE[ptrid][1] = null;
             }
         }
 
@@ -55,6 +61,7 @@ public class InputListener implements View.OnTouchListener {
     }
 
     private TouchMode mode = TouchMode.TAP;
+
     public void setMode(TouchMode mode) {
         this.mode = mode;
     }
@@ -141,11 +148,15 @@ public class InputListener implements View.OnTouchListener {
 
     public Direction isTouch(ControlZone zone) {
         if (this.mode == TouchMode.TAP) {
-            if (isHeld(zone.x + (zone.xx - zone.x) / 2, zone.y, zone.xx, zone.yy)) {
+            final boolean isRigth = isHeld(zone.x + (zone.xx - zone.x) / 2, zone.y, zone.xx, zone.yy);
+            final boolean isLeft = isHeld(zone.x, zone.y, (zone.xx - zone.x) / 2 + zone.x, zone.yy);
+            if (isRigth && !isLeft) {
                 return Direction.RIGHT;
-            } else if (isHeld(zone.x, zone.y, (zone.xx - zone.x) / 2 + zone.x, zone.yy)) {
+            }
+            else if (isLeft && !isRigth) {
                 return Direction.LEFT;
-            } else {
+            }
+            else {
                 return Direction.NONE;
             }
         } else {
