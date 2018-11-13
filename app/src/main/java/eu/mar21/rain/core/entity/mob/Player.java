@@ -5,7 +5,7 @@ import eu.mar21.rain.core.graphics.sprite.AnimatedSprite;
 import eu.mar21.rain.core.level.Level;
 import eu.mar21.rain.core.level.data.Skill;
 import eu.mar21.rain.core.level.data.Statistics;
-import eu.mar21.rain.core.utils.InputListener;
+import eu.mar21.rain.core.utils.input.InputListener;
 import eu.mar21.rain.core.utils.Resources;
 
 public class Player extends Mob {

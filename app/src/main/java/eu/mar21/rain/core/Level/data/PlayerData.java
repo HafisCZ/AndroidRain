@@ -22,13 +22,11 @@ public class PlayerData {
     private static final double EXP_POOL_MOD = 1.2;
 
     private static final Paint FONT_TEXT = new Paint();
-    private static final Paint EXP_BOOST_HIGHLIGHT = new Paint();
     static {
         FONT_TEXT.setTextAlign(Paint.Align.CENTER);
         FONT_TEXT.setTextSize(20);
         FONT_TEXT.setTypeface(Typeface.MONOSPACE);
         FONT_TEXT.setColor(Color.YELLOW);
-        EXP_BOOST_HIGHLIGHT.setColorFilter(new PorterDuffColorFilter(0xFFFD6A02, PorterDuff.Mode.MULTIPLY));
     }
 
     private final Level level;
@@ -133,8 +131,10 @@ public class PlayerData {
         this.barBars[0].draw(c, xoff * 2, 10);
         this.barBars[1].draw(c, xoff * 2, 10);
 
-        this.barBars[2].setPaint(this.playerExpBoostDuration > 0 ? EXP_BOOST_HIGHLIGHT : null);
         this.barBars[2].draw(c, xoff * 2, yoff + 10);
+        if (this.playerExpBoostDuration > 0) {
+            c.drawText(this.playerExpBoost  + "X", xoff * 3 + Resources.BARS[0].getWidth(), yoff + 30, FONT_TEXT);
+        }
 
         if (this.selectedSkill != null) {
             if (this.playerEnergyBurnout > 0) {

@@ -5,7 +5,7 @@ import android.graphics.Canvas;
 import eu.mar21.rain.core.graphics.Renderer;
 import eu.mar21.rain.core.level.data.Statistics;
 import eu.mar21.rain.core.scene.Scene;
-import eu.mar21.rain.core.utils.InputListener;
+import eu.mar21.rain.core.utils.input.InputListener;
 import eu.mar21.rain.core.utils.Resources;
 
 public class Stat extends Scene {

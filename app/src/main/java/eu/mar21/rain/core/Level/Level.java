@@ -23,7 +23,7 @@ import eu.mar21.rain.core.entity.spawner.Spawner;
 import eu.mar21.rain.core.entity.spawner.StarSpawner;
 import eu.mar21.rain.core.graphics.Notification;
 import eu.mar21.rain.core.level.data.PlayerData;
-import eu.mar21.rain.core.utils.InputListener;
+import eu.mar21.rain.core.utils.input.InputListener;
 import eu.mar21.rain.core.utils.Resources;
 
 public class Level {

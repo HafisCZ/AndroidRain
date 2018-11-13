@@ -1,7 +1,9 @@
-package eu.mar21.rain.core.utils;
+package eu.mar21.rain.core.utils.input;
 
 import android.view.MotionEvent;
 import android.view.View;
+
+import eu.mar21.rain.core.utils.Resources;
 
 import static android.view.MotionEvent.ACTION_CANCEL;
 import static android.view.MotionEvent.ACTION_DOWN;

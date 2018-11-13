@@ -7,7 +7,7 @@ import android.graphics.Typeface;
 import eu.mar21.rain.core.graphics.Renderer;
 import eu.mar21.rain.core.scene.Game;
 import eu.mar21.rain.core.scene.Scene;
-import eu.mar21.rain.core.utils.InputListener;
+import eu.mar21.rain.core.utils.input.InputListener;
 import eu.mar21.rain.core.utils.Resources;
 
 public class Menu extends Scene {
