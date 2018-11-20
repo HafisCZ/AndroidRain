@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import eu.mar21.rain.core.graphics.Renderer;
 import eu.mar21.rain.core.level.data.Statistics;
 import eu.mar21.rain.core.scene.Scene;
+import eu.mar21.rain.core.ui.View;
 import eu.mar21.rain.core.utils.input.InputListener;
 import eu.mar21.rain.core.utils.Resources;
 
@@ -45,16 +46,20 @@ public class Stat extends Scene {
         return this.input;
     }
 
+    private void drawItem(Canvas c, int row, int col, String label, int value) {
+        c.drawText(label, (float) Resources.SCREEN_WIDTH / 20.0f + col * (float) Resources.SCREEN_WIDTH / 2.0f, (float) Resources.SCREEN_HEIGHT / 10.0f * row + (float) Resources.SCREEN_HEIGHT / 10.0f, Resources.FONT_DEBUG);
+        c.drawText(Integer.toString(value), (float) Resources.SCREEN_WIDTH / 3.0f + col * (float) Resources.SCREEN_WIDTH / 2.0f, (float) Resources.SCREEN_HEIGHT / 10.0f * row + (float) Resources.SCREEN_HEIGHT / 10.0f, Resources.FONT_DEBUG);
+    }
+
     @Override
     public void draw(Canvas c) {
-        for (int i = 0; i < 13; i++) {
-            c.drawText(Statistics.values()[i].name(), 50, 50 * i + 50, Resources.FONT_DEBUG);
-            c.drawText(Statistics.values()[i].get() + "", 400, 50 * i + 50, Resources.FONT_DEBUG);
+        for (int i = 0; i < Resources.BACKGROUND.length; i++) {
+            c.drawBitmap(Resources.BACKGROUND[i], - 50, 0, null);
         }
 
-        for (int i = 13; i < Statistics.values().length; i++) {
-            c.drawText(Statistics.values()[i].name(), 50 + 700, 50 * (i - 13) + 50, Resources.FONT_DEBUG);
-            c.drawText(Statistics.values()[i].get() + "", 400 + 700, 50 * (i - 13) + 50, Resources.FONT_DEBUG);
-        }
+        drawItem(c, 0, 0, "Player level:", Statistics.PLAYER_LEVEL.get());
+        drawItem(c, 1, 0, "Total score:", Statistics.PLAYER_SCORE.get());
+
+        new View(0, 0, (float) Resources.SCREEN_WIDTH,(float) Resources.SCREEN_HEIGHT / 10.0f).setBackground(View.DEFAULT_BG).setText("STATISTICS", View.DEFAULT_FONT).resetFont().draw(c);
     }
 }
