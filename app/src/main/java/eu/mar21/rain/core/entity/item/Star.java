@@ -50,7 +50,7 @@ public class Star extends Item {
             }
             case 4:
             {
-                int multiplier = 2 + RANDOM.nextInt(9);
+                int multiplier = 2 + RANDOM.nextInt(Statistics.PLAYER_LEVEL.get());
                 this.level.getData().addExperienceBoost(multiplier, 10);
                 this.level.showNotification(new Notification(Notification.NotificationStyle.GREEN, "ITEM RECEIVED", multiplier + "X EXP FOR 10 SECONDS"));
                 break;

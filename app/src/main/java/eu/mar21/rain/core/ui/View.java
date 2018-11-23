@@ -1,92 +1,83 @@
 package eu.mar21.rain.core.ui;
 
 import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Typeface;
 
-import eu.mar21.rain.core.graphics.Drawable;
-import eu.mar21.rain.core.graphics.sprite.Sprite;
+import java.util.ArrayList;
+import java.util.List;
 
-public class View implements Drawable {
+import eu.mar21.rain.core.utils.Resources;
+import eu.mar21.rain.core.utils.input.InputListener;
 
-    public static final Paint DEFAULT_BG = new Paint();
-    public static final Paint DEFAULT_FONT = new Paint();
-    static {
-        DEFAULT_BG.setColor(0x0F8FBC8F);
-        DEFAULT_FONT.setColor(0xF0FFFFFF);
+public abstract class View {
+
+    protected float x = 0.0f;
+    protected float y = 0.0f;
+    protected float w = 0.0f;
+    protected float h = 0.0f;
+
+    private List<View> children = new ArrayList<>();
+
+    private Action action;
+    private boolean actionHandled = false;
+    private InputListener listener;
+
+    public void addChild(View view) {
+        this.children.add(view);
     }
 
-    private float x;
-    private float y;
-
-    private float w;
-    private float h;
-
-    private Sprite sprite;
-    private Paint paint;
-
-    private String text;
-    private Paint font;
-
-    public View(float x, float y, float w, float h) {
-        this.x = x;
-        this.y = y;
-        this.w = w;
-        this.h = h;
+    public void removeChild(View view) {
+        this.children.remove(view);
     }
 
-    public View setBackground(Paint paint) {
-        this.paint = paint;
+    public float getScale() {
+        return this.h / this.w;
+    }
 
+    public List<View> getChildren() {
+        return this.children;
+    }
+
+    public void setListener(InputListener listener) {
+        this.listener = listener;
+        for (View v : this.children) {
+            v.setListener(listener);
+        }
+    }
+
+    public View onClick(Action action) {
+        this.action = action;
         return this;
     }
 
-    public View setBackground(Sprite sprite) {
-        this.sprite = sprite;
+    private void handleListener(float x, float y, float w, float h) {
+        if (this.listener != null && this.action != null) {
+            boolean press = this.listener.isPressed((int) x, (int) y, (int) (x + w), (int) (y + h));
+            if (press && !this.actionHandled) {
+                this.action.apply(this);
+            }
 
-        return this;
+            this.actionHandled = press;
+        }
     }
 
-    public View setText(String text, Paint font) {
-        this.text = text;
-        this.font = font;
-
-        return this;
-    }
-
-    public View resetFont() {
-        this.font.setTextAlign(Paint.Align.CENTER);
-        this.font.setTextSize(this.h * 0.8f);
-        this.font.setTypeface(Typeface.MONOSPACE);
-
-        return this;
-    }
-
-    public View clearText() {
-        this.text = null;
-        this.font = null;
-
-        return this;
-    }
-
-    public View clearBackground() {
-        this.paint = null;
-        this.sprite = null;
-
-        return this;
-    }
-
-    @Override
     public void draw(Canvas c) {
-        if (this.sprite != null) {
-            this.sprite.draw(c, (int) this.x , (int) this.y);
-        } else if (this.paint != null) {
-            c.drawRect((int) this.x, (int) this.y, (int) this.x + this.w, (int) this.y + this.h, this.paint);
-        }
+        draw(c, 0, 0, (float) Resources.SCREEN_WIDTH, (float) Resources.SCREEN_HEIGHT);
+    }
 
-        if (this.text != null) {
-            c.drawText(this.text, (int) this.x + this.w / 2.0f, (int) this.y + (this.h * 0.8f), this.font);
+    private void draw(Canvas c, float px, float py, float pw, float ph) {
+        float rx = px + pw * this.x;
+        float ry = py + ph * this.y;
+        float rw = pw * this.w;
+        float rh = ph * this.h;
+
+        handleListener(rx, ry, rw, rh);
+        drawView(c, rx, ry, rw, rh);
+        for (View v : this.children) {
+            v.draw(c, rx, ry, rw, rh);
         }
     }
+
+    public abstract void drawView(Canvas c, float x, float y, float w, float h);
 
 }
+

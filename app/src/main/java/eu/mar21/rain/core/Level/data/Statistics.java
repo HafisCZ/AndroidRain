@@ -17,17 +17,17 @@ public enum Statistics {
     PLAYER_SPENDABLE_POINTS(0),
     PLAYER_MAX_HEALTH(3),
     PLAYER_DEF_SHIELD(0),
-    PLAYER_UPGRADE_DMG_SHOCKWAVE(1),
+    PLAYER_UPGRADE_DMG_SHOCKWAVE(0),
     PLAYER_UPGRADE_BETTER_NODES(0),
-    PLAYER_UPGRADE_SECOND_WIND(0),
     PLAYER_SKILL_SHOCKWAVE(0),
     PLAYER_SKILL_DOUBLE_EXP(0),
-    PLAYER_SKILL_SHIELD(0),
-    PLAYER_SKILL_TRANSCENDENCE(0);
+    PLAYER_SKILL_SHIELD(0);
 
     private int value;
+    private int def;
 
     Statistics(int def) {
+        this.def = def;
         this.value = DataStorage.INSTANCE.get(name(), def);
     }
 
@@ -45,6 +45,12 @@ public enum Statistics {
 
     public void add(int amount) {
         this.value += amount;
+    }
+
+    public static void clear() {
+        for (Statistics s : values()) {
+            s.set(s.def);
+        }
     }
 
     public static void save() {

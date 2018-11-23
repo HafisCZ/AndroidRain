@@ -21,9 +21,7 @@ public class DataStorage {
     }
 
     public int get(String key, int def) {
-        final int value = this.preferences.getInt(KEY_PREFIX + key, -1);
-
-        return value == -1 ? def : value;
+        return this.preferences.getInt(KEY_PREFIX + key, def);
     }
 
     public void set(String key, int value) {

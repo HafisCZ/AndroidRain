@@ -1,6 +1,9 @@
 package eu.mar21.rain.core.level;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Typeface;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,6 +26,7 @@ import eu.mar21.rain.core.entity.spawner.Spawner;
 import eu.mar21.rain.core.entity.spawner.StarSpawner;
 import eu.mar21.rain.core.graphics.Notification;
 import eu.mar21.rain.core.level.data.PlayerData;
+import eu.mar21.rain.core.ui.Text;
 import eu.mar21.rain.core.utils.input.InputListener;
 import eu.mar21.rain.core.utils.Resources;
 
@@ -38,6 +42,7 @@ public class Level {
     private PlayerData data;
 
     private boolean exit = false;
+    private boolean frozen = false;
 
     private Queue<Notification> notifications;
 
@@ -124,6 +129,12 @@ public class Level {
         if (!this.notifications.isEmpty()) {
             this.notifications.peek().draw(c);
         }
+
+        if (this.frozen) {
+            new Text("GAME PAUSED").setPosition(0.5f, 0.6f).setFont(Typeface.MONOSPACE, Color.WHITE, 0.1f, Paint.Align.CENTER).draw(c);
+            new Text("CLICK ABOVE CENTER OF YOUR SCREEN TO UNPAUSE THE GAME").setPosition(0.5f, 0.7f).setFont(Typeface.MONOSPACE, Color.WHITE, 0.02f, Paint.Align.CENTER).draw(c);
+            new Text("OR CLICK LEFT UPPER CORNER TO RETURN TO MENU").setPosition(0.5f, 0.75f).setFont(Typeface.MONOSPACE, Color.WHITE, 0.02f, Paint.Align.CENTER).draw(c);
+        }
     }
 
     public List<Entity> getMobs() {
@@ -139,48 +150,58 @@ public class Level {
     }
 
     public void tick() {
-        for (Iterator<Spawner> iterator = this.spawners.iterator(); iterator.hasNext();) {
-            Spawner spawner = iterator.next();
-            spawner.tick();
-            if (spawner.isDead()) {
-                iterator.remove();
+        if (this.input.isPressed(InputListener.ControlZone.LC_QUAD)) {
+            this.frozen ^= true;
+        } else if (this.frozen && this.input.isPressed(InputListener.ControlZone.LU_QUAD)) {
+            this.exit = true;
+            this.frozen = false;
+            this.data.save();
+        }
+
+        if (!frozen) {
+            for (Iterator<Spawner> iterator = this.spawners.iterator(); iterator.hasNext();) {
+                Spawner spawner = iterator.next();
+                spawner.tick();
+                if (spawner.isDead()) {
+                    iterator.remove();
+                }
             }
-        }
 
-        for (Iterator<Entity> iterator = this.mobs.iterator(); iterator.hasNext();) {
-            Entity entity = iterator.next();
-            entity.tick();
-            if (entity.isDead()) {
-                iterator.remove();
+            for (Iterator<Entity> iterator = this.mobs.iterator(); iterator.hasNext();) {
+                Entity entity = iterator.next();
+                entity.tick();
+                if (entity.isDead()) {
+                    iterator.remove();
+                }
             }
-        }
 
-        for (Iterator<Entity> iterator = this.particles.iterator(); iterator.hasNext();) {
-            Entity entity = iterator.next();
-            entity.tick();
-            if (entity.isDead()) {
-                iterator.remove();
+            for (Iterator<Entity> iterator = this.particles.iterator(); iterator.hasNext();) {
+                Entity entity = iterator.next();
+                entity.tick();
+                if (entity.isDead()) {
+                    iterator.remove();
+                }
             }
-        }
 
-        for (Entity e : buffer) {
-            add(e);
-        }
-        buffer.clear();
-
-        if (this.mobs.size() > 0) {
-            this.data.tick();
-
-            if (this.data.getPlayerHealth() <= 0) {
-                this.data.save();
-                this.exit = true;
+            for (Entity e : buffer) {
+                add(e);
             }
-        }
+            buffer.clear();
 
-        if (!this.notifications.isEmpty()) {
-            this.notifications.peek().update();
-            if (this.notifications.peek().isDead()) {
-                this.notifications.remove();
+            if (this.mobs.size() > 0) {
+                this.data.tick();
+
+                if (this.data.getPlayerHealth() <= 0) {
+                    this.data.save();
+                    this.exit = true;
+                }
+            }
+
+            if (!this.notifications.isEmpty()) {
+                this.notifications.peek().update();
+                if (this.notifications.peek().isDead()) {
+                    this.notifications.remove();
+                }
             }
         }
     }

@@ -12,6 +12,11 @@ import eu.mar21.rain.core.R;
 
 public class Resources {
 
+    public static Paint PAINT_DEFAULT_BG = new Paint();
+    static {
+        PAINT_DEFAULT_BG.setColor(0x0FFFFFFF);
+    }
+
     public static final Paint FONT_DEBUG = new Paint();
     static {
         FONT_DEBUG.setColor(0xFFFFFFFF);
@@ -35,7 +40,7 @@ public class Resources {
     public static Bitmap ACID[] = new Bitmap[4];
     public static Bitmap ICONS[] = new Bitmap[3];
     public static Bitmap BARS[] = new Bitmap[6];
-    public static Bitmap SKILLF, SKILL;
+    public static Bitmap SKILLF, SKILL, SKILLS[] = new Bitmap[3];
 
     public static Bitmap STAR, ENERGY, SHIELD;
 
@@ -69,7 +74,12 @@ public class Resources {
         }
 
         SKILLF = BitmapFactory.decodeResource(c, R.drawable.frame);
+
         SKILL = BitmapFactory.decodeResource(c, R.drawable.ability);
+        for (int i = 0; i < 3; i++) {
+            int size = SKILL.getHeight();
+            SKILLS[i] = Bitmap.createBitmap(SKILL, i * size, 0, size, size);
+        }
 
         STAR = BitmapFactory.decodeResource(c, R.drawable.star);
         SHIELD = BitmapFactory.decodeResource(c, R.drawable.armor);

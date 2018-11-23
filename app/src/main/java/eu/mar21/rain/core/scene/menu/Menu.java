@@ -1,51 +1,28 @@
 package eu.mar21.rain.core.scene.menu;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 
 import eu.mar21.rain.core.graphics.Renderer;
 import eu.mar21.rain.core.scene.Game;
 import eu.mar21.rain.core.scene.Scene;
+import eu.mar21.rain.core.ui.Panel;
+import eu.mar21.rain.core.ui.Text;
+import eu.mar21.rain.core.ui.View;
 import eu.mar21.rain.core.utils.input.InputListener;
 import eu.mar21.rain.core.utils.Resources;
 
 public class Menu extends Scene {
 
-    private static final Paint BACKGROUND = new Paint();
-    private static final Paint FONT = new Paint();
-    static {
-        BACKGROUND.setColor(0x0F8FBC8F);
-        FONT.setColor(0xA4FFFFFF);
-        FONT.setTextSize(50);
-        FONT.setTypeface(Typeface.MONOSPACE);
-    }
-
-    private final int lx;
-    private final int rx;
-    private final int bh;
-    private final int sh;
-
     private InputListener input;
+    private View view;
 
     public Menu(Renderer r) {
         super(r);
 
         this.input = new InputListener();
-
-        this.lx = (int) (Resources.SCREEN_WIDTH / 10.0);
-        this.rx = (int) (Resources.SCREEN_WIDTH / 2.0);
-        this.sh = (int) (Resources.SCREEN_HEIGHT / 10.0);
-        this.bh = (int) (3.0 * Resources.SCREEN_HEIGHT / 20.0);
-    }
-
-    private void drawButton(Canvas c, String text, int row) {
-        c.drawRect(this.lx, this.sh + row * this.bh + 10 * row, this.rx, this.sh + (row + 1) * this.bh + 10 * row, BACKGROUND);
-        c.drawText(text, this.rx / 3, this.sh + row * (this.bh + 10) + 50 + 25, FONT);
-    }
-
-    private boolean isButtonDown(int row) {
-        return this.input.isPressed(this.lx, this.sh + row * this.bh + 10 * row, this.rx, this.sh + (row + 1) * this.bh + 10 * row);
     }
 
     @Override
@@ -54,49 +31,37 @@ public class Menu extends Scene {
             c.drawBitmap(Resources.BACKGROUND[i], - 50, 0, null);
         }
 
-        drawButton(c, "PLAY", 0);
-        drawButton(c, "UPGRADES", 1);
-        drawButton(c, "STATISTICS", 2);
-        drawButton(c, "SETTINGS", 3);
-        drawButton(c, "EXIT", 4);
-    }
-
-    @Override
-    public void update(Scene s) {
-        if (isButtonDown(0)) {
-            this.renderer.requestScene(Game.class);
-        }
-
-        if (isButtonDown(1)) {
-
-        }
-
-        if (isButtonDown(2)) {
-            this.renderer.requestScene(Stat.class);
-        }
-
-        if (isButtonDown(3)) {
-
-        }
-
-        if (isButtonDown(4)) {
-            this.renderer.getParentActivity().finish();
-        }
+        this.view.draw(c);
     }
 
     @Override
     public void init() {
+        this.view = new Panel(0, 0, 1, 1);
 
+        Panel panels[] = new Panel[5];
+        for (int i = 0; i < 5; i++) {
+            panels[i] = new Panel(0.1f, 0.1f + 0.17f * i, 0.4f, 0.15f).setBackground(0x0F8FBC8F);
+            this.view.addChild(panels[i]);
+        }
+
+        panels[0].addChild(new Text("PLAY").setFont(Typeface.MONOSPACE, Color.WHITE, 0.05f, Paint.Align.LEFT).setPosition(0.1f, 0.7f));
+        panels[1].addChild(new Text("SHOP").setFont(Typeface.MONOSPACE, Color.WHITE, 0.05f, Paint.Align.LEFT).setPosition(0.1f, 0.7f));
+        panels[2].addChild(new Text("STATISTICS").setFont(Typeface.MONOSPACE, Color.WHITE, 0.05f, Paint.Align.LEFT).setPosition(0.1f, 0.7f));
+        panels[3].addChild(new Text("OPTIONS").setFont(Typeface.MONOSPACE, Color.WHITE, 0.05f, Paint.Align.LEFT).setPosition(0.1f, 0.7f));
+        panels[4].addChild(new Text("EXIT").setFont(Typeface.MONOSPACE, Color.WHITE, 0.05f, Paint.Align.LEFT).setPosition(0.1f, 0.7f));
+
+        panels[0].onClick(v -> renderer.requestScene(Game.class));
+        panels[1].onClick(v -> renderer.requestScene(Shop.class));
+        panels[2].onClick(v -> renderer.requestScene(Stat.class));
+        panels[3].onClick(v -> renderer.requestScene(Settings.class));
+        panels[4].onClick(v -> renderer.getParentActivity().finish());
+
+        this.view.setListener(this.input);
     }
 
     @Override
     public void begin() {
         this.input.reset();
-    }
-
-    @Override
-    public void end() {
-
     }
 
     @Override

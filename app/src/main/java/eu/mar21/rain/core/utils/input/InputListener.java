@@ -62,18 +62,23 @@ public class InputListener implements View.OnTouchListener {
         return true;
     }
 
-    private TouchMode mode = TouchMode.TAP;
+    private static TouchMode mode = TouchMode.TAP;
 
-    public void setMode(TouchMode mode) {
-        this.mode = mode;
+    public static void setMode(TouchMode m) {
+        mode = m;
+    }
+
+    public static TouchMode getMode() {
+        return mode;
     }
 
     public enum ControlZone {
 
         WHOLE_SCREEN(0, 0, Resources.SCREEN_WIDTH, Resources.SCREEN_HEIGHT),
-        LU_QUAD(0, 0, Resources.SCREEN_WIDTH / 2, Resources.SCREEN_HEIGHT / 2),
+        LU_QUAD(0, 0, Resources.SCREEN_WIDTH / 3, Resources.SCREEN_HEIGHT / 2),
+        LC_QUAD(Resources.SCREEN_WIDTH / 3, 0, Resources.SCREEN_WIDTH / 3, Resources.SCREEN_HEIGHT / 2),
         LD_QUAD(0, Resources.SCREEN_HEIGHT / 2, Resources.SCREEN_WIDTH / 2, Resources.SCREEN_HEIGHT / 2),
-        RU_QUAD(Resources.SCREEN_WIDTH / 2, 0, Resources.SCREEN_WIDTH / 2, Resources.SCREEN_HEIGHT / 2),
+        RU_QUAD(2 * Resources.SCREEN_WIDTH / 3, 0, Resources.SCREEN_WIDTH / 3, Resources.SCREEN_HEIGHT / 2),
         RD_QUAD(Resources.SCREEN_WIDTH / 2, Resources.SCREEN_HEIGHT / 2, Resources.SCREEN_WIDTH / 2, Resources.SCREEN_HEIGHT / 2),
         ROW3(0, Resources.SCREEN_HEIGHT / 2, Resources.SCREEN_WIDTH, Resources.SCREEN_HEIGHT / 4),
         ROW4(0, 3 * Resources.SCREEN_HEIGHT / 4, Resources.SCREEN_WIDTH, Resources.SCREEN_HEIGHT / 4);
@@ -149,7 +154,7 @@ public class InputListener implements View.OnTouchListener {
     }
 
     public Direction isTouch(ControlZone zone) {
-        if (this.mode == TouchMode.TAP) {
+        if (mode == TouchMode.TAP) {
             final boolean isRigth = isHeld(zone.x + (zone.xx - zone.x) / 2, zone.y, zone.xx, zone.yy);
             final boolean isLeft = isHeld(zone.x, zone.y, (zone.xx - zone.x) / 2 + zone.x, zone.yy);
             if (isRigth && !isLeft) {
@@ -166,7 +171,7 @@ public class InputListener implements View.OnTouchListener {
         }
     }
 
-    public Direction isSwipe(ControlZone zone) {
+    private Direction isSwipe(ControlZone zone) {
         Direction direction = Direction.NONE;
 
         for (int i = 0; i < MAX_CURSORS; i++) {

@@ -50,6 +50,7 @@ public class Renderer extends View {
     public void registerScene(Class<? extends Scene> scene) {
         try {
             this.scenes.put(scene, scene.getConstructor(Renderer.class).newInstance(this));
+            ((Scene) this.scenes.get(scene)).init();
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException exception) {
             Log.i("AppSceneRegFail", Log.getStackTraceString(exception));
         }

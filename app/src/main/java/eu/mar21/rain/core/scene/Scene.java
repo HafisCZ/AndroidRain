@@ -14,11 +14,21 @@ public abstract class Scene extends GestureDetector.SimpleOnGestureListener impl
         this.renderer = r;
     }
 
-    public abstract void update(Scene s);
+    public void update(Scene s) {
 
-    public abstract void init();
-    public abstract void begin();
-    public abstract void end();
+    }
+
+    public void init() {
+
+    }
+
+    public void begin() {
+
+    }
+
+    public void end() {
+
+    }
 
     public InputListener getDedicatedListener() {
         return null;
