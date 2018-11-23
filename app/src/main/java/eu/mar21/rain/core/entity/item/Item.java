@@ -18,7 +18,7 @@ public abstract class Item extends Entity {
     }
 
     protected Item(double x, double y, double width, double height, Sprite sprite, double offsetX, double offsetY, Level level) {
-        this(x, y, width, height, sprite, offsetX, offsetY, DEFAULT_SPEED_X, DEFAULT_SPEED_Y, level);
+        this(x, y, width, height, sprite, offsetX, offsetY, DEFAULT_SPEED_X * Resources.RES_MULTX, DEFAULT_SPEED_Y * Resources.RES_MULTY, level);
     }
 
     @Override

@@ -26,7 +26,7 @@ public class Acid extends Mob {
     }
 
     public Acid(double x, double y, Level level) {
-        this(x, y, SPEED_X_DEFAULT, SPEED_Y_DEFAULT, level);
+        this(x, y, SPEED_X_DEFAULT * Resources.RES_MULTX, SPEED_Y_DEFAULT * Resources.RES_MULTY, level);
     }
 
     @Override

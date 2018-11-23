@@ -5,8 +5,8 @@ import eu.mar21.rain.core.graphics.sprite.AnimatedSprite;
 import eu.mar21.rain.core.level.Level;
 import eu.mar21.rain.core.level.data.Skill;
 import eu.mar21.rain.core.level.data.Statistics;
-import eu.mar21.rain.core.utils.input.InputListener;
 import eu.mar21.rain.core.utils.Resources;
+import eu.mar21.rain.core.utils.input.InputListener;
 
 public class Player extends Mob {
 
@@ -26,7 +26,7 @@ public class Player extends Mob {
     public Player(double x, double y, Level level) {
         super(x, y, Resources.PLAYER[0].getWidth(), Resources.PLAYER[0].getHeight(), new AnimatedSprite(Resources.PLAYER, ANIMATION_DELTA, ANIMATION_FRAMEGROUP_0, ANIMATION_FRAMEGROUP_1, ANIMATION_FRAMEGROUP_2), 0, 0, level);
 
-        this.speed = SPEED_X_INCREMENT;
+        this.speed = SPEED_X_INCREMENT * Resources.RES_MULTX;
     }
 
     @Override
@@ -34,12 +34,12 @@ public class Player extends Mob {
         int move = 0;
 
         if (this.level.getInput().isTouch(InputListener.ControlZone.ROW4) == InputListener.Direction.RIGHT) {
-            this.dx = Math.min(this.dx + this.speed, SPEED_X_LIMIT);
+            this.dx = Math.min(this.dx + this.speed, SPEED_X_LIMIT * Resources.RES_MULTX);
             move = 1;
         }
 
         if (this.level.getInput().isTouch(InputListener.ControlZone.ROW4) == InputListener.Direction.LEFT) {
-            this.dx = Math.max(this.dx - this.speed, -SPEED_X_LIMIT);
+            this.dx = Math.max(this.dx - this.speed, -SPEED_X_LIMIT * Resources.RES_MULTX);
             move = -1;
         }
 
@@ -54,7 +54,7 @@ public class Player extends Mob {
         if (this.level.getInput().isPressed(InputListener.ControlZone.ROW3)) {
             if (!this.jump) {
                 this.jump = true;
-                this.dy = SPEED_Y_LIMIT;
+                this.dy = SPEED_Y_LIMIT * Resources.RES_MULTY;
 
                 Statistics.STAT_COUNT_JUMP.add();
             }
@@ -74,7 +74,7 @@ public class Player extends Mob {
         this.y += this.dy;
 
         if (this.jump) {
-            this.dy += SPEED_Y_INCREMENT;
+            this.dy += SPEED_Y_INCREMENT * Resources.RES_MULTY;
         }
 
         if (this.x < 0) {

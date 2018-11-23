@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.WindowManager;
 
 import eu.mar21.rain.core.R;
@@ -44,6 +45,8 @@ public class Resources {
 
     public static Bitmap STAR, ENERGY, SHIELD;
 
+    public static float RES_MULTX = 1.0f, RES_MULTY = 1.0f;
+
     public static void preload(android.content.res.Resources c) {
         LOGO = BitmapFactory.decodeResource(c, R.drawable.logo);
     }
@@ -54,6 +57,9 @@ public class Resources {
 
         SCREEN_HEIGHT = dm.heightPixels;
         SCREEN_WIDTH = dm.widthPixels;
+
+        RES_MULTX = (float) SCREEN_WIDTH / 1280.0f;
+        RES_MULTY = (float) SCREEN_HEIGHT / 720.0f;
 
         BACKGROUND = new Bitmap[8];
         for (int i = 0; i < 8; i++) {

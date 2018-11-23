@@ -11,8 +11,8 @@ import eu.mar21.rain.core.scene.Scene;
 import eu.mar21.rain.core.ui.Panel;
 import eu.mar21.rain.core.ui.Text;
 import eu.mar21.rain.core.ui.View;
-import eu.mar21.rain.core.utils.input.InputListener;
 import eu.mar21.rain.core.utils.Resources;
+import eu.mar21.rain.core.utils.input.InputListener;
 
 public class Menu extends Scene {
 

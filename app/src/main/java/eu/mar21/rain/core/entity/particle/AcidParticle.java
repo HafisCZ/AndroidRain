@@ -46,9 +46,9 @@ public class AcidParticle extends Particle {
         this.y += this.dy;
 
         if (this.dx > 0) {
-            this.dx = Math.max(0, this.dx - SPEED_X_INCREMENT);
+            this.dx = Math.max(0, this.dx - SPEED_X_INCREMENT * Resources.RES_MULTX);
         } else if (this.dx < 0) {
-            this.dx = Math.min(0, this.dx + SPEED_X_INCREMENT);
+            this.dx = Math.min(0, this.dx + SPEED_X_INCREMENT * Resources.RES_MULTX);
         }
 
         if (this.x < 0) {
@@ -64,7 +64,7 @@ public class AcidParticle extends Particle {
             this.despawnActive = true;
             this.dy = 0;
         } else {
-            this.dy += SPEED_Y_INCREMENT;
+            this.dy += SPEED_Y_INCREMENT * Resources.RES_MULTY;
         }
 
         if (this.despawnActive) {

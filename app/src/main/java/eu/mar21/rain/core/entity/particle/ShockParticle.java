@@ -32,7 +32,7 @@ public class ShockParticle extends Particle {
 
     @Override
     public void tick() {
-        this.radius += ARC_RADIUS_INCREMENT;
+        this.radius += ARC_RADIUS_INCREMENT * Resources.RES_MULTX;
         if (this.radius > Resources.SCREEN_WIDTH) {
             kill();
         }

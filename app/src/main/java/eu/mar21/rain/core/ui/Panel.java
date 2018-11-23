@@ -1,7 +1,6 @@
 package eu.mar21.rain.core.ui;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 
 public class Panel extends View {
