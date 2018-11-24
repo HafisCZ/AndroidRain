@@ -10,16 +10,23 @@ import eu.mar21.rain.core.utils.input.InputListener;
 
 public abstract class View {
 
-    protected float x = 0.0f;
-    protected float y = 0.0f;
-    protected float w = 0.0f;
-    protected float h = 0.0f;
+    protected float x;
+    protected float y;
+    protected float w;
+    protected float h;
 
     private List<View> children = new ArrayList<>();
 
     private Action action;
     private boolean actionHandled = false;
     private InputListener listener;
+
+    protected View(float x, float y, float w, float h) {
+        this.x = x;
+        this.y = y;
+        this.w = w;
+        this.h = h;
+    }
 
     public void addChild(View view) {
         this.children.add(view);
@@ -64,7 +71,7 @@ public abstract class View {
         draw(c, 0, 0, (float) Resources.SCREEN_WIDTH, (float) Resources.SCREEN_HEIGHT);
     }
 
-    private void draw(Canvas c, float px, float py, float pw, float ph) {
+    protected void draw(Canvas c, float px, float py, float pw, float ph) {
         float rx = px + pw * this.x;
         float ry = py + ph * this.y;
         float rw = pw * this.w;

@@ -10,11 +10,13 @@ public class Panel extends View {
         this.paint.setColor(0);
     }
 
+    public Panel(View parent, float x, float y, float w, float h) {
+        this(x, y, w, h);
+        parent.addChild(this);
+    }
+
     public Panel(float x, float y, float w, float h) {
-        this.x = x;
-        this.y = y;
-        this.w = w;
-        this.h = h;
+        super(x, y, w, h);
     }
 
     public Panel setBackground(int color) {

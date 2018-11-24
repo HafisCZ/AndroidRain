@@ -199,6 +199,8 @@ public class PlayerData {
         if (this.availableSkills.size() > 0 && this.playerEnergyBurnout <= 0) {
             if (this.selectedSkill == null) {
                 this.selectedSkill = this.availableSkills.get(0);
+            } else if (this.availableSkills.size() == 1) {
+                return false;
             } else {
                 this.selectedSkill = this.availableSkills.get((this.availableSkills.indexOf(this.selectedSkill) + 1) % this.availableSkills.size());
             }

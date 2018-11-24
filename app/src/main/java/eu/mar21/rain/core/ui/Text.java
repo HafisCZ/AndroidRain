@@ -11,7 +11,13 @@ public class Text extends View {
     private String text;
     private Paint font = new Paint();
 
+    public Text(View parent, String text) {
+        this(text);
+        parent.addChild(this);
+    }
+
     public Text(String text) {
+        super(0, 0, 0, 0);
         this.text = text;
     }
 

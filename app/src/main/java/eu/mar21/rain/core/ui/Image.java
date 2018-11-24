@@ -13,6 +13,7 @@ public class Image extends View {
     private boolean center = false;
 
     public Image(Bitmap sprite) {
+        super(0, 0, 0, 0);
         this.sprite = sprite;
     }
 

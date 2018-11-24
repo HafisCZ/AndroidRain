@@ -1,8 +1,15 @@
 package eu.mar21.rain.core.utils.input;
 
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+import eu.mar21.rain.core.utils.DataStorage;
 import eu.mar21.rain.core.utils.Resources;
 
 import static android.view.MotionEvent.ACTION_CANCEL;
@@ -12,10 +19,10 @@ import static android.view.MotionEvent.ACTION_POINTER_DOWN;
 import static android.view.MotionEvent.ACTION_POINTER_UP;
 import static android.view.MotionEvent.ACTION_UP;
 
-public class InputListener implements View.OnTouchListener {
+public class InputListener implements View.OnTouchListener, SensorEventListener {
 
     public enum TouchMode {
-        TAP, SWIPE
+        TAP, SWIPE, SENSOR
     }
 
     private static final int MAX_CURSORS = 5;
@@ -62,10 +69,58 @@ public class InputListener implements View.OnTouchListener {
         return true;
     }
 
-    private static TouchMode mode = TouchMode.TAP;
+    private Direction sensorDirection = Direction.NONE;
+    private float gravity[];
+    private float magnetic[];
+    private float accels[] = new float[3];
+    private float mags[] = new float[3];
+    private float values[] = new float[3];
+    private float azimuth;
+    private float pitch;
+    private float roll;
+
+    @Override
+    public void onSensorChanged(SensorEvent e) {
+        switch (e.sensor.getType()) {
+            case Sensor.TYPE_MAGNETIC_FIELD : {
+                this.mags = e.values.clone();
+                break;
+            }
+            case Sensor.TYPE_ACCELEROMETER : {
+                this.accels = e.values.clone();
+                break;
+            }
+        }
+
+        if (this.mags != null && this.accels != null) {
+            this.gravity = new float[9];
+            this.magnetic = new float[9];
+            SensorManager.getRotationMatrix(this.gravity, this.magnetic, this.accels, this.mags);
+
+            float[] outGravity = new float[9];
+            SensorManager.remapCoordinateSystem(this.gravity, SensorManager.AXIS_X,SensorManager.AXIS_Z, outGravity);
+            SensorManager.getOrientation(outGravity, this.values);
+
+            this.azimuth = this.values[0] * 57.2957795f;
+            this.pitch = this.values[1] * 57.2957795f;
+            this.roll = this.values[2] * 57.2957795f;
+            this.mags = null;
+            this.accels = null;
+
+            this.sensorDirection = this.roll < -98 ? Direction.LEFT : (this.roll > -82 ? Direction.RIGHT : Direction.NONE);
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor s, int a) {
+
+    }
+
+    private static TouchMode mode = TouchMode.values()[DataStorage.INSTANCE.get("control.mode", 0)];
 
     public static void setMode(TouchMode m) {
         mode = m;
+        DataStorage.INSTANCE.set("control.mode", mode.ordinal());
     }
 
     public static TouchMode getMode() {
@@ -81,7 +136,9 @@ public class InputListener implements View.OnTouchListener {
         RU_QUAD(2 * Resources.SCREEN_WIDTH / 3, 0, Resources.SCREEN_WIDTH / 3, Resources.SCREEN_HEIGHT / 2),
         RD_QUAD(Resources.SCREEN_WIDTH / 2, Resources.SCREEN_HEIGHT / 2, Resources.SCREEN_WIDTH / 2, Resources.SCREEN_HEIGHT / 2),
         ROW3(0, Resources.SCREEN_HEIGHT / 2, Resources.SCREEN_WIDTH, Resources.SCREEN_HEIGHT / 4),
-        ROW4(0, 3 * Resources.SCREEN_HEIGHT / 4, Resources.SCREEN_WIDTH, Resources.SCREEN_HEIGHT / 4);
+        ROW4(0, 3 * Resources.SCREEN_HEIGHT / 4, Resources.SCREEN_WIDTH, Resources.SCREEN_HEIGHT / 4),
+        UP(0, 0, Resources.SCREEN_WIDTH, Resources.SCREEN_HEIGHT / 2),
+        DOWN(0, Resources.SCREEN_HEIGHT / 2, Resources.SCREEN_WIDTH, Resources.SCREEN_HEIGHT / 2);
 
         private final int x, y, xx, yy;
         private boolean lock;
@@ -166,8 +223,10 @@ public class InputListener implements View.OnTouchListener {
             else {
                 return Direction.NONE;
             }
-        } else {
+        } else if (mode == TouchMode.SWIPE) {
             return isSwipe(zone);
+        } else {
+            return sensorDirection;
         }
     }
 

@@ -55,6 +55,7 @@ public class Level {
 
     public void reset() {
         this.exit = false;
+        this.input.reset();
 
         this.buffer.clear();
         this.mobs.clear();
@@ -132,8 +133,8 @@ public class Level {
 
         if (this.frozen) {
             new Text("GAME PAUSED").setPosition(0.5f, 0.6f).setFont(Typeface.MONOSPACE, Color.WHITE, 0.1f, Paint.Align.CENTER).draw(c);
-            new Text("CLICK ABOVE CENTER OF YOUR SCREEN TO UNPAUSE THE GAME").setPosition(0.5f, 0.7f).setFont(Typeface.MONOSPACE, Color.WHITE, 0.02f, Paint.Align.CENTER).draw(c);
-            new Text("OR CLICK LEFT UPPER CORNER TO RETURN TO MENU").setPosition(0.5f, 0.75f).setFont(Typeface.MONOSPACE, Color.WHITE, 0.02f, Paint.Align.CENTER).draw(c);
+            new Text("CLICK BELOW TO UNPAUSE THE GAME").setPosition(0.5f, 0.7f).setFont(Typeface.MONOSPACE, Color.WHITE, 0.02f, Paint.Align.CENTER).draw(c);
+            new Text("OR CLICK ABOVE TO RETURN TO MENU").setPosition(0.5f, 0.75f).setFont(Typeface.MONOSPACE, Color.WHITE, 0.02f, Paint.Align.CENTER).draw(c);
         }
     }
 
@@ -150,12 +151,15 @@ public class Level {
     }
 
     public void tick() {
-        if (this.input.isPressed(InputListener.ControlZone.LC_QUAD)) {
-            this.frozen ^= true;
-        } else if (this.frozen && this.input.isPressed(InputListener.ControlZone.LU_QUAD)) {
+        if (this.frozen && this.input.isPressed(InputListener.ControlZone.DOWN)) {
+            this.frozen = false;
+        } else if (this.frozen && this.input.isPressed(InputListener.ControlZone.UP)) {
             this.exit = true;
             this.frozen = false;
             this.data.save();
+        } else if (this.input.isPressed(InputListener.ControlZone.LC_QUAD)) {
+            this.frozen = true;
+            this.input.reset();
         }
 
         if (!frozen) {

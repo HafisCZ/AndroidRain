@@ -17,6 +17,7 @@ public enum Statistics {
     PLAYER_SPENDABLE_POINTS(0),
     PLAYER_MAX_HEALTH(3),
     PLAYER_DEF_SHIELD(0),
+    PLAYER_UPGRADE_STAR(1),
     PLAYER_UPGRADE_DMG_SHOCKWAVE(0),
     PLAYER_UPGRADE_BETTER_NODES(0),
     PLAYER_SKILL_SHOCKWAVE(0),
@@ -41,6 +42,10 @@ public enum Statistics {
 
     public void add() {
         add(1);
+    }
+
+    public void sub() {
+        add(-1);
     }
 
     public void add(int amount) {

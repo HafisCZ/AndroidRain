@@ -8,7 +8,9 @@ import android.graphics.Typeface;
 import eu.mar21.rain.core.graphics.Renderer;
 import eu.mar21.rain.core.level.data.Statistics;
 import eu.mar21.rain.core.scene.Scene;
+import eu.mar21.rain.core.ui.Button;
 import eu.mar21.rain.core.ui.Image;
+import eu.mar21.rain.core.ui.List;
 import eu.mar21.rain.core.ui.Panel;
 import eu.mar21.rain.core.ui.Text;
 import eu.mar21.rain.core.ui.View;
@@ -26,6 +28,7 @@ public class Shop extends Scene {
     private Panel title;
     private Panel panels[] = new Panel[2];
     private Panel skills[] = new Panel[5];
+    private Button stars[] = new Button[4];
 
     public Shop(Renderer r) {
         super(r);
@@ -44,22 +47,50 @@ public class Shop extends Scene {
         this.view.addChild(title);
 
         /*
-            Individual content panels
+            Creating list view
         */
-        panels[0] = new Panel(0.1f, 0.15f, 0.8f, 0.1f);
-        panels[1] = new Panel(0.1f, 0.30f, 0.8f, 0.1f);
-        for (Panel p : this.panels) {
-            this.view.addChild(p);
+        List list = new List(this.view, 0, 0.1f, 1, 0.9f);
+        Panel listItem0 = list.newItem();
+        Panel listItem1 = list.newItem();
+
+        /*
+            Adding buttons to control the list view
+        */
+        new Button(this.view, "NEXT", 0.85f, 0.9f, 0.15f, 0.1f).setBackground(0x0F8FBC8F).setFont(Typeface.MONOSPACE, Color.WHITE, 0.03f).onClick(v -> list.next());
+        new Button(this.view, "PREV", 0, 0.9f, 0.15f, 0.1f).setBackground(0x0F8FBC8F).setFont(Typeface.MONOSPACE, Color.WHITE, 0.03f).onClick(v -> list.prev());
+
+        /*
+            Adding content to seconds list item
+        */
+
+        new Text(listItem0, "GENERAL").setPosition(0.5f, 0.1f).setFont(Typeface.MONOSPACE, Color.WHITE,0.03f, Paint.Align.CENTER);
+        new Text(listItem1, "STAR UPGRADES").setPosition(0.5f, 0.1f).setFont(Typeface.MONOSPACE, Color.WHITE,0.03f, Paint.Align.CENTER);
+
+        String starsLabels[] = { "INSTANT XP", "SHIELD", "XP BOOST", "FREE POINT" };
+        for (int i = 0; i < 4; i++) {
+            this.stars[i] = (Button) new Button(listItem1, starsLabels[i], 0.05f + 0.25f * i, 0.2f, 0.15f, 0.15f).setBackground(0).setFont(Typeface.MONOSPACE, Color.WHITE, 0.03f).onClick(v -> {
+                if (Statistics.PLAYER_SPENDABLE_POINTS.get() > 0 && Statistics.PLAYER_UPGRADE_STAR.get() < 5) {
+                    Statistics.PLAYER_SPENDABLE_POINTS.sub();
+                    Statistics.PLAYER_UPGRADE_STAR.add();
+                    Statistics.save();
+
+                    begin();
+                }
+            });
         }
 
+        /*
+            Individual content panels
+        */
+        panels[0] = new Panel(listItem0, 0.1f, 0.15f, 0.8f, 0.1f);
+        panels[1] = new Panel(listItem0,0.1f, 0.30f, 0.8f, 0.1f);
+
         for (int i = 0; i < 3; i++) {
-            skills[i] = new Panel(0.1f + 0.3f * i, 0.5f, 0.2f, 0.2f * this.view.getScale());
-            this.view.addChild(skills[i]);
+            skills[i] = new Panel(listItem0, 0.1f + 0.3f * i, 0.5f, 0.2f, 0.2f * listItem0.getScale());
         }
 
         for (int i = 0; i < 2; i++) {
-            skills[i + 3] = new Panel(0.1f + 0.3f * i, 0.75f, 0.2f, 0.2f * this.view.getScale());
-            this.view.addChild(skills[i + 3]);
+            skills[i + 3] = new Panel(listItem0, 0.1f + 0.3f * i, 0.75f, 0.2f, 0.2f * listItem0.getScale());
         }
 
         /*
@@ -200,6 +231,10 @@ public class Shop extends Scene {
         ((Text) this.skills[2].getChildren().get(0)).setColor(Statistics.PLAYER_SKILL_DOUBLE_EXP.get() < 1 && Statistics.PLAYER_SPENDABLE_POINTS.get() > 0 ? Color.YELLOW : (Statistics.PLAYER_SKILL_DOUBLE_EXP.get() == 1 ? Color.GRAY : Color.WHITE));
         ((Text) this.skills[3].getChildren().get(0)).setColor(Statistics.PLAYER_UPGRADE_DMG_SHOCKWAVE.get() < 1 && Statistics.PLAYER_SPENDABLE_POINTS.get() > 0 ? Color.YELLOW : (Statistics.PLAYER_UPGRADE_DMG_SHOCKWAVE.get() == 1 ? Color.GRAY : Color.WHITE));
         ((Text) this.skills[4].getChildren().get(0)).setColor(Statistics.PLAYER_UPGRADE_BETTER_NODES.get() < 1 && Statistics.PLAYER_SPENDABLE_POINTS.get() > 0 ? Color.YELLOW : (Statistics.PLAYER_UPGRADE_BETTER_NODES.get() == 1 ? Color.GRAY : Color.WHITE));
+
+        for (int i = 0; i < 4; i++) {
+            this.stars[i].setColor(Statistics.PLAYER_UPGRADE_STAR.get() >= i + 2 ? Color.GRAY : (Statistics.PLAYER_UPGRADE_STAR.get() >= i + 1 && Statistics.PLAYER_SPENDABLE_POINTS.get() > 0 ? Color.YELLOW : Color.WHITE));
+        }
 
         /*
             Add all images
