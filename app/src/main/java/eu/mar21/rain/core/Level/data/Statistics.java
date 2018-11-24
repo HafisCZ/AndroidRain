@@ -10,6 +10,7 @@ public enum Statistics {
     STAT_COUNT_NODES(0),
     STAT_COUNT_STARS(0),
     STAT_COUNT_JUMP(0),
+    STAT_COUNT_LONGEST(0),
     STAT_COUNT_ACTIVATE(0),
 
     PLAYER_SCORE(0),

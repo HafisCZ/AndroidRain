@@ -190,12 +190,14 @@ public class Level {
             for (Entity e : buffer) {
                 add(e);
             }
+
             buffer.clear();
 
             if (this.mobs.size() > 0) {
                 this.data.tick();
 
                 if (this.data.getPlayerHealth() <= 0) {
+                    this.data.saveTime();
                     this.data.save();
                     this.exit = true;
                 }

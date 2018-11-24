@@ -54,6 +54,7 @@ public class Stat extends Scene {
         this.view.addChild(newInfo("Level", Statistics.PLAYER_LEVEL.get(), 0.05f, 0.15f));
         this.view.addChild(newInfo("Score", Statistics.PLAYER_SCORE.get(), 0.05f, 0.25f));
         this.view.addChild(newInfo("Total EXP", Statistics.STAT_COUNT_EXP.get(), 0.05f, 0.35f));
+        this.view.addChild(newInfo("Longest game", Statistics.STAT_COUNT_LONGEST.get(), 0.05f, 0.45f));
 
         this.view.addChild(newInfo("Nodes", Statistics.STAT_COUNT_NODES.get(), 0.55f, 0.15f));
         this.view.addChild(newInfo("Shields", Statistics.STAT_COUNT_SHIELD.get(), 0.55f, 0.25f));

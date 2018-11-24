@@ -65,6 +65,8 @@ public class PlayerData {
     private Sprite barFrame;
     private Sprite barBars[];
 
+    private long seconds;
+
     private int xoff;
     private int yoff;
 
@@ -117,6 +119,8 @@ public class PlayerData {
 
         this.yoff = Resources.BARS[0].getHeight() + 5;
         this.xoff = Resources.ICONS[0].getWidth();
+
+        this.seconds = 0;
     }
 
     public void save() {
@@ -170,6 +174,12 @@ public class PlayerData {
         }
 
         Statistics.STAT_COUNT_DAMAGE.add();
+    }
+
+    public void saveTime() {
+        if (Statistics.STAT_COUNT_LONGEST.get() < this.seconds) {
+            Statistics.STAT_COUNT_LONGEST.set((int) this.seconds);
+        }
     }
 
     public int getPlayerHealth() {
@@ -251,6 +261,7 @@ public class PlayerData {
     public void tick() {
         if (counter++ > 60) {
             counter = 0;
+            seconds++;
 
             Statistics.PLAYER_SCORE.add(2);
 
