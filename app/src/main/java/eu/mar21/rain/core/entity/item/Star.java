@@ -18,14 +18,14 @@ public class Star extends Item {
 
         switch (RANDOM.nextInt(Statistics.PLAYER_UPGRADE_STAR.get())) {
             case 1 : {
-                this.level.getData().addShield();
-                this.level.showNotification(new Notification(Notification.NotificationStyle.GREEN,"ITEM RECEIVED", "SHIELD"));
-                break;
-            }
-            case 2 : {
                 int experience = 5 + RANDOM.nextInt(this.level.getData().getRequiredExperience() / 5);
                 this.level.getData().addExperience(experience);
                 this.level.showNotification(new Notification(Notification.NotificationStyle.GREEN,"ITEM RECEIVED", experience + " EXP"));
+                break;
+            }
+            case 2 : {
+                this.level.getData().addShield();
+                this.level.showNotification(new Notification(Notification.NotificationStyle.GREEN,"ITEM RECEIVED", "SHIELD"));
                 break;
             }
             case 3 : {

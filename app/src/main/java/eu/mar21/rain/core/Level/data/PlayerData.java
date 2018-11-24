@@ -6,7 +6,9 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 import eu.mar21.rain.core.entity.Entity;
 import eu.mar21.rain.core.graphics.Notification;
@@ -15,6 +17,18 @@ import eu.mar21.rain.core.level.Level;
 import eu.mar21.rain.core.utils.Resources;
 
 public class PlayerData {
+
+    private class XPBoost {
+
+        int durationLeft;
+        int multiplier;
+
+        XPBoost(int dur, int mul) {
+            this.durationLeft = dur;
+            this.multiplier = mul;
+        }
+
+    }
 
     private static final double EXP_POOL = 40;
     private static final double EXP_POOL_MOD = 1.2;
@@ -29,6 +43,8 @@ public class PlayerData {
 
     private final Level level;
 
+    private final Queue<XPBoost> boostQueue = new LinkedList<>();
+
     private int playerHealth;
     private int playerShield;
 
@@ -38,9 +54,6 @@ public class PlayerData {
 
     private int playerExp;
     private int playerNextLevelExp;
-
-    private int playerExpBoostDuration;
-    private int playerExpBoost;
 
     private Skill selectedSkill;
     private List<Skill> availableSkills;
@@ -69,9 +82,6 @@ public class PlayerData {
 
         this.playerExp = 0;
         this.playerNextLevelExp = (int) (EXP_POOL * Math.pow(EXP_POOL_MOD, Statistics.PLAYER_LEVEL.get()));
-
-        this.playerExpBoostDuration = 0;
-        this.playerExpBoost = 0;
 
         this.selectedSkill = null;
         this.availableSkills = new ArrayList<>();
@@ -130,8 +140,8 @@ public class PlayerData {
         this.barBars[1].draw(c, xoff * 2, 10);
 
         this.barBars[2].draw(c, xoff * 2, yoff + 10);
-        if (this.playerExpBoostDuration > 0) {
-            c.drawText(this.playerExpBoost  + "X", xoff * 3 + Resources.BARS[0].getWidth(), yoff + 30, FONT_TEXT);
+        if (this.boostQueue.size() > 0) {
+            c.drawText(this.boostQueue.peek().multiplier  + "X", xoff * 3 + Resources.BARS[0].getWidth(), yoff + 30, FONT_TEXT);
         }
 
         if (this.selectedSkill != null) {
@@ -167,8 +177,7 @@ public class PlayerData {
     }
 
     public void addExperienceBoost(int multiplier, int duration) {
-        this.playerExpBoost = multiplier;
-        this.playerExpBoostDuration = duration;
+        this.boostQueue.add(new XPBoost(duration, multiplier));
 
         Statistics.PLAYER_SCORE.add(200);
     }
@@ -245,9 +254,13 @@ public class PlayerData {
 
             Statistics.PLAYER_SCORE.add(2);
 
-            if (this.playerExpBoostDuration > 0) {
-                this.playerExpBoostDuration--;
-                this.playerExp += this.playerExpBoost;
+            if (this.boostQueue.size() > 0) {
+                this.boostQueue.peek().durationLeft--;
+                this.playerExp += this.boostQueue.peek().multiplier;
+
+                if (this.boostQueue.peek().durationLeft < 1) {
+                    this.boostQueue.remove();
+                }
             } else {
                 this.playerExp++;
             }
