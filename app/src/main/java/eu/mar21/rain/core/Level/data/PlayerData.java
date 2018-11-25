@@ -138,7 +138,7 @@ public class PlayerData {
 
         this.barBars[0].setSpan(1, this.playerHealth);
         this.barBars[1].setSpan(1, this.playerShield);
-        this.barBars[2].setSpan(1, (int) (100.0 * (double) this.playerExp / (double) this.playerNextLevelExp));
+        this.barBars[2].setSpan(1, Math.min(100, (int) (100.0 * (double) this.playerExp / (double) this.playerNextLevelExp)));
 
         this.barBars[0].draw(c, xoff * 2, 10);
         this.barBars[1].draw(c, xoff * 2, 10);
