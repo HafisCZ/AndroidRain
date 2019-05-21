@@ -33,14 +33,6 @@ public class PlayerData {
     private static final double EXP_POOL = 40;
     private static final double EXP_POOL_MOD = 1.2;
 
-    private static final Paint FONT_TEXT = new Paint();
-    static {
-        FONT_TEXT.setTextAlign(Paint.Align.CENTER);
-        FONT_TEXT.setTextSize(20);
-        FONT_TEXT.setTypeface(Typeface.MONOSPACE);
-        FONT_TEXT.setColor(Color.YELLOW);
-    }
-
     private final Level level;
 
     private final Queue<XPBoost> boostQueue = new LinkedList<>();
@@ -129,7 +121,7 @@ public class PlayerData {
     }
 
     public void draw(Canvas c) {
-        c.drawText("" + Statistics.PLAYER_SCORE.get(), (float) (c.getWidth() / 2.0), 30.0f, FONT_TEXT);
+        c.drawText("" + Statistics.PLAYER_SCORE.get(), (float) (c.getWidth() / 2.0), 30.0f, Resources.PAINT_M_Y_20_C);
 
         for (int i = 0; i < (this.selectedSkill == null ? 2 : 3); i++) {
             this.iconSmall[i].draw(c, yoff - 10, yoff * i + 10);
@@ -145,7 +137,7 @@ public class PlayerData {
 
         this.barBars[2].draw(c, xoff * 2, yoff + 10);
         if (this.boostQueue.size() > 0) {
-            c.drawText(this.boostQueue.peek().multiplier  + "X", xoff * 3 + Resources.BARS[0].getWidth(), yoff + 30, FONT_TEXT);
+            c.drawText(this.boostQueue.peek().multiplier  + "X", xoff * 3 + Resources.BARS[0].getWidth(), yoff + 30, Resources.PAINT_M_Y_20_C);
         }
 
         if (this.selectedSkill != null) {

@@ -25,12 +25,19 @@ public class Resources {
     public static Paint PAINT_M_LGRAY_0050_L = new Paint();
     public static Paint PAINT_0F8FBC8F = new Paint();
     public static Paint PAINT_2F8FBC8F = new Paint();
+    public static Paint PAINT_108FBC8F = new Paint();
     public static Paint PAINT_2FFFBC8F = new Paint();
     public static Paint PAINT_0 = new Paint();
     public static Paint PAINT_M_Y_0050_R = new Paint();
     public static Paint PAINT_M_Y_0030_C = new Paint();
     public static Paint PAINT_M_GRAY_0030_C = new Paint();
     public static Paint PAINT_M_W_0030_C = new Paint();
+    public static Paint PAINT_0_STROKE = new Paint();
+    public static Paint PAINT_A000FF00_STROKE = new Paint();
+    public static Paint PAINT_A0FFFF00_STROKE = new Paint();
+    public static Paint PAINT_M_A4FFFFFF_0030 = new Paint();
+    public static Paint PAINT_M_A4FFFFFF_0020 = new Paint();
+    public static Paint PAINT_M_Y_20_C = new Paint();
 
     public static Bitmap[] BACKGROUND = new Bitmap[8];
     public static Bitmap[] PLAYER = new Bitmap[9];
@@ -115,65 +122,64 @@ public class Resources {
         PAINT_M_W_0020_L.setTextAlign(Paint.Align.LEFT);
         PAINT_M_W_0020_L.setTextSize(0.02f * (float) SCREEN_WIDTH);
 
-        PAINT_M_W_0020_R.setTypeface(Typeface.MONOSPACE);
-        PAINT_M_W_0020_R.setColor(Color.WHITE);
+        PAINT_M_W_0020_R.set(PAINT_M_W_0020_L);
         PAINT_M_W_0020_R.setTextAlign(Paint.Align.RIGHT);
-        PAINT_M_W_0020_R.setTextSize(0.02f * (float) SCREEN_WIDTH);
 
-        PAINT_M_W_0020_C.setTypeface(Typeface.MONOSPACE);
-        PAINT_M_W_0020_C.setColor(Color.WHITE);
+        PAINT_M_W_0020_C.set(PAINT_M_W_0020_L);
         PAINT_M_W_0020_C.setTextAlign(Paint.Align.CENTER);
-        PAINT_M_W_0020_C.setTextSize(0.02f * (float) SCREEN_WIDTH);
 
+        PAINT_M_W_0050_C.set(PAINT_M_W_0020_C);
+        PAINT_M_W_0050_C.setTextSize(0.05f * (float) SCREEN_WIDTH);
+
+        PAINT_M_W_0100_C.set(PAINT_M_W_0020_C);
+        PAINT_M_W_0100_C.setTextSize(0.1f * (float) SCREEN_WIDTH);
+
+        PAINT_M_W_0050_L.set(PAINT_M_W_0050_C);
+        PAINT_M_W_0050_L.setTextAlign(Paint.Align.LEFT);
+
+        PAINT_M_LGRAY_0050_L.set(PAINT_M_W_0050_L);
+        PAINT_M_LGRAY_0050_L.setColor(Color.LTGRAY);
+
+        PAINT_M_W_0030_C.set(PAINT_M_W_0020_C);
+        PAINT_M_W_0030_C.setTextSize(0.03f * (float) SCREEN_WIDTH);
+
+        PAINT_M_W_0030_L.set(PAINT_M_W_0020_L);
+        PAINT_M_W_0030_L.setTextSize(0.03f * (float) SCREEN_WIDTH);
+
+        PAINT_M_Y_0050_R.set(PAINT_M_W_0050_C);
+        PAINT_M_Y_0050_R.setTextAlign(Paint.Align.RIGHT);
+        PAINT_M_Y_0050_R.setColor(Color.YELLOW);
+
+        PAINT_M_Y_0030_C.set(PAINT_M_W_0020_C);
+        PAINT_M_Y_0030_C.setTextSize(0.03f * (float) SCREEN_WIDTH);
+        PAINT_M_Y_0030_C.setColor(Color.YELLOW);
+
+        PAINT_M_Y_20_C.set(PAINT_M_Y_0030_C);
+        PAINT_M_Y_20_C.setTextSize(20);
+
+        PAINT_M_GRAY_0030_C.set(PAINT_M_Y_0030_C);
+        PAINT_M_GRAY_0030_C.setColor(Color.GRAY);
+
+        PAINT_0.setColor(0x00000000);
         PAINT_0F8FBC8F.setColor(0x0F8FBC8F);
         PAINT_2F8FBC8F.setColor(0x2F8FBC8F);
         PAINT_2FFFBC8F.setColor(0x2FFFBC8F);
+        PAINT_108FBC8F.setColor(0x108FBC8F);
 
-        PAINT_M_W_0050_C.setTypeface(Typeface.MONOSPACE);
-        PAINT_M_W_0050_C.setColor(Color.WHITE);
-        PAINT_M_W_0050_C.setTextAlign(Paint.Align.CENTER);
-        PAINT_M_W_0050_C.setTextSize(0.05f * (float) SCREEN_WIDTH);
+        PAINT_0_STROKE.setColor(0);
+        PAINT_0_STROKE.setStyle(Paint.Style.STROKE);
 
-        PAINT_M_W_0100_C.setTypeface(Typeface.MONOSPACE);
-        PAINT_M_W_0100_C.setColor(Color.WHITE);
-        PAINT_M_W_0100_C.setTextAlign(Paint.Align.CENTER);
-        PAINT_M_W_0100_C.setTextSize(0.05f * (float) SCREEN_WIDTH);
+        PAINT_A0FFFF00_STROKE.setColor(0xA0FFFF00);
+        PAINT_A0FFFF00_STROKE.setStyle(Paint.Style.STROKE);
 
-        PAINT_M_W_0050_L.setTypeface(Typeface.MONOSPACE);
-        PAINT_M_W_0050_L.setColor(Color.WHITE);
-        PAINT_M_W_0050_L.setTextAlign(Paint.Align.LEFT);
-        PAINT_M_W_0050_L.setTextSize(0.05f * (float) SCREEN_WIDTH);
+        PAINT_A000FF00_STROKE.setColor(0xA000FF00);
+        PAINT_A000FF00_STROKE.setStyle(Paint.Style.STROKE);
 
-        PAINT_M_LGRAY_0050_L.setTypeface(Typeface.MONOSPACE);
-        PAINT_M_LGRAY_0050_L.setColor(Color.LTGRAY);
-        PAINT_M_LGRAY_0050_L.setTextAlign(Paint.Align.LEFT);
-        PAINT_M_LGRAY_0050_L.setTextSize(0.05f * (float) SCREEN_WIDTH);
+        PAINT_M_A4FFFFFF_0030.setColor(0xA4FFFFFF);
+        PAINT_M_A4FFFFFF_0030.setTypeface(Typeface.MONOSPACE);
+        PAINT_M_A4FFFFFF_0030.setTextSize(30);
 
-        PAINT_M_Y_0050_R.setTypeface(Typeface.MONOSPACE);
-        PAINT_M_Y_0050_R.setColor(Color.YELLOW);
-        PAINT_M_Y_0050_R.setTextAlign(Paint.Align.LEFT);
-        PAINT_M_Y_0050_R.setTextSize(0.05f * (float) SCREEN_WIDTH);
-
-        PAINT_M_Y_0030_C.setTypeface(Typeface.MONOSPACE);
-        PAINT_M_Y_0030_C.setColor(Color.YELLOW);
-        PAINT_M_Y_0030_C.setTextAlign(Paint.Align.CENTER);
-        PAINT_M_Y_0030_C.setTextSize(0.03f * (float) SCREEN_WIDTH);
-
-        PAINT_M_GRAY_0030_C.setTypeface(Typeface.MONOSPACE);
-        PAINT_M_GRAY_0030_C.setColor(Color.GRAY);
-        PAINT_M_GRAY_0030_C.setTextAlign(Paint.Align.CENTER);
-        PAINT_M_GRAY_0030_C.setTextSize(0.03f * (float) SCREEN_WIDTH);
-
-        PAINT_M_W_0030_C.setTypeface(Typeface.MONOSPACE);
-        PAINT_M_W_0030_C.setColor(Color.WHITE);
-        PAINT_M_W_0030_C.setTextAlign(Paint.Align.CENTER);
-        PAINT_M_W_0030_C.setTextSize(0.03f * (float) SCREEN_WIDTH);
-
-        PAINT_M_W_0030_L.setTypeface(Typeface.MONOSPACE);
-        PAINT_M_W_0030_L.setColor(Color.WHITE);
-        PAINT_M_W_0030_L.setTextAlign(Paint.Align.LEFT);
-        PAINT_M_W_0030_L.setTextSize(0.03f * (float) SCREEN_WIDTH);
-
-        PAINT_0.setColor(0x00000000);
+        PAINT_M_A4FFFFFF_0020.set(PAINT_M_A4FFFFFF_0030);
+        PAINT_M_A4FFFFFF_0020.setTextSize(20);
     }
 }
