@@ -16,7 +16,7 @@ public class Star extends Item {
     // Methods
     @Override
     public void effect() {
-        switch (RANDOM.nextInt(Statistics.PLAYER_UPGRADE_STAR.get())) {
+        switch (RANDOM.nextInt(Statistics.UPGRADE_RANDOM.get())) {
             case 1 : {
                 int experience = 5 + RANDOM.nextInt(this.level.getData().getRequiredExperience() / 5);
                 this.level.getData().addExperience(experience);
@@ -52,7 +52,7 @@ public class Star extends Item {
             }
         }
 
-        Statistics.STAT_COUNT_STARS.add();
+        Statistics.STAT_RANDOM_COLLECTED.add(1);
     }
 
 }

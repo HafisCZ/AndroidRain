@@ -1,74 +1,57 @@
 package eu.mar21.rain.core.scene.menu;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Typeface;
 
-import eu.mar21.rain.core.graphics.Renderer;
+import eu.mar21.rain.core.graphics.Window;
 import eu.mar21.rain.core.level.data.Statistics;
 import eu.mar21.rain.core.scene.Scene;
 import eu.mar21.rain.core.ui.Panel;
 import eu.mar21.rain.core.ui.Text;
-import eu.mar21.rain.core.ui.View;
 import eu.mar21.rain.core.utils.Resources;
 import eu.mar21.rain.core.utils.input.InputListener;
 
 public class Stat extends Scene {
 
-    private InputListener input;
+    // Constructor
+    public Stat(Window w) {
+        super(w);
 
-    private View view;
-
-    public Stat(Renderer r) {
-        super(r);
-
-        this.input = new InputListener();
+        this.listener = new InputListener();
     }
 
-    private Panel newInfo(String s1, int s2, float x, float y) {
-        Panel panel = new Panel(x, y, 0.4f, 0.1f);
-        panel.addChild(new Text(s1).setPosition(0, 0.8f).setFont(Typeface.MONOSPACE, Color.WHITE, 0.02f, Paint.Align.LEFT));
-        panel.addChild(new Text(Integer.toString(s2)).setPosition(1, 0.8f).setFont(Typeface.MONOSPACE, Color.WHITE, 0.02f, Paint.Align.RIGHT));
+    // Methods
+    private Panel entry(String s, int i, float x, float y) {
+        Panel p = new Panel(x, y, 0.4f, 0.1f).setBackground(Resources.PAINT_0);
 
-        return panel;
+        p.add(new Text(s).setPosition(0, 0.8f).setForeground(Resources.PAINT_M_W_0020_L));
+        p.add(new Text(Integer.toString(i)).setPosition(1, 0.8f).setForeground(Resources.PAINT_M_W_0020_R));
+
+        return p;
     }
 
     @Override
     public void begin() {
-        this.input.reset();
+        this.view = new Panel(0, 0, 1, 1).setBackground(Resources.PAINT_0);
 
-        this.view = new Panel(0, 0, 1, 1);
+        Panel title = (Panel) new Panel(0, 0, 1, 0.1f).setBackground(Resources.PAINT_0F8FBC8F).onClick(v -> window.requestScene(Menu.class));
+        title.add(new Text("STATISTICS").setPosition(0.5f, 0.8f).setForeground(Resources.PAINT_M_W_0050_C));
+        title.add(new Text("<<").setPosition(0.01f, 0.8f).setForeground(Resources.PAINT_M_LGRAY_0050_L));
+        this.view.add(title);
 
-        /*
-            Header & back button
-        */
-        Panel title = (Panel) new Panel(0, 0, 1, 0.1f).setBackground(0x0F8FBC8F).onClick(v -> renderer.requestScene(Menu.class));
-        title.addChild(new Text("STATISTICS").setPosition(0.5f, 0.8f).setFont(Typeface.MONOSPACE, Color.WHITE,0.05f, Paint.Align.CENTER));
-        title.addChild(new Text("<<").setPosition(0.01f, 0.8f).setFont(Typeface.MONOSPACE, Color.LTGRAY, 0.05f, Paint.Align.LEFT));
-        this.view.addChild(title);
+        this.view.add(entry("Level", Statistics.PLAYER_LEVEL.get(), 0.05f, 0.15f));
+        this.view.add(entry("Score", Statistics.PLAYER_SCORE.get(), 0.05f, 0.25f));
+        this.view.add(entry("Total EXP", Statistics.STAT_TOTAL_EXP.get(), 0.05f, 0.35f));
+        this.view.add(entry("Longest game", Statistics.STAT_LONGEST_GAME.get(), 0.05f, 0.45f));
 
-        /*
-            Entries
-        */
-        this.view.addChild(newInfo("Level", Statistics.PLAYER_LEVEL.get(), 0.05f, 0.15f));
-        this.view.addChild(newInfo("Score", Statistics.PLAYER_SCORE.get(), 0.05f, 0.25f));
-        this.view.addChild(newInfo("Total EXP", Statistics.STAT_COUNT_EXP.get(), 0.05f, 0.35f));
-        this.view.addChild(newInfo("Longest game", Statistics.STAT_COUNT_LONGEST.get(), 0.05f, 0.45f));
+        this.view.add(entry("Nodes", Statistics.STAT_ENERGY_COLLECTED.get(), 0.55f, 0.15f));
+        this.view.add(entry("Shields", Statistics.STAT_SHIELDS_COLLECTED.get(), 0.55f, 0.25f));
+        this.view.add(entry("Stars", Statistics.STAT_RANDOM_COLLECTED.get(), 0.55f, 0.35f));
+        this.view.add(entry("Skills used", Statistics.STAT_SKILL_ACTIVATIONS.get(), 0.55f, 0.45f));
+        this.view.add(entry("Jumps", Statistics.STAT_TOTAL_JUMPS.get(), 0.55f, 0.55f));
+        this.view.add(entry("Damage", Statistics.STAT_DMG_TAKEN.get(), 0.55f, 0.65f));
 
-        this.view.addChild(newInfo("Nodes", Statistics.STAT_COUNT_NODES.get(), 0.55f, 0.15f));
-        this.view.addChild(newInfo("Shields", Statistics.STAT_COUNT_SHIELD.get(), 0.55f, 0.25f));
-        this.view.addChild(newInfo("Stars", Statistics.STAT_COUNT_STARS.get(), 0.55f, 0.35f));
-        this.view.addChild(newInfo("Skills used", Statistics.STAT_COUNT_ACTIVATE.get(), 0.55f, 0.45f));
-        this.view.addChild(newInfo("Jumps", Statistics.STAT_COUNT_JUMP.get(), 0.55f, 0.55f));
-        this.view.addChild(newInfo("Damage", Statistics.STAT_COUNT_DAMAGE.get(), 0.55f, 0.65f));
-
-        this.view.setListener(this.input);
-    }
-
-    @Override
-    public InputListener getDedicatedListener() {
-        return this.input;
+        this.listener.reset();
+        this.view.setListener(this.listener);
     }
 
     @Override
@@ -77,6 +60,6 @@ public class Stat extends Scene {
             c.drawBitmap(Resources.BACKGROUND[i], - 50, 0, null);
         }
 
-        this.view.draw(c);
+        this.view.show(c);
     }
 }

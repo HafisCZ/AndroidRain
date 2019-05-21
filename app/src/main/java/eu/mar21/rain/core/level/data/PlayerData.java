@@ -75,12 +75,12 @@ public class PlayerData {
     public PlayerData(Level level) {
         this.level = level;
 
-        this.playerHealth = Statistics.PLAYER_MAX_HEALTH.get();
-        this.playerShield = Statistics.PLAYER_DEF_SHIELD.get();
+        this.playerHealth = Statistics.PLAYER_HEALTH.get();
+        this.playerShield = Statistics.PLAYER_SHIELDS.get();
 
         this.playerEnergy = 0;
         this.playerEnergyBurnout = 0;
-        this.playerEnergyRate = Statistics.PLAYER_UPGRADE_BETTER_NODES.get() != 0 ? 2 : 1;
+        this.playerEnergyRate = Statistics.UPGRADE_ENERGY_MULT.get() != 0 ? 2 : 1;
 
         this.playerExp = 0;
         this.playerNextLevelExp = (int) (EXP_POOL * Math.pow(EXP_POOL_MOD, Statistics.PLAYER_LEVEL.get()));
@@ -88,15 +88,15 @@ public class PlayerData {
         this.selectedSkill = null;
         this.availableSkills = new ArrayList<>();
 
-        if (Statistics.PLAYER_SKILL_SHOCKWAVE.get() != 0) {
+        if (Statistics.UPGRADE_SKILL_SHOCK.get() != 0) {
             this.availableSkills.add(Skill.SHOCKWAVE);
         }
 
-        if (Statistics.PLAYER_SKILL_DOUBLE_EXP.get() != 0) {
+        if (Statistics.UPGRADE_SKILL_XPBOOST.get() != 0) {
             this.availableSkills.add(Skill.EXPERIENCE_SPAWN);
         }
 
-        if (Statistics.PLAYER_SKILL_SHIELD.get() != 0) {
+        if (Statistics.UPGRADE_SKILL_SHIELD.get() != 0) {
             this.availableSkills.add(Skill.SHIELD_SPAWN);
         }
 
@@ -124,7 +124,7 @@ public class PlayerData {
     }
 
     public void save() {
-        Statistics.STAT_COUNT_EXP.add(this.playerExp);
+        Statistics.STAT_TOTAL_EXP.add(this.playerExp);
         Statistics.save();
     }
 
@@ -173,12 +173,12 @@ public class PlayerData {
             }
         }
 
-        Statistics.STAT_COUNT_DAMAGE.add();
+        Statistics.STAT_DMG_TAKEN.add(1);
     }
 
     public void saveTime() {
-        if (Statistics.STAT_COUNT_LONGEST.get() < this.seconds) {
-            Statistics.STAT_COUNT_LONGEST.set((int) this.seconds);
+        if (Statistics.STAT_LONGEST_GAME.get() < this.seconds) {
+            Statistics.STAT_LONGEST_GAME.set((int) this.seconds);
         }
     }
 
@@ -210,7 +210,7 @@ public class PlayerData {
             this.playerEnergyBurnout = this.selectedSkill.getDuration() * 60;
             this.playerEnergy = 0;
 
-            Statistics.STAT_COUNT_ACTIVATE.add();
+            Statistics.STAT_SKILL_ACTIVATIONS.add(1);
         }
     }
 
@@ -279,8 +279,8 @@ public class PlayerData {
             if (this.playerExp >= this.playerNextLevelExp) {
                 this.playerExp = 0;
 
-                Statistics.PLAYER_LEVEL.add();
-                Statistics.PLAYER_SPENDABLE_POINTS.add();
+                Statistics.PLAYER_LEVEL.add(1);
+                Statistics.PLAYER_POINTS.add(1);
 
                 this.playerNextLevelExp = (int) (EXP_POOL * Math.pow(EXP_POOL_MOD, Statistics.PLAYER_LEVEL.get()));
 
@@ -294,7 +294,7 @@ public class PlayerData {
     }
 
     public void addPoint() {
-        Statistics.PLAYER_SPENDABLE_POINTS.add();
+        Statistics.PLAYER_POINTS.add(1);
     }
 
 }

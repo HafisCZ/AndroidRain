@@ -1,67 +1,65 @@
 package eu.mar21.rain.core.level.data;
 
-import eu.mar21.rain.core.utils.DataStorage;
+import eu.mar21.rain.core.device.Preferences;
 
 public enum Statistics {
 
-    STAT_COUNT_DAMAGE(0),
-    STAT_COUNT_EXP(0),
-    STAT_COUNT_SHIELD(0),
-    STAT_COUNT_NODES(0),
-    STAT_COUNT_STARS(0),
-    STAT_COUNT_JUMP(0),
-    STAT_COUNT_LONGEST(0),
-    STAT_COUNT_ACTIVATE(0),
+    STAT_DMG_TAKEN,
+    STAT_TOTAL_EXP,
+    STAT_SHIELDS_COLLECTED,
+    STAT_ENERGY_COLLECTED,
+    STAT_RANDOM_COLLECTED,
+    STAT_TOTAL_JUMPS,
+    STAT_LONGEST_GAME,
+    STAT_SKILL_ACTIVATIONS,
 
-    PLAYER_SCORE(0),
+    PLAYER_SCORE,
     PLAYER_LEVEL(1),
-    PLAYER_SPENDABLE_POINTS(0),
-    PLAYER_MAX_HEALTH(3),
-    PLAYER_DEF_SHIELD(0),
-    PLAYER_UPGRADE_STAR(1),
-    PLAYER_UPGRADE_DMG_SHOCKWAVE(0),
-    PLAYER_UPGRADE_BETTER_NODES(0),
-    PLAYER_SKILL_SHOCKWAVE(0),
-    PLAYER_SKILL_DOUBLE_EXP(0),
-    PLAYER_SKILL_SHIELD(0);
+    PLAYER_POINTS,
+    PLAYER_HEALTH(3),
+    PLAYER_SHIELDS,
 
-    private int value;
+    UPGRADE_RANDOM(1),
+    UPGRADE_SKILL_SHOCK,
+    UPGRADE_SKILL_XPBOOST,
+    UPGRADE_SKILL_SHIELD,
+    UPGRADE_ENERGY_MULT;
+
+    // Params
+    private int val;
     private int def;
+
+    // Constructor
+    Statistics() {
+        this(0);
+    }
 
     Statistics(int def) {
         this.def = def;
-        this.value = DataStorage.INSTANCE.get(name(), def);
+        this.val = Preferences.get(name(), def);
     }
 
     public int get() {
-        return this.value;
+        return this.val;
     }
 
-    public void set(int value) {
-        this.value = value;
+    public void set(int val) {
+        this.val = val;
     }
 
-    public void add() {
-        add(1);
+    public void add(int val) {
+        this.val += val;
     }
 
-    public void sub() {
-        add(-1);
-    }
-
-    public void add(int amount) {
-        this.value += amount;
-    }
-
-    public static void clear() {
+    public static void reset() {
         for (Statistics s : values()) {
-            s.set(s.def);
+            s.val = s.def;
         }
     }
 
     public static void save() {
-        for (Statistics s : values()) {
-            DataStorage.INSTANCE.set(s.name(), s.value);
+        for (Statistics s :  values()) {
+            Preferences.set(s.name(), s.val);
         }
     }
 

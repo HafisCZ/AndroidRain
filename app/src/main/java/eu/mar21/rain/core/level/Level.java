@@ -1,16 +1,12 @@
 package eu.mar21.rain.core.level;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Typeface;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Queue;
 
 import eu.mar21.rain.core.entity.Entity;
@@ -27,7 +23,6 @@ import eu.mar21.rain.core.entity.spawner.Spawner;
 import eu.mar21.rain.core.entity.spawner.StarSpawner;
 import eu.mar21.rain.core.graphics.Notification;
 import eu.mar21.rain.core.level.data.PlayerData;
-import eu.mar21.rain.core.ui.Text;
 import eu.mar21.rain.core.utils.Resources;
 import eu.mar21.rain.core.utils.input.InputListener;
 
@@ -126,13 +121,13 @@ public class Level {
     }
 
     public void draw(Canvas c) {
-        if (this.mobs.size() > 0) {
+        if (!this.exit) {
             for (int i = 0; i < 8; i++) {
                 c.drawBitmap(Resources.BACKGROUND[i], (int) ((getPlayer().getCX() - Resources.SCREEN_WIDTH / 2) / (Resources.SCREEN_WIDTH / 8) * - Math.pow(1.55, i) - 100 / 2), 0, null);
             }
         } else {
             for (int i = 0; i < 8; i++) {
-                c.drawBitmap(Resources.BACKGROUND[i], 0,0, null);
+                c.drawBitmap(Resources.BACKGROUND[i], -50,0, null);
             }
         }
 
@@ -156,12 +151,10 @@ public class Level {
         if (!this.notifications.isEmpty()) {
             this.notifications.peek().draw(c);
         }
+    }
 
-        if (this.frozen) {
-            new Text("GAME PAUSED").setPosition(0.5f, 0.6f).setFont(Typeface.MONOSPACE, Color.WHITE, 0.1f, Paint.Align.CENTER).draw(c);
-            new Text("CLICK BELOW TO UNPAUSE THE GAME").setPosition(0.5f, 0.7f).setFont(Typeface.MONOSPACE, Color.WHITE, 0.02f, Paint.Align.CENTER).draw(c);
-            new Text("OR CLICK ABOVE TO RETURN TO MENU").setPosition(0.5f, 0.75f).setFont(Typeface.MONOSPACE, Color.WHITE, 0.02f, Paint.Align.CENTER).draw(c);
-        }
+    public boolean isFrozen() {
+        return this.frozen;
     }
 
     public List<Mob> getMobs() {

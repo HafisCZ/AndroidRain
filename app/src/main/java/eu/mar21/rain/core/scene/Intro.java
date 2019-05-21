@@ -1,60 +1,49 @@
 package eu.mar21.rain.core.scene;
 
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
-import eu.mar21.rain.core.graphics.Renderer;
+import eu.mar21.rain.core.graphics.Window;
 import eu.mar21.rain.core.utils.Resources;
 
 public class Intro extends Scene {
 
+    // Params
     private int alpha;
-    private boolean fadeOut;
+    private boolean fade;
 
-    @SuppressWarnings("unused")
-    public Intro(Renderer r) {
-        super(r);
+    // Constructor
+    public Intro(Window w) {
+        super(w);
+    }
+
+    // Methods
+    @Override
+    public void begin() {
+        this.alpha = 0;
+        this.fade = false;
     }
 
     @Override
     public void update(Scene s) {
-        if (this.fadeOut) {
+        if (this.fade) {
             this.alpha -= 4;
             if (this.alpha < 0) {
                 this.alpha = 0;
-                this.fadeOut = false;
+                this.fade = false;
             }
         } else {
             this.alpha += 2;
             if (this.alpha > 255) {
                 this.alpha = 255;
-                this.fadeOut = true;
-
+                this.fade = true;
             }
         }
     }
 
     @Override
-    public void init() {
-
-    }
-
-    @Override
-    public void begin() {
-        this.alpha = 0;
-        this.fadeOut = false;
-    }
-
-    @Override
-    public void end() {
-
-    }
-
-    @Override
     public void draw(Canvas c) {
-        Resources.ALPHA_ONLY.setAlpha(this.alpha);
+        Resources.PAINT_ALPHA.setAlpha(this.alpha);
 
-        final Bitmap logo = Resources.LOGO;
-        c.drawBitmap(logo, c.getWidth() / 2 - logo.getWidth()/ 2, c.getHeight() / 2 - logo.getHeight() / 2, Resources.ALPHA_ONLY);
+        c.drawBitmap(Resources.LOGO, (float) (c.getWidth() / 2 - Resources.LOGO.getWidth() / 2), (float) (c.getHeight() / 2 - Resources.LOGO.getHeight() / 2), Resources.PAINT_ALPHA);
     }
 }

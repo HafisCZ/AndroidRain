@@ -1,6 +1,7 @@
 package eu.mar21.rain.core.ui;
 
 import android.graphics.Canvas;
+import android.graphics.Paint;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,81 +11,98 @@ import eu.mar21.rain.core.utils.input.InputListener;
 
 public abstract class View {
 
+    // Params
     protected float x;
     protected float y;
     protected float w;
     protected float h;
 
-    private List<View> children = new ArrayList<>();
+    protected Paint fg;
+    protected Paint bg;
+
+    protected List<View> views;
 
     private Action action;
-    private boolean actionHandled = false;
+    private boolean handled;
     private InputListener listener;
 
+    // Constructor
     protected View(float x, float y, float w, float h) {
         this.x = x;
         this.y = y;
         this.w = w;
         this.h = h;
+
+        this.views = new ArrayList<>();
+        this.handled = false;
+        this.listener = null;
+        this.action = null;
+
+        this.fg = Resources.PAINT;
+        this.bg = Resources.PAINT;
     }
 
-    public void addChild(View view) {
-        this.children.add(view);
+    // Methods
+    public void add(View v) {
+        this.views.add(v);
     }
 
-    public void removeChild(View view) {
-        this.children.remove(view);
+    public void remove(View v) {
+        this.views.remove(v);
+    }
+
+    public List<View> get() {
+        return this.views;
     }
 
     public float getScale() {
         return this.h / this.w;
     }
 
-    public List<View> getChildren() {
-        return this.children;
-    }
+    public void setListener(InputListener l) {
+        this.listener = l;
 
-    public void setListener(InputListener listener) {
-        this.listener = listener;
-        for (View v : this.children) {
-            v.setListener(listener);
+        for (View v : this.views) {
+            v.setListener(l);
         }
     }
 
     public View onClick(Action action) {
         this.action = action;
+
         return this;
     }
 
-    private void handleListener(float x, float y, float w, float h) {
+    protected void handle(float rx, float ry, float rw, float rh) {
         if (this.listener != null && this.action != null) {
-            boolean press = this.listener.isPressed((int) x, (int) y, (int) (x + w), (int) (y + h));
-            if (press && !this.actionHandled) {
+            boolean press = this.listener.isPressed((int) rx, (int) ry, (int) (rx + rw), (int) (ry + rh));
+            if (press && !this.handled) {
                 this.action.apply(this);
             }
 
-            this.actionHandled = press;
+            this.handled = press;
         }
     }
 
-    public void draw(Canvas c) {
-        draw(c, 0, 0, (float) Resources.SCREEN_WIDTH, (float) Resources.SCREEN_HEIGHT);
+    public void show(Canvas c) {
+        show(c, 0, 0, (float) Resources.SCREEN_WIDTH, (float) Resources.SCREEN_HEIGHT);
     }
 
-    protected void draw(Canvas c, float px, float py, float pw, float ph) {
-        float rx = px + pw * this.x;
-        float ry = py + ph * this.y;
-        float rw = pw * this.w;
-        float rh = ph * this.h;
+    protected void show(Canvas c, float fx, float fy, float fw, float fh) {
+        float rx = fx + fw * this.x;
+        float ry = fy + fh * this.y;
+        float rw = fw * this.w;
+        float rh = fh * this.h;
 
-        handleListener(rx, ry, rw, rh);
-        drawView(c, rx, ry, rw, rh);
-        for (View v : this.children) {
-            v.draw(c, rx, ry, rw, rh);
+        handle(rx, ry, rw, rh);
+        draw(c, rx, ry, rw, rh);
+
+        for (View v : this.views) {
+            v.show(c, rx, ry, rw, rh);
         }
     }
 
-    public abstract void drawView(Canvas c, float x, float y, float w, float h);
+    public abstract void draw(Canvas c, float x, float y, float w, float h);
 
 }
 

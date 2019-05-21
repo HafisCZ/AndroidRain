@@ -1,94 +1,82 @@
 package eu.mar21.rain.core.scene.menu;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Typeface;
 
-import eu.mar21.rain.core.graphics.Renderer;
+import eu.mar21.rain.core.graphics.Window;
 import eu.mar21.rain.core.level.data.Statistics;
 import eu.mar21.rain.core.scene.Scene;
 import eu.mar21.rain.core.ui.Button;
 import eu.mar21.rain.core.ui.Panel;
 import eu.mar21.rain.core.ui.Text;
-import eu.mar21.rain.core.ui.View;
 import eu.mar21.rain.core.utils.Resources;
 import eu.mar21.rain.core.utils.input.InputListener;
 
 public class Settings extends Scene {
 
-    private InputListener input;
+    // Params
+    private Button[] buttons= new Button[3];
 
-    private View view;
-    private Button buttons[] = new Button[3];
+    // Constructor
+    public Settings(Window w) {
+        super(w);
 
-    public Settings(Renderer r) {
-        super(r);
-
-        this.input = new InputListener();
+        this.listener = new InputListener();
     }
 
+    // Methods
     @Override
     public void init() {
-        this.view = new Panel(0, 0, 1, 1);
+        this.view = new Panel(0, 0, 1, 1).setBackground(Resources.PAINT_0);
 
-        /*
-            Header & back button
-        */
-        Panel title = (Panel) new Panel(0, 0, 1, 0.1f).setBackground(0x0F8FBC8F).onClick(v -> renderer.requestScene(Menu.class));
-        title.addChild(new Text("OPTIONS").setPosition(0.5f, 0.8f).setFont(Typeface.MONOSPACE, Color.WHITE,0.05f, Paint.Align.CENTER));
-        title.addChild(new Text("<<").setPosition(0.01f, 0.8f).setFont(Typeface.MONOSPACE, Color.LTGRAY, 0.05f, Paint.Align.LEFT));
-        this.view.addChild(title);
+        Panel title = (Panel) new Panel(0, 0, 1, 0.1f).setBackground(Resources.PAINT_0F8FBC8F).onClick(v -> window.requestScene(Menu.class));
+        title.add(new Text("OPTIONS").setPosition(0.5f, 0.8f).setForeground(Resources.PAINT_M_W_0050_C));
+        title.add(new Text("<<").setPosition(0.01f, 0.8f).setForeground(Resources.PAINT_M_LGRAY_0050_L));
+        this.view.add(title);
 
-        Panel sub0 = new Panel(0.1f, 0.15f, 0.8f, 0.3f);
-        sub0.addChild(new Text("CONTROL SCHEME").setPosition(0.05f, 0.2f).setFont(Typeface.MONOSPACE, Color.WHITE, 0.03f, Paint.Align.LEFT));
-        this.view.addChild(sub0);
+        Panel sub0 = new Panel(0.1f, 0.15f, 0.8f, 0.3f).setBackground(Resources.PAINT_0);
+        sub0.add(new Text("CONTROL SCHEME").setPosition(0.05f, 0.2f).setForeground(Resources.PAINT_M_W_0030_L));
+        this.view.add(sub0);
 
-        buttons[0] = (Button) new Button(sub0, "TAP", 0 * 1.0f / 3.0f + 0.05f, 0.5f, 1.0f / 3.0f - 0.05f, 0.5f).setBackground(0x0F8FBC8F).setFont(Typeface.MONOSPACE, Color.WHITE, 0.05f).onClick(v -> {
+        buttons[0] = (Button) new Button(sub0, "TAP", 0 * 1.0f / 3.0f + 0.05f, 0.5f, 1.0f / 3.0f - 0.05f, 0.5f).setBackground(Resources.PAINT_0F8FBC8F).setForeground(Resources.PAINT_M_W_0050_C).onClick(v -> {
             InputListener.setMode(InputListener.TouchMode.TAP);
             begin();
         });
 
-        buttons[1] = (Button) new Button(sub0, "SWIPE", 1 * 1.0f / 3.0f + 0.05f, 0.5f, 1.0f / 3.0f - 0.05f, 0.5f).setBackground(0x0F8FBC8F).setFont(Typeface.MONOSPACE, Color.WHITE, 0.05f).onClick(v -> {
+        buttons[1] = (Button) new Button(sub0, "SWIPE", 1 * 1.0f / 3.0f + 0.05f, 0.5f, 1.0f / 3.0f - 0.05f, 0.5f).setBackground(Resources.PAINT_0F8FBC8F).setForeground(Resources.PAINT_M_W_0050_C).onClick(v -> {
             InputListener.setMode(InputListener.TouchMode.SWIPE);
             begin();
         });
 
-        buttons[2] = (Button) new Button(sub0, "SENSOR", 2 * 1.0f / 3.0f + 0.05f, 0.5f, 1.0f / 3.0f - 0.05f, 0.5f).setBackground(0x0F8FBC8F).setFont(Typeface.MONOSPACE, Color.WHITE, 0.05f).onClick(v -> {
+        buttons[2] = (Button) new Button(sub0, "SENSOR", 2 * 1.0f / 3.0f + 0.05f, 0.5f, 1.0f / 3.0f - 0.05f, 0.5f).setBackground(Resources.PAINT_0F8FBC8F).setForeground(Resources.PAINT_M_W_0050_C).onClick(v -> {
             InputListener.setMode(InputListener.TouchMode.SENSOR);
             begin();
         });
 
-        Panel sub1 = new Panel(0.1f, 0.6f, 0.8f, 0.3f);
-        sub1.addChild(new Text("STATISTICS").setPosition(0.05f, 0.2f).setFont(Typeface.MONOSPACE, Color.WHITE, 0.03f, Paint.Align.LEFT));
-        this.view.addChild(sub1);
+        Panel sub1 = new Panel(0.1f, 0.6f, 0.8f, 0.3f).setBackground(Resources.PAINT_0);
+        sub1.add(new Text("STATISTICS").setPosition(0.05f, 0.2f).setForeground(Resources.PAINT_M_W_0030_L));
+        this.view.add(sub1);
 
-        Panel gsub1 = new Panel(0.05f, 0.5f, 1.0f / 3.0f - 0.05f, 0.5f).setBackground(0x2FFFBC8F);
-        sub1.addChild(gsub1);
+        Panel gsub1 = new Panel(0.05f, 0.5f, 1.0f / 3.0f - 0.05f, 0.5f).setBackground(Resources.PAINT_2FFFBC8F);
+        sub1.add(gsub1);
 
-        gsub1.addChild(new Text("CLEAR").setPosition(0.5f, 0.8f).setFont(Typeface.MONOSPACE, Color.WHITE, 0.05f, Paint.Align.CENTER));
+        gsub1.add(new Text("CLEAR").setPosition(0.5f, 0.8f).setForeground(Resources.PAINT_M_W_0050_C));
 
         gsub1.onClick(v -> {
-            Statistics.clear();
+            Statistics.reset();
             Statistics.save();
             begin();
         });
 
-        this.view.setListener(this.input);
+        this.view.setListener(this.listener);
     }
 
     @Override
     public void begin() {
-        this.input.reset();
+        this.listener.reset();
 
-        this.buttons[0].setBackground(InputListener.getMode() == InputListener.TouchMode.TAP ? 0x2F8FFC8F : 0x0F8FBC8F);
-        this.buttons[1].setBackground(InputListener.getMode() == InputListener.TouchMode.SWIPE ? 0x2F8FFC8F : 0x0F8FBC8F);
-        this.buttons[2].setBackground(InputListener.getMode() == InputListener.TouchMode.SENSOR ? 0x2F8FFC8F : 0x0F8FBC8F);
-    }
-
-    @Override
-    public InputListener getDedicatedListener() {
-        return this.input;
+        this.buttons[0].setBackground(InputListener.getMode() == InputListener.TouchMode.TAP ? Resources.PAINT_2F8FBC8F : Resources.PAINT_0F8FBC8F);
+        this.buttons[1].setBackground(InputListener.getMode() == InputListener.TouchMode.SWIPE ? Resources.PAINT_2F8FBC8F : Resources.PAINT_0F8FBC8F);
+        this.buttons[2].setBackground(InputListener.getMode() == InputListener.TouchMode.SENSOR ? Resources.PAINT_2F8FBC8F : Resources.PAINT_0F8FBC8F);
     }
 
     @Override
@@ -97,6 +85,6 @@ public class Settings extends Scene {
             c.drawBitmap(Resources.BACKGROUND[i], - 50, 0, null);
         }
 
-        this.view.draw(c);
+        this.view.show(c);
     }
 }

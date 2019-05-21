@@ -7,7 +7,7 @@ import android.hardware.SensorManager;
 import android.view.MotionEvent;
 import android.view.View;
 
-import eu.mar21.rain.core.utils.DataStorage;
+import eu.mar21.rain.core.device.Preferences;
 import eu.mar21.rain.core.utils.Resources;
 
 import static android.view.MotionEvent.ACTION_CANCEL;
@@ -114,11 +114,11 @@ public class InputListener implements View.OnTouchListener, SensorEventListener 
 
     }
 
-    private static TouchMode mode = TouchMode.values()[DataStorage.INSTANCE.get("control.mode", 0)];
+    private static TouchMode mode = TouchMode.values()[Preferences.get("control.mode", 0)];
 
     public static void setMode(TouchMode m) {
         mode = m;
-        DataStorage.INSTANCE.set("control.mode", mode.ordinal());
+        Preferences.set("control.mode", mode.ordinal());
     }
 
     public static TouchMode getMode() {

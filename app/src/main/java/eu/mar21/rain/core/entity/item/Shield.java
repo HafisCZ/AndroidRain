@@ -17,7 +17,7 @@ public class Shield extends Item {
     public void effect() {
         this.level.getData().addShield();
 
-        Statistics.STAT_COUNT_SHIELD.add();
+        Statistics.STAT_SHIELDS_COLLECTED.add(1);
     }
 
 }

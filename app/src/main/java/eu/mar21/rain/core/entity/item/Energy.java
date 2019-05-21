@@ -17,7 +17,7 @@ public class Energy extends Item {
     public void effect() {
         this.level.getData().addEnergy();
 
-        Statistics.STAT_COUNT_NODES.add();
+        Statistics.STAT_ENERGY_COLLECTED.add(1);
     }
 
 }

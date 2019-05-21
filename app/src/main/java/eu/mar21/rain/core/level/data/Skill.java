@@ -2,8 +2,8 @@ package eu.mar21.rain.core.level.data;
 
 import eu.mar21.rain.core.entity.particle.ShockParticle;
 import eu.mar21.rain.core.level.Level;
-import eu.mar21.rain.core.utils.Resources;
 import eu.mar21.rain.core.utils.Consumer;
+import eu.mar21.rain.core.utils.Resources;
 
 public enum Skill {
 

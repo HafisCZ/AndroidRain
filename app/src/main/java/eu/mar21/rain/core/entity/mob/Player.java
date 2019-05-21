@@ -60,7 +60,7 @@ public class Player extends Mob {
                 this.airborn = true;
                 this.dy = LIMIT_DY * Resources.RES_MULTY;
 
-                Statistics.STAT_COUNT_JUMP.add();
+                Statistics.STAT_TOTAL_JUMPS.add(1);
             }
         }
 

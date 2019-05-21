@@ -1,12 +1,8 @@
 package eu.mar21.rain.core.entity.mob;
 
-import android.util.Log;
-
 import eu.mar21.rain.core.entity.particle.AcidParticle;
 import eu.mar21.rain.core.graphics.sprite.AnimatedSprite;
 import eu.mar21.rain.core.level.Level;
-import eu.mar21.rain.core.level.data.Skill;
-import eu.mar21.rain.core.level.data.Statistics;
 import eu.mar21.rain.core.utils.Resources;
 
 public class Acid extends Mob {
@@ -48,14 +44,7 @@ public class Acid extends Mob {
             this.level.getData().damage();
 
             this.y -= this.sy;
-
-            if (this.level.getData().getPlayerHealth() > 0) {
-                if (Statistics.PLAYER_UPGRADE_DMG_SHOCKWAVE.get() >= 1) {
-                    Skill.SHOCKWAVE.applyEffect(getCX(), Resources.SCREEN_HEIGHT, this.level);
-                }
-
-                spawnParticles(-1.0);
-            }
+            spawnParticles(-1.0);
 
             remove();
         }
