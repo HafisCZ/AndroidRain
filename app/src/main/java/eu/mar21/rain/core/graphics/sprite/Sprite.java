@@ -42,7 +42,7 @@ public class Sprite {
         this.tileHeight = ((double) image.getHeight()) / rowCount;
     }
 
-    public void draw(Canvas c, int x, int y) {
+    public void draw(Canvas c, double x, double y) {
         sr.set(
             (int) (this.selectedCol * this.tileWidth),
             (int) (this.selectedRow * this.tileHeight),
@@ -50,7 +50,7 @@ public class Sprite {
             (int) (this.selectedRow * this.tileHeight + this.spanRow * this.tileHeight)
         );
 
-        dr.set(x, y, x + (int) (this.spanCol * this.tileWidth), y + (int) (this.spanRow * this.tileHeight));
+        dr.set((int) x, (int) y, (int) (x + this.spanCol * this.tileWidth), (int) (y + this.spanRow * this.tileHeight));
 
         c.drawBitmap(this.image, sr, dr, paint);
     }

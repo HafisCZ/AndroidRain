@@ -9,6 +9,7 @@ import eu.mar21.rain.core.utils.Resources;
 
 public class RainParticle extends Particle {
 
+    // Default params
     private static final Paint COLOR_1 = new Paint();
     private static final Paint COLOR_2 = new Paint();
     static {
@@ -16,20 +17,22 @@ public class RainParticle extends Particle {
         COLOR_2.setColor(Color.argb(255, 173, 216, 230));
     }
 
+    // Params
     private final Paint color;
 
-    public RainParticle(double x, double y, double width, double height, double dx, double dy, Level level) {
-        super(x, y, width, height, level);
+    // Constructor
+    public RainParticle(Level level, double x, double y, double sx, double sy, double dx, double dy) {
+        super(level, x, y, sx, sy);
 
         this.dx = dx;
         this.dy = dy;
-
         this.color = RANDOM.nextBoolean() ? COLOR_1 : COLOR_2;
     }
 
+    // Methods
     @Override
     public void draw(Canvas c) {
-        c.drawRect((int) this.x, (int) this.y, (int) (this.x + this.width), (int) (this.y + this.height), this.color);
+        c.drawRect((float) this.x, (float) this.y, (float) (this.x + this.sx), (float) (this.y + this.sy), this.color);
     }
 
     @Override
@@ -37,14 +40,8 @@ public class RainParticle extends Particle {
         this.x += this.dx;
         this.y += this.dy;
 
-        if (this.level.getPlayer() != null) {
-            if (this.level.getPlayer().isCollidingAABB(this)) {
-                kill();
-            }
-        }
-
-        if (this.y > Resources.SCREEN_HEIGHT) {
-            kill();
+        if (this.y > Resources.SCREEN_HEIGHT || (this.level.getPlayer() != null && this.level.getPlayer().isCollidingAABB(this))) {
+            remove();
         }
     }
 }

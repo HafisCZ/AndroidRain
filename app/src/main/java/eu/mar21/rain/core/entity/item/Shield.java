@@ -7,17 +7,17 @@ import eu.mar21.rain.core.utils.Resources;
 
 public class Shield extends Item {
 
-    public static final double WIDTH = 40;
-    public static final double HEIGHT = 60;
-
-    public Shield(double x, double y, Level level) {
-        super(x, y, WIDTH, HEIGHT, new Sprite(Resources.SHIELD), 0, 0, level);
+    // Constructor
+    public Shield(Level level, double x, double y) {
+        super(level, x, y, Resources.SHIELD.getWidth(), Resources.SHIELD.getHeight(), new Sprite(Resources.SHIELD), 0.0, 0.0, Item.DEFAULT_DX, Item.DEFAULT_DY);
     }
 
+    // Methods
     @Override
-    public void applyEffect() {
-        Statistics.STAT_COUNT_SHIELD.add();
+    public void effect() {
         this.level.getData().addShield();
+
+        Statistics.STAT_COUNT_SHIELD.add();
     }
 
 }

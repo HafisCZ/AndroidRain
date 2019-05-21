@@ -1,41 +1,57 @@
 package eu.mar21.rain.core.entity.item;
 
+import android.graphics.Canvas;
+
 import eu.mar21.rain.core.entity.Entity;
+import eu.mar21.rain.core.graphics.Drawable;
 import eu.mar21.rain.core.graphics.sprite.Sprite;
 import eu.mar21.rain.core.level.Level;
 import eu.mar21.rain.core.utils.Resources;
 
-public abstract class Item extends Entity {
+public abstract class Item extends Entity implements Drawable {
 
-    public static final double DEFAULT_SPEED_X = 0;
-    public static final double DEFAULT_SPEED_Y = 4;
+    // Default params
+    protected static final double DEFAULT_DX = 0.0;
+    protected static final double DEFAULT_DY = 4.0;
 
-    public Item(double x, double y, double width, double height, Sprite sprite, double offsetX, double offsetY, double dx, double dy, Level level) {
-        super(x, y, width, height, sprite, offsetX, offsetY, level);
+    // Params
+    private final double ox;
+    private final double oy;
+    protected final Sprite sprite;
 
-        this.dx = dx;
-        this.dy = dy;
+    // Constructor
+    protected Item(Level level, double x, double y, double sx, double sy, Sprite sprite, double ox, double oy, double dx, double dy) {
+        super(level, x, y, sx, sy);
+
+        this.sprite = sprite;
+        this.ox = ox;
+        this.oy = oy;
+
+        this.dx = dx * Resources.RES_MULTX;
+        this.dy = dy * Resources.RES_MULTY;
     }
 
-    protected Item(double x, double y, double width, double height, Sprite sprite, double offsetX, double offsetY, Level level) {
-        this(x, y, width, height, sprite, offsetX, offsetY, DEFAULT_SPEED_X * Resources.RES_MULTX, DEFAULT_SPEED_Y * Resources.RES_MULTY, level);
-    }
-
+    //Methods
     @Override
     public final void tick() {
         this.x += this.dx;
         this.y += this.dy;
 
-        if (this.y + this.height > Resources.SCREEN_HEIGHT) {
-            kill();
+        if (this.y + this.sy > Resources.SCREEN_HEIGHT) {
+            remove();
         }
 
         if (this.level.isCollidingPlayerAABB(this)) {
-            applyEffect();
-            kill();
+            effect();
+            remove();
         }
     }
 
-    public abstract void applyEffect();
+    @Override
+    public final void draw(Canvas c) {
+        sprite.draw(c, this.x + this.ox, this.y + this.oy);
+    }
+
+    public abstract void effect();
 
 }

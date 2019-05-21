@@ -8,14 +8,14 @@ import eu.mar21.rain.core.utils.Resources;
 
 public class Star extends Item {
 
-    public Star(double x, double y, Level level) {
-        super(x, y, Resources.STAR.getWidth(), Resources.STAR.getHeight(), new Sprite(Resources.STAR), 0, 0, level);
+    // Constructor
+    public Star(Level level, double x, double y) {
+        super(level, x, y, Resources.STAR.getWidth(), Resources.STAR.getHeight(), new Sprite(Resources.STAR), 0.0, 0.0, Item.DEFAULT_DX, Item.DEFAULT_DY);
     }
 
+    // Methods
     @Override
-    public void applyEffect() {
-        Statistics.STAT_COUNT_STARS.add();
-
+    public void effect() {
         switch (RANDOM.nextInt(Statistics.PLAYER_UPGRADE_STAR.get())) {
             case 1 : {
                 int experience = 5 + RANDOM.nextInt(this.level.getData().getRequiredExperience() / 5);
@@ -50,8 +50,9 @@ public class Star extends Item {
                     break;
                 }
             }
-
         }
+
+        Statistics.STAT_COUNT_STARS.add();
     }
 
 }

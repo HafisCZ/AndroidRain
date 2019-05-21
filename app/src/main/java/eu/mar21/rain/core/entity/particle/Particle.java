@@ -1,15 +1,14 @@
 package eu.mar21.rain.core.entity.particle;
 
 import eu.mar21.rain.core.entity.Entity;
+import eu.mar21.rain.core.graphics.Drawable;
 import eu.mar21.rain.core.level.Level;
 
-public abstract class Particle extends Entity {
+public abstract class Particle extends Entity implements Drawable {
 
-    public Particle(double x, double y, double width, double height, Level level) {
-        super(x, y, width, height, level);
+    //Constructor
+    protected Particle(Level level, double x, double y, double sx, double sy) {
+        super(level, x, y, sx, sy);
     }
-
-    @Override
-    public abstract void tick();
 
 }

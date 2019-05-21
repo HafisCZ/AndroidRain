@@ -6,13 +6,15 @@ import eu.mar21.rain.core.utils.Resources;
 
 public class EnergySpawner extends Spawner {
 
-    public EnergySpawner(double x, double y, double width, double height, Level level, int rate, int variation, int count) {
-        super(x, y, width - Resources.ENERGY.getWidth(), height, level, rate, variation, count);
+    // Constructor
+    public EnergySpawner(Level level, double x, double y, double sx, double sy, int rate, int rnd, int count) {
+        super(level, x, y, sx - Resources.ENERGY.getWidth(), sy, rate, rnd, count);
     }
 
+    // Methods
     @Override
     public void spawn() {
-        this.level.add(new Energy(getRandomX(), getRandomY(), this.level));
+        this.level.add(new Energy(this.level, getRndX(), getRndY()));
     }
 
 }

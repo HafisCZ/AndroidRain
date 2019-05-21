@@ -6,13 +6,15 @@ import eu.mar21.rain.core.utils.Resources;
 
 public class StarSpawner extends Spawner {
 
-    public StarSpawner(double x, double y, double width, double height, Level level, int rate, int variation, int count) {
-        super(x, y, width - Resources.STAR.getWidth(), height, level, rate, variation, count);
+    // Constructor
+    public StarSpawner(Level level, double x, double y, double sx, double sy, int rate, int rnd, int count) {
+        super(level, x, y, sx - Resources.STAR.getWidth(), sy, rate, rnd, count);
     }
 
+    // Methods
     @Override
     public void spawn() {
-        this.level.add(new Star(getRandomX(), getRandomY(), this.level));
+        this.level.add(new Star(this.level, getRndX(), getRndY()));
     }
 
 }

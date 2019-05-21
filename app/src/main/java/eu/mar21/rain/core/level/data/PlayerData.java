@@ -129,7 +129,7 @@ public class PlayerData {
     }
 
     public void draw(Canvas c) {
-        c.drawText("" + Statistics.PLAYER_SCORE.get(), c.getWidth() / 2, 30, FONT_TEXT);
+        c.drawText("" + Statistics.PLAYER_SCORE.get(), (float) (c.getWidth() / 2.0), 30.0f, FONT_TEXT);
 
         for (int i = 0; i < (this.selectedSkill == null ? 2 : 3); i++) {
             this.iconSmall[i].draw(c, yoff - 10, yoff * i + 10);
@@ -160,7 +160,7 @@ public class PlayerData {
             this.iconFrame.draw(c, xoff * 2, yoff * 3 + 10);
 
             this.iconSkills.selectTile(0, this.selectedSkill.ordinal());
-            this.iconSkills.draw(c, xoff * 2 + Resources.SKILLF.getWidth() / 2 - Resources.SKILL.getWidth() / 8, 10 + yoff * 3 + Resources.SKILLF.getWidth() / 2 - Resources.SKILL.getWidth() / 8);
+            this.iconSkills.draw(c, xoff * 2 + Resources.SKILLF.getWidth() / 2.0 - Resources.SKILL.getWidth() / 8.0, 10 + yoff * 3 + Resources.SKILLF.getWidth() / 2 - Resources.SKILL.getWidth() / 8.0);
         }
     }
 
@@ -206,7 +206,7 @@ public class PlayerData {
 
     public void useSkill(Entity caster) {
         if (this.selectedSkill != null && this.playerEnergyBurnout <= 0 && this.playerEnergy >= this.selectedSkill.getPowerRequired()) {
-            this.selectedSkill.applyEffect(caster.getCenterX(), caster.getCenterY(), this.level);
+            this.selectedSkill.applyEffect(caster.getCX(), caster.getCY(), this.level);
             this.playerEnergyBurnout = this.selectedSkill.getDuration() * 60;
             this.playerEnergy = 0;
 

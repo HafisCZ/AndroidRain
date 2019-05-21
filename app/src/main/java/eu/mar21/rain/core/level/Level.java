@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Queue;
 
 import eu.mar21.rain.core.entity.Entity;
@@ -32,60 +33,80 @@ import eu.mar21.rain.core.utils.input.InputListener;
 
 public class Level {
 
-    private final List<Entity> mobs = new ArrayList<>();
-    private final List<Entity> particles = new ArrayList<>();
+    // Entity lists
+    private final List<Mob> mobs = new ArrayList<>();
+    private final List<Item> items = new ArrayList<>();
     private final List<Spawner> spawners = new ArrayList<>();
+    private final List<Particle> particles = new ArrayList<>();
 
-    private final List<Entity> buffer = Collections.synchronizedList(new ArrayList<Entity>());
+    private final List<Entity> buffer = Collections.synchronizedList(new ArrayList<>());
 
-    private InputListener input;
+    private Queue<Notification> notifications = new LinkedList<>();
+
+    // Level data
     private PlayerData data;
+    private InputListener input;
 
-    private boolean exit = false;
-    private boolean frozen = false;
+    // Params
+    private boolean exit;
+    private boolean frozen;
 
-    private Queue<Notification> notifications;
+    private Player player;
+    private RainSpawner rain;
 
+    // Constructor
     public Level(InputListener input) {
-        this.spawners.add(new RainSpawner(0, -20, Resources.SCREEN_WIDTH, 0, this, 1, 0, 5));
         this.input = input;
+        this.exit = false;
+        this.frozen = false;
 
-        this.notifications = new LinkedList<>();
+        this.rain = new RainSpawner(this, 0.0, -20.0, Resources.SCREEN_WIDTH, 0.0, 1, 0, 5);
     }
 
+    // Methods
     public void reset() {
         this.exit = false;
-        this.input.reset();
 
+        this.input.reset();
         this.buffer.clear();
         this.mobs.clear();
-        this.spawners.subList(1, this.spawners.size()).clear();
-        for (Object e : this.particles.toArray()) {
-            if (((Entity) e).isDead() || !(e instanceof RainParticle)) {
-                this.particles.remove(e);
+        this.items.clear();
+        this.spawners.clear();
+        this.notifications.clear();
+
+        for (Iterator<Particle> iterator = this.particles.iterator(); iterator.hasNext();) {
+            Particle p = iterator.next();
+
+            if (p.isRemoved() || !(p instanceof RainParticle)) {
+                iterator.remove();
             }
         }
 
         this.data = new PlayerData(this);
-        this.mobs.add(new Player((Resources.SCREEN_WIDTH - Resources.PLAYER[0].getWidth()) / 2, Resources.SCREEN_HEIGHT, this));
+        this.player = new Player(this, (Resources.SCREEN_WIDTH - Resources.PLAYER[0].getWidth()) / 2, Resources.SCREEN_HEIGHT);
 
-        this.spawners.add(new AcidSpawner(0, -50, Resources.SCREEN_WIDTH, 0, this, 20, 5, 2));
-        this.spawners.add(new ArmorSpawner(0, -50, Resources.SCREEN_WIDTH, 0, this, (60 * 60) >> 1, 10 * 60, 1));
-        this.spawners.add(new EnergySpawner(0, -50, Resources.SCREEN_WIDTH, 0, this, 60, 60, 1));
-        this.spawners.add(new StarSpawner(0, -50, Resources.SCREEN_WIDTH, 0, this, 20 * 60, 0, 1));
+        this.spawners.add(new AcidSpawner(this,0, -50, Resources.SCREEN_WIDTH, 0,  20, 5, 2));
+        this.spawners.add(new ArmorSpawner(this,0, -50, Resources.SCREEN_WIDTH, 0,  (60 * 60) >> 1, 10 * 60, 1));
+        this.spawners.add(new EnergySpawner(this,0, -50, Resources.SCREEN_WIDTH, 0,  60, 60, 1));
+        this.spawners.add(new StarSpawner(this,0, -50, Resources.SCREEN_WIDTH, 0,  20 * 60, 0, 1));
 
-        this.notifications.clear();
-        showNotification(new Notification(Notification.NotificationStyle.PLAIN,"NEW GAME", null));
+        this.notifications.add(new Notification(Notification.NotificationStyle.PLAIN, "NEW GAME", null));
     }
 
-    public void add(Entity e) {
-        if (e instanceof Mob || e instanceof Item) {
-            this.mobs.add(e);
-        } else if (e instanceof Particle) {
-            this.particles.add(e);
-        } else if (e instanceof Spawner) {
-            this.spawners.add((Spawner) e);
-        }
+    public void add(Spawner s) {
+        this.spawners.add(s);
+    }
+
+    public void add(Mob m) {
+        this.mobs.add(m);
+    }
+
+    public void add(Item i) {
+        this.items.add(i);
+    }
+
+    public void add(Particle p) {
+        this.particles.add(p);
     }
 
     public void showNotification(Notification notification) {
@@ -107,7 +128,7 @@ public class Level {
     public void draw(Canvas c) {
         if (this.mobs.size() > 0) {
             for (int i = 0; i < 8; i++) {
-                c.drawBitmap(Resources.BACKGROUND[i], (int) ((getPlayer().getCenterX() - Resources.SCREEN_WIDTH / 2) / (Resources.SCREEN_WIDTH / 8) * - Math.pow(1.55, i) - 100 / 2), 0, null);
+                c.drawBitmap(Resources.BACKGROUND[i], (int) ((getPlayer().getCX() - Resources.SCREEN_WIDTH / 2) / (Resources.SCREEN_WIDTH / 8) * - Math.pow(1.55, i) - 100 / 2), 0, null);
             }
         } else {
             for (int i = 0; i < 8; i++) {
@@ -115,15 +136,20 @@ public class Level {
             }
         }
 
-        for (Entity p : this.particles) {
+        for (Particle p : this.particles) {
             p.draw(c);
         }
 
-        for (Entity m : this.mobs) {
+        for (Mob m : this.mobs) {
             m.draw(c);
         }
 
-        if (this.mobs.size() > 0) {
+        for (Item i : this.items) {
+            i.draw(c);
+        }
+
+        if (this.player != null) {
+            this.player.draw(c);
             this.data.draw(c);
         }
 
@@ -138,16 +164,16 @@ public class Level {
         }
     }
 
-    public List<Entity> getMobs() {
-        return mobs.subList(1, mobs.size());
+    public List<Mob> getMobs() {
+        return this.mobs;
     }
 
     public Player getPlayer() {
-        return (this.mobs.size() > 0) ? (Player) this.mobs.get(0) : null;
+        return this.player;
     }
 
-    public boolean isCollidingPlayerAABB(Entity entity) {
-        return null != getPlayer() && getPlayer().isCollidingAABB(entity);
+    public boolean isCollidingPlayerAABB(Entity e) {
+        return this.player != null && this.player.isCollidingAABB(e);
     }
 
     public void tick() {
@@ -163,37 +189,54 @@ public class Level {
         }
 
         if (!frozen) {
+            if (this.player != null) {
+                this.player.tick();
+            }
+
+            this.rain.tick();
+
             for (Iterator<Spawner> iterator = this.spawners.iterator(); iterator.hasNext();) {
                 Spawner spawner = iterator.next();
                 spawner.tick();
-                if (spawner.isDead()) {
+                if (spawner.isRemoved()) {
                     iterator.remove();
                 }
             }
 
-            for (Iterator<Entity> iterator = this.mobs.iterator(); iterator.hasNext();) {
+            for (Iterator<Mob> iterator = this.mobs.iterator(); iterator.hasNext();) {
                 Entity entity = iterator.next();
                 entity.tick();
-                if (entity.isDead()) {
+                if (entity.isRemoved()) {
                     iterator.remove();
                 }
             }
 
-            for (Iterator<Entity> iterator = this.particles.iterator(); iterator.hasNext();) {
+            for (Iterator<Item> iterator = this.items.iterator(); iterator.hasNext();) {
                 Entity entity = iterator.next();
                 entity.tick();
-                if (entity.isDead()) {
+                if (entity.isRemoved()) {
+                    iterator.remove();
+                }
+            }
+
+            for (Iterator<Particle> iterator = this.particles.iterator(); iterator.hasNext();) {
+                Entity entity = iterator.next();
+                entity.tick();
+                if (entity.isRemoved()) {
                     iterator.remove();
                 }
             }
 
             for (Entity e : buffer) {
-                add(e);
+                if (e instanceof Mob) add((Mob) e);
+                else if (e instanceof Item) add((Item) e);
+                else if (e instanceof Spawner) add((Spawner) e);
+                else if (e instanceof Particle) add((Particle) e);
             }
 
             buffer.clear();
 
-            if (this.mobs.size() > 0) {
+            if (this.player != null) {
                 this.data.tick();
 
                 if (this.data.getPlayerHealth() <= 0) {

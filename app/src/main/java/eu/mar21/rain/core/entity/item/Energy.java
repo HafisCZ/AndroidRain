@@ -7,13 +7,17 @@ import eu.mar21.rain.core.utils.Resources;
 
 public class Energy extends Item {
 
-    public Energy(double x, double y, Level level) {
-        super(x, y, Resources.ENERGY.getWidth(), Resources.ENERGY.getHeight(), new Sprite(Resources.ENERGY), 0, 0, level);
+    // Constructor
+    public Energy(Level level, double x, double y) {
+        super(level, x, y, Resources.ENERGY.getWidth(), Resources.ENERGY.getHeight(), new Sprite(Resources.ENERGY), 0.0, 0.0, Item.DEFAULT_DX, Item.DEFAULT_DY);
     }
 
+    // Methods
     @Override
-    public void applyEffect() {
-        Statistics.STAT_COUNT_NODES.add();
+    public void effect() {
         this.level.getData().addEnergy();
+
+        Statistics.STAT_COUNT_NODES.add();
     }
+
 }

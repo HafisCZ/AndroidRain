@@ -10,21 +10,23 @@ import eu.mar21.rain.core.utils.Resources;
 
 public class ShockParticle extends Particle {
 
-    public static final double ARC_RADIUS_INCREMENT = 8;
-    public static final double ARC_ANGLE = 180;
-
+    // Default params
+    private static final double ARC_RAD_INC = 8.0;
     private static final Paint COLOR = new Paint();
     static {
         COLOR.setColor(0xFFF0F8FF);
         COLOR.setStyle(Paint.Style.STROKE);
     }
 
-    private double radius = 0;
+    // Params
+    private double radius = 0.0;
 
-    public ShockParticle(double x, double y, double width, double height, Level level) {
-        super(x, y, width, height, level);
+    // Constructor
+    public ShockParticle(Level level, double x, double y, double sx, double sy) {
+        super(level, x, y, sx, sy);
     }
 
+    // Methods
     @Override
     public void draw(Canvas c) {
         c.drawCircle((float) this.x, (float) this.y, (float) this.radius, COLOR);
@@ -32,15 +34,16 @@ public class ShockParticle extends Particle {
 
     @Override
     public void tick() {
-        this.radius += ARC_RADIUS_INCREMENT * Resources.RES_MULTX;
+        this.radius += ARC_RAD_INC * Resources.RES_MULTX;
+
         if (this.radius > Resources.SCREEN_WIDTH) {
-            kill();
+            remove();
         }
 
-        for (Entity m : this.level.getMobs()) {
-            if (m instanceof Acid) {
-                if (m.getDistance(this.x, this.y) <= this.radius) {
-                    m.kill();
+        for (Entity e : this.level.getMobs()) {
+            if (e instanceof Acid) {
+                if (e.getDistance(this) <= this.radius) {
+                    e.remove();
                 }
             }
         }

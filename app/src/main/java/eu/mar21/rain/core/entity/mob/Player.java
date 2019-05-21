@@ -10,36 +10,40 @@ import eu.mar21.rain.core.utils.input.InputListener;
 
 public class Player extends Mob {
 
-    public static final double SPEED_X_LIMIT = 20;
-    public static final double SPEED_Y_LIMIT = -10;
-    public static final double SPEED_X_INCREMENT = 1.6;
-    public static final double SPEED_Y_INCREMENT = 0.4;
+    // Default params
+    private static final double LIMIT_DX = 20.0;
+    private static final double LIMIT_DY = -10.0;
+    private static final double LIMIT_DX_STEP = 1.6;
+    private static final double LIMIT_DY_STEP = 0.4;
+    private static final int ANIM_DELTA = 8;
+    private static final int[] ANIM_GRP0 = { 0 };
+    private static final int[] ANIM_GRP1 = { 1, 2, 3, 4 };
+    private static final int[] ANIM_GRP2 = { 5, 6, 7, 8 };
 
-    public static final int ANIMATION_DELTA = 8;
-    public static final int ANIMATION_FRAMEGROUP_0[] = { 0 };
-    public static final int ANIMATION_FRAMEGROUP_1[] = { 1, 2, 3, 4 };
-    public static final int ANIMATION_FRAMEGROUP_2[] = { 5, 6, 7, 8 };
-
+    // Params
     private final double speed;
-    private boolean jump = true;
+    private boolean airborn;
 
-    public Player(double x, double y, Level level) {
-        super(x, y, Resources.PLAYER[0].getWidth(), Resources.PLAYER[0].getHeight(), new AnimatedSprite(Resources.PLAYER, ANIMATION_DELTA, ANIMATION_FRAMEGROUP_0, ANIMATION_FRAMEGROUP_1, ANIMATION_FRAMEGROUP_2), 0, 0, level);
+    // Constructor
+    public Player(Level level, double x, double y) {
+        super(level, x, y, Resources.PLAYER[0].getWidth(), Resources.PLAYER[0].getHeight(), new AnimatedSprite(Resources.PLAYER, ANIM_DELTA, ANIM_GRP0, ANIM_GRP1, ANIM_GRP2), 0.0, 0.0);
 
-        this.speed = SPEED_X_INCREMENT * Resources.RES_MULTX;
+        this.speed = LIMIT_DX_STEP * Resources.RES_MULTX;
+        this.airborn = true;
     }
 
+    // Methods
     @Override
     public void tick() {
         int move = 0;
 
         if (this.level.getInput().isTouch(InputListener.ControlZone.ROW4) == InputListener.Direction.RIGHT) {
-            this.dx = Math.min(this.dx + this.speed, SPEED_X_LIMIT * Resources.RES_MULTX);
+            this.dx = Math.min(this.dx + this.speed, LIMIT_DX * Resources.RES_MULTX);
             move = 1;
         }
 
         if (this.level.getInput().isTouch(InputListener.ControlZone.ROW4) == InputListener.Direction.LEFT) {
-            this.dx = Math.max(this.dx - this.speed, -SPEED_X_LIMIT * Resources.RES_MULTX);
+            this.dx = Math.max(this.dx - this.speed, -LIMIT_DX * Resources.RES_MULTX);
             move = -1;
         }
 
@@ -52,9 +56,9 @@ public class Player extends Mob {
         }
 
         if (this.level.getInput().isPressed(InputListener.ControlZone.ROW3)) {
-            if (!this.jump) {
-                this.jump = true;
-                this.dy = SPEED_Y_LIMIT * Resources.RES_MULTY;
+            if (!this.airborn) {
+                this.airborn = true;
+                this.dy = LIMIT_DY * Resources.RES_MULTY;
 
                 Statistics.STAT_COUNT_JUMP.add();
             }
@@ -73,26 +77,26 @@ public class Player extends Mob {
         this.x += this.dx;
         this.y += this.dy;
 
-        if (this.jump) {
-            this.dy += SPEED_Y_INCREMENT * Resources.RES_MULTY;
+        if (this.airborn) {
+            this.dy += LIMIT_DY_STEP * Resources.RES_MULTY;
         }
 
         if (this.x < 0) {
             this.x = 0;
             this.dx = 0;
-        } else if (this.x + this.width > Resources.SCREEN_WIDTH) {
-            this.x = Resources.SCREEN_WIDTH - this.width;
+        } else if (this.x + this.sx > Resources.SCREEN_WIDTH) {
+            this.x = Resources.SCREEN_WIDTH - this.sx;
             this.dx = 0;
         }
 
         if (this.y < 0) {
             this.y = 0;
             this.dy = 0;
-        } else if (this.y + this.height > Resources.SCREEN_HEIGHT) {
-            this.y = Resources.SCREEN_HEIGHT - this.height;
+        } else if (this.y + this.sy > Resources.SCREEN_HEIGHT) {
+            this.y = Resources.SCREEN_HEIGHT - this.sy;
             this.dy = 0;
 
-            this.jump = false;
+            this.airborn = false;
         }
 
         if (this.dx != 0) {

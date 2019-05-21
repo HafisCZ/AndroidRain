@@ -5,29 +5,31 @@ import eu.mar21.rain.core.level.Level;
 
 public abstract class Spawner extends Entity {
 
-    protected final int rate;
-    protected final int variation;
-    protected final int count;
+    // Params
+    private final int rate;
+    private final int rnd;
+    private final int count;
+    private int frame;
+    private int frameCount;
 
-    protected int frameCount = 0;
-    protected int frameLimit;
+    // Constructor
+    public Spawner(Level level, double x, double y, double sx, double sy, int rate, int rnd, int count) {
+        super(level, x, y, sx, sy);
 
-    public Spawner(double x, double y, double width, double height, Level level, int rate, int variation, int count) {
-        super(x, y, width, height, level);
-
+        this.rate = rate;
+        this.rnd = rnd;
         this.count = count;
 
-        this.variation = variation;
-        this.rate = rate;
-
-        this.frameLimit = rate;
+        this.frame = 0;
+        this.frameCount = rate;
     }
 
+    // Methods
     @Override
     public final void tick() {
-        if (this.frameCount++ >= this.frameLimit) {
-            this.frameCount = 0;
-            this.frameLimit = this.rate + (this.variation > 1 ? RANDOM.nextInt(this.variation) : 0);
+        if (this.frame++ >= this.frameCount) {
+            this.frame = 0;
+            this.frameCount = this.rate + (this.rnd > 1 ? RANDOM.nextInt(this.rnd) : 0);
 
             if (this.level != null) {
                 for (int i = 0; i < this.count; i++) {
@@ -37,12 +39,12 @@ public abstract class Spawner extends Entity {
         }
     }
 
-    protected double getRandomX() {
-        return this.x + (this.width == 0 ? 0 : RANDOM.nextInt((int) this.width));
+    protected double getRndX() {
+        return this.x + (this.sx == 0 ? 0 : RANDOM.nextInt((int) this.sx));
     }
 
-    protected double getRandomY() {
-        return this.y + (this.height == 0 ? 0 : RANDOM.nextInt((int) this.height));
+    protected double getRndY() {
+        return this.y + (this.sy == 0 ? 0 : RANDOM.nextInt((int) this.sy));
     }
 
     public abstract void spawn();
