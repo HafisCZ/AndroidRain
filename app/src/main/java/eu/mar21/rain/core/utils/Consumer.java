@@ -1,7 +1,7 @@
 package eu.mar21.rain.core.utils;
 
-public interface Consumer<T, U, V> {
+public interface Consumer<T> {
 
-    void accept(T t, U u, V v);
+    void accept(T t);
 
 }

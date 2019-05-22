@@ -6,8 +6,9 @@ import android.graphics.Paint;
 import java.util.ArrayList;
 import java.util.List;
 
+import eu.mar21.rain.core.device.input.InputListener;
+import eu.mar21.rain.core.utils.Consumer;
 import eu.mar21.rain.core.utils.Resources;
-import eu.mar21.rain.core.utils.input.InputListener;
 
 public abstract class View {
 
@@ -22,7 +23,7 @@ public abstract class View {
 
     protected List<View> views;
 
-    private Action action;
+    private Consumer<View> action;
     private boolean handled;
     private InputListener listener;
 
@@ -67,7 +68,7 @@ public abstract class View {
         }
     }
 
-    public View onClick(Action action) {
+    public View onClick(Consumer<View> action) {
         this.action = action;
 
         return this;
@@ -75,9 +76,9 @@ public abstract class View {
 
     protected void handle(float rx, float ry, float rw, float rh) {
         if (this.listener != null && this.action != null) {
-            boolean press = this.listener.isPressed((int) rx, (int) ry, (int) (rx + rw), (int) (ry + rh));
+            boolean press = this.listener.isHeld((int) rx, (int) ry, (int) (rx + rw), (int) (ry + rh));
             if (press && !this.handled) {
-                this.action.apply(this);
+                this.action.accept(this);
             }
 
             this.handled = press;

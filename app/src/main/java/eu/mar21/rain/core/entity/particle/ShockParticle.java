@@ -1,7 +1,6 @@
 package eu.mar21.rain.core.entity.particle;
 
 import android.graphics.Canvas;
-import android.graphics.Paint;
 
 import eu.mar21.rain.core.entity.Entity;
 import eu.mar21.rain.core.entity.mob.Acid;
@@ -12,24 +11,19 @@ public class ShockParticle extends Particle {
 
     // Default params
     private static final double ARC_RAD_INC = 8.0;
-    private static final Paint COLOR = new Paint();
-    static {
-        COLOR.setColor(0xFFF0F8FF);
-        COLOR.setStyle(Paint.Style.STROKE);
-    }
 
     // Params
     private double radius = 0.0;
 
     // Constructor
-    public ShockParticle(Level level, double x, double y, double sx, double sy) {
-        super(level, x, y, sx, sy);
+    public ShockParticle(Level level, double x, double y) {
+        super(level, x, y, 0, 0);
     }
 
     // Methods
     @Override
     public void draw(Canvas c) {
-        c.drawCircle((float) this.x, (float) this.y, (float) this.radius, COLOR);
+        c.drawCircle((float) this.x, (float) this.y, (float) this.radius, Resources.PAINT_FFF0F8FF_STROKE);
     }
 
     @Override

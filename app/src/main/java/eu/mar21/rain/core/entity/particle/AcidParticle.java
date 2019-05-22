@@ -1,7 +1,6 @@
 package eu.mar21.rain.core.entity.particle;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 
 import eu.mar21.rain.core.level.Level;
@@ -14,12 +13,6 @@ public class AcidParticle extends Particle {
     private static final double DEFAULT_DY_STEP = 0.5;
     private static final int DESPAWN_MIN = 10;
     private static final int DESPAWN_MAX = 30;
-    private static final Paint COLOR_1 = new Paint();
-    private static final Paint COLOR_2 = new Paint();
-    static {
-        COLOR_1.setColor(Color.argb(255, 124, 252, 0));
-        COLOR_2.setColor(Color.argb(255, 173, 255, 47));
-    }
 
     // Params
     private final Paint color;
@@ -32,7 +25,7 @@ public class AcidParticle extends Particle {
 
         this.dx = dx;
         this.dy = dy;
-        this.color = RANDOM.nextBoolean() ? COLOR_1 : COLOR_2;
+        this.color = RANDOM.nextBoolean() ? Resources.PAINT_FF7CFC00 : Resources.PAINT_FFADFF2F;
         this.despawn = DESPAWN_MIN + RANDOM.nextInt(DESPAWN_MAX - DESPAWN_MIN + 1);
         this.despawnEnabled = false;
     }

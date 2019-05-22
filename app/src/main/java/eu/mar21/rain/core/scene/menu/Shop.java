@@ -2,6 +2,7 @@ package eu.mar21.rain.core.scene.menu;
 
 import android.graphics.Canvas;
 
+import eu.mar21.rain.core.device.input.InputListener;
 import eu.mar21.rain.core.graphics.Window;
 import eu.mar21.rain.core.level.data.Statistics;
 import eu.mar21.rain.core.scene.Scene;
@@ -11,7 +12,6 @@ import eu.mar21.rain.core.ui.List;
 import eu.mar21.rain.core.ui.Panel;
 import eu.mar21.rain.core.ui.Text;
 import eu.mar21.rain.core.utils.Resources;
-import eu.mar21.rain.core.utils.input.InputListener;
 
 public class Shop extends Scene {
 
@@ -24,8 +24,6 @@ public class Shop extends Scene {
     // Constructor
     public Shop(Window w) {
         super(w);
-
-        this.listener = new InputListener();
     }
 
     // Methods
@@ -33,7 +31,7 @@ public class Shop extends Scene {
     public void init() {
         this.view = new Panel(0, 0, 1, 1).setBackground(Resources.PAINT_0);
 
-        this.title = (Panel) new Panel(this.view, 0, 0, 1, 0.1f).setBackground(Resources.PAINT_0F8FBC8F).onClick(v -> window.requestScene(Menu.class));
+        this.title = (Panel) new Panel(this.view, 0, 0, 1, 0.1f).setBackground(Resources.PAINT_0F8FBC8F).onClick(v -> window.request(Menu.class));
         new Text(this.title, "SHOP").setPosition(0.5f, 0.8f).setForeground(Resources.PAINT_M_W_0050_C);
         new Text(this.title, "<<").setPosition(0.01f, 0.8f).setForeground(Resources.PAINT_M_LGRAY_0050_L);
 
@@ -151,13 +149,11 @@ public class Shop extends Scene {
         new Image(skills[1], Resources.SKILLS[1]).setPosition(0.5f, 0.7f).center(true);
         new Image(skills[2], Resources.SKILLS[2]).setPosition(0.5f, 0.7f).center(true);
 
-        this.view.setListener(this.listener);
+        this.view.setListener(this.window.getListener());
     }
 
     @Override
     public void begin() {
-        this.listener.reset();
-
         this.title.get().subList(2, this.title.get().size()).clear();
         new Text(this.title, Integer.toString(Statistics.PLAYER_POINTS.get())).setPosition(0.95f, 0.8f).setForeground(Resources.PAINT_M_Y_0050_R);
 

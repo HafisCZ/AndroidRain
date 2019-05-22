@@ -1,9 +1,6 @@
 package eu.mar21.rain.core.level.data;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Typeface;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

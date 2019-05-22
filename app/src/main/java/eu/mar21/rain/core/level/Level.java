@@ -3,28 +3,30 @@ package eu.mar21.rain.core.level;
 import android.graphics.Canvas;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+import eu.mar21.rain.core.device.input.InputListener;
+import eu.mar21.rain.core.device.input.TouchZone;
 import eu.mar21.rain.core.entity.Entity;
 import eu.mar21.rain.core.entity.item.Item;
 import eu.mar21.rain.core.entity.mob.Mob;
 import eu.mar21.rain.core.entity.mob.Player;
+import eu.mar21.rain.core.entity.particle.FlashParticle;
 import eu.mar21.rain.core.entity.particle.Particle;
 import eu.mar21.rain.core.entity.particle.RainParticle;
 import eu.mar21.rain.core.entity.spawner.AcidSpawner;
 import eu.mar21.rain.core.entity.spawner.ArmorSpawner;
 import eu.mar21.rain.core.entity.spawner.EnergySpawner;
+import eu.mar21.rain.core.entity.spawner.GenericSpawner;
 import eu.mar21.rain.core.entity.spawner.RainSpawner;
 import eu.mar21.rain.core.entity.spawner.Spawner;
 import eu.mar21.rain.core.entity.spawner.StarSpawner;
 import eu.mar21.rain.core.graphics.Notification;
 import eu.mar21.rain.core.level.data.PlayerData;
 import eu.mar21.rain.core.utils.Resources;
-import eu.mar21.rain.core.utils.input.InputListener;
 
 public class Level {
 
@@ -33,8 +35,6 @@ public class Level {
     private final List<Item> items = new ArrayList<>();
     private final List<Spawner> spawners = new ArrayList<>();
     private final List<Particle> particles = new ArrayList<>();
-
-    private final List<Entity> buffer = Collections.synchronizedList(new ArrayList<>());
 
     private Queue<Notification> notifications = new LinkedList<>();
 
@@ -63,7 +63,6 @@ public class Level {
         this.exit = false;
 
         this.input.reset();
-        this.buffer.clear();
         this.mobs.clear();
         this.items.clear();
         this.spawners.clear();
@@ -80,6 +79,7 @@ public class Level {
         this.data = new PlayerData(this);
         this.player = new Player(this, (Resources.SCREEN_WIDTH - Resources.PLAYER[0].getWidth()) / 2, Resources.SCREEN_HEIGHT);
 
+        this.spawners.add(new GenericSpawner(this, 20 * 60, 10 * 60, 1, A -> add(new FlashParticle(this, 10))));
         this.spawners.add(new AcidSpawner(this,0, -50, Resources.SCREEN_WIDTH, 0,  20, 5, 2));
         this.spawners.add(new ArmorSpawner(this,0, -50, Resources.SCREEN_WIDTH, 0,  (60 * 60) >> 1, 10 * 60, 1));
         this.spawners.add(new EnergySpawner(this,0, -50, Resources.SCREEN_WIDTH, 0,  60, 60, 1));
@@ -106,10 +106,6 @@ public class Level {
 
     public void showNotification(Notification notification) {
         this.notifications.add(notification);
-    }
-
-    public void addLater(Entity e) {
-        this.buffer.add(e);
     }
 
     public InputListener getInput() {
@@ -170,13 +166,13 @@ public class Level {
     }
 
     public void tick() {
-        if (this.frozen && this.input.isPressed(InputListener.ControlZone.DOWN)) {
+        if (this.frozen && this.input.isPressed(TouchZone.HALF_DOWN)) {
             this.frozen = false;
-        } else if (this.frozen && this.input.isPressed(InputListener.ControlZone.UP)) {
+        } else if (this.frozen && this.input.isPressed(TouchZone.HALP_UP)) {
             this.exit = true;
             this.frozen = false;
             this.data.save();
-        } else if (this.input.isPressed(InputListener.ControlZone.LC_QUAD)) {
+        } else if (this.input.isPressed(TouchZone.QUAD_CU)) {
             this.frozen = true;
             this.input.reset();
         }
@@ -220,15 +216,6 @@ public class Level {
                 }
             }
 
-            for (Entity e : buffer) {
-                if (e instanceof Mob) add((Mob) e);
-                else if (e instanceof Item) add((Item) e);
-                else if (e instanceof Spawner) add((Spawner) e);
-                else if (e instanceof Particle) add((Particle) e);
-            }
-
-            buffer.clear();
-
             if (this.player != null) {
                 this.data.tick();
 
@@ -240,8 +227,10 @@ public class Level {
             }
 
             if (!this.notifications.isEmpty()) {
-                this.notifications.peek().update();
-                if (this.notifications.peek().isDead()) {
+                Notification n = this.notifications.peek();
+
+                n.update();
+                if(n.isRemoved()) {
                     this.notifications.remove();
                 }
             }

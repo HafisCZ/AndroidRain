@@ -56,7 +56,7 @@ public class Acid extends Mob {
         for (int i = 0; i < PARTICLE_CNT; i++) {
             double particleSize = RANDOM.nextInt(5) + 1;
             double particleXSpeed = RANDOM.nextInt(5) - 2.5;
-            this.level.addLater(new AcidParticle(this.level, this.x, this.y + this.sy - particleSize, particleSize, particleSize, particleXSpeed, ySpeed));
+            this.level.add(new AcidParticle(this.level, this.x, this.y + this.sy - particleSize, particleSize, particleSize, particleXSpeed, ySpeed));
         }
     }
 

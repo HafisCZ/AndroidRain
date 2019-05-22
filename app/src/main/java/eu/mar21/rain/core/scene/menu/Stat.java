@@ -2,21 +2,19 @@ package eu.mar21.rain.core.scene.menu;
 
 import android.graphics.Canvas;
 
+import eu.mar21.rain.core.device.input.InputListener;
 import eu.mar21.rain.core.graphics.Window;
 import eu.mar21.rain.core.level.data.Statistics;
 import eu.mar21.rain.core.scene.Scene;
 import eu.mar21.rain.core.ui.Panel;
 import eu.mar21.rain.core.ui.Text;
 import eu.mar21.rain.core.utils.Resources;
-import eu.mar21.rain.core.utils.input.InputListener;
 
 public class Stat extends Scene {
 
     // Constructor
     public Stat(Window w) {
         super(w);
-
-        this.listener = new InputListener();
     }
 
     // Methods
@@ -33,7 +31,7 @@ public class Stat extends Scene {
     public void begin() {
         this.view = new Panel(0, 0, 1, 1).setBackground(Resources.PAINT_0);
 
-        Panel title = (Panel) new Panel(0, 0, 1, 0.1f).setBackground(Resources.PAINT_0F8FBC8F).onClick(v -> window.requestScene(Menu.class));
+        Panel title = (Panel) new Panel(0, 0, 1, 0.1f).setBackground(Resources.PAINT_0F8FBC8F).onClick(v -> window.request(Menu.class));
         title.add(new Text("STATISTICS").setPosition(0.5f, 0.8f).setForeground(Resources.PAINT_M_W_0050_C));
         title.add(new Text("<<").setPosition(0.01f, 0.8f).setForeground(Resources.PAINT_M_LGRAY_0050_L));
         this.view.add(title);
@@ -50,8 +48,7 @@ public class Stat extends Scene {
         this.view.add(entry("Jumps", Statistics.STAT_TOTAL_JUMPS.get(), 0.55f, 0.55f));
         this.view.add(entry("Damage", Statistics.STAT_DMG_TAKEN.get(), 0.55f, 0.65f));
 
-        this.listener.reset();
-        this.view.setListener(this.listener);
+        this.view.setListener(this.window.getListener());
     }
 
     @Override

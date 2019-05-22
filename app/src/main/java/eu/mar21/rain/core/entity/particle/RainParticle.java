@@ -1,21 +1,12 @@
 package eu.mar21.rain.core.entity.particle;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 
 import eu.mar21.rain.core.level.Level;
 import eu.mar21.rain.core.utils.Resources;
 
 public class RainParticle extends Particle {
-
-    // Default params
-    private static final Paint COLOR_1 = new Paint();
-    private static final Paint COLOR_2 = new Paint();
-    static {
-        COLOR_1.setColor(Color.argb(255, 100, 149, 237));
-        COLOR_2.setColor(Color.argb(255, 173, 216, 230));
-    }
 
     // Params
     private final Paint color;
@@ -26,7 +17,7 @@ public class RainParticle extends Particle {
 
         this.dx = dx;
         this.dy = dy;
-        this.color = RANDOM.nextBoolean() ? COLOR_1 : COLOR_2;
+        this.color = RANDOM.nextBoolean() ? Resources.PAINT_FF6495ED : Resources.PAINT_FFADD8E6;
     }
 
     // Methods

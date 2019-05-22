@@ -1,12 +1,13 @@
 package eu.mar21.rain.core.entity.mob;
 
+import eu.mar21.rain.core.device.input.TouchZone;
 import eu.mar21.rain.core.graphics.Notification;
 import eu.mar21.rain.core.graphics.sprite.AnimatedSprite;
 import eu.mar21.rain.core.level.Level;
 import eu.mar21.rain.core.level.data.Skill;
 import eu.mar21.rain.core.level.data.Statistics;
+import eu.mar21.rain.core.utils.Direction;
 import eu.mar21.rain.core.utils.Resources;
-import eu.mar21.rain.core.utils.input.InputListener;
 
 public class Player extends Mob {
 
@@ -35,19 +36,17 @@ public class Player extends Mob {
     // Methods
     @Override
     public void tick() {
-        int move = 0;
+        Direction direction = this.level.getInput().getDirection(TouchZone.ROW_4);
 
-        if (this.level.getInput().isTouch(InputListener.ControlZone.ROW4) == InputListener.Direction.RIGHT) {
+        if (direction == Direction.RIGHT) {
             this.dx = Math.min(this.dx + this.speed, LIMIT_DX * Resources.RES_MULTX);
-            move = 1;
         }
 
-        if (this.level.getInput().isTouch(InputListener.ControlZone.ROW4) == InputListener.Direction.LEFT) {
+        if (direction == Direction.LEFT) {
             this.dx = Math.max(this.dx - this.speed, -LIMIT_DX * Resources.RES_MULTX);
-            move = -1;
         }
 
-        if (this.level.getInput().isTouch(InputListener.ControlZone.ROW4) == InputListener.Direction.NONE) {
+        if (direction == Direction.NONE) {
             if (this.dx > 0) {
                 this.dx = Math.max(this.dx - this.speed, 0);
             } else if (this.dx < 0) {
@@ -55,7 +54,7 @@ public class Player extends Mob {
             }
         }
 
-        if (this.level.getInput().isPressed(InputListener.ControlZone.ROW3)) {
+        if (this.level.getInput().isPressed(TouchZone.ROW_3)) {
             if (!this.airborn) {
                 this.airborn = true;
                 this.dy = LIMIT_DY * Resources.RES_MULTY;
@@ -64,11 +63,11 @@ public class Player extends Mob {
             }
         }
 
-        if (this.level.getInput().isPressed(InputListener.ControlZone.LU_QUAD)) {
+        if (this.level.getInput().isPressed(TouchZone.QUAD_LU)) {
             this.level.getData().useSkill(this);
         }
 
-        if (this.level.getInput().isPressed(InputListener.ControlZone.RU_QUAD)) {
+        if (this.level.getInput().isPressed(TouchZone.QUAD_RU)) {
             if (this.level.getData().selectNextSkill()) {
                 this.level.showNotification(new Notification(Notification.NotificationStyle.PLAIN,"SKILL SELECTED", Skill.values()[this.level.getData().getSelectedSkill()].name()));
             }
@@ -100,7 +99,7 @@ public class Player extends Mob {
         }
 
         if (this.dx != 0) {
-            ((AnimatedSprite) this.sprite).play(move == 0 ? (this.dx > 0 ? 2 : 1) : (move > 0 ? 2 : 1));
+            ((AnimatedSprite) this.sprite).play(direction == Direction.NONE ? (this.dx > 0 ? 2 : 1) : (direction == Direction.RIGHT ? 2 : 1));
         } else {
             ((AnimatedSprite) this.sprite).stop();
         }

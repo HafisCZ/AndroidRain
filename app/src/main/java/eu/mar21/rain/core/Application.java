@@ -14,6 +14,7 @@ import eu.mar21.rain.core.scene.menu.Menu;
 import eu.mar21.rain.core.scene.menu.Settings;
 import eu.mar21.rain.core.scene.menu.Shop;
 import eu.mar21.rain.core.scene.menu.Stat;
+import eu.mar21.rain.core.utils.Logger;
 import eu.mar21.rain.core.utils.Resources;
 
 public class Application extends Activity {
@@ -39,25 +40,27 @@ public class Application extends Activity {
 
         INSTANCE = this;
 
+        Logger.clear();
+
+        Preferences.init(this, "eu.mar21.rain.");
+
         Resources.loadCore(getResources(), getWindowManager());
 
         Window window = new Window(this);
         setContentView(window);
 
-        window.registerScene(Intro.class);
-        window.requestScene(Intro.class);
-
-        Preferences.init(this, "eu.mar21.rain.");
+        window.register(Intro.class);
+        window.request(Intro.class);
 
         new Thread(() -> {
             Resources.loadExtras(getResources());
-            window.registerScene(Game.class);
-            window.registerScene(Menu.class);
-            window.registerScene(Stat.class);
-            window.registerScene(Shop.class);
-            window.registerScene(Settings.class);
+            window.register(Game.class);
+            window.register(Menu.class);
+            window.register(Stat.class);
+            window.register(Shop.class);
+            window.register(Settings.class);
 
-            window.requestScene(Menu.class);
+            window.request(Menu.class);
         }).start();
     }
 

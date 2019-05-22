@@ -1,9 +1,7 @@
 package eu.mar21.rain.core.graphics;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Typeface;
 
 import eu.mar21.rain.core.utils.Resources;
 
@@ -55,7 +53,7 @@ public class Notification implements Drawable {
         }
     }
 
-    public boolean isDead() {
+    public boolean isRemoved() {
         return this.position < 0;
     }
 

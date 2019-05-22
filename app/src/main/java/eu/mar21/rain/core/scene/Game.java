@@ -6,13 +6,13 @@ import android.hardware.Sensor;
 import android.hardware.SensorManager;
 
 import eu.mar21.rain.core.Application;
+import eu.mar21.rain.core.device.input.InputListener;
 import eu.mar21.rain.core.graphics.Window;
 import eu.mar21.rain.core.level.Level;
 import eu.mar21.rain.core.scene.menu.Menu;
 import eu.mar21.rain.core.ui.Panel;
 import eu.mar21.rain.core.ui.Text;
 import eu.mar21.rain.core.utils.Resources;
-import eu.mar21.rain.core.utils.input.InputListener;
 
 public class Game extends Scene {
 
@@ -23,17 +23,7 @@ public class Game extends Scene {
     public Game(Window w) {
         super(w);
 
-        this.listener = new InputListener();
-        this.level = new Level(this.listener);
-
-        SensorManager sm = (SensorManager) Application.get().getSystemService(Context.SENSOR_SERVICE);
-
-        try {
-            sm.registerListener(this.listener, sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
-            sm.registerListener(this.listener, sm.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_NORMAL);
-        } catch (NullPointerException e) {
-
-        }
+        this.level = new Level(this.window.getListener());
     }
 
     // Methods
@@ -51,7 +41,7 @@ public class Game extends Scene {
 
         if (this.level.isExiting()) {
             this.level.reset();
-            this.window.requestScene(Menu.class);
+            this.window.request(Menu.class);
         }
     }
 

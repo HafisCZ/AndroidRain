@@ -3,6 +3,7 @@ package eu.mar21.rain.core.scene;
 import android.graphics.Canvas;
 
 import eu.mar21.rain.core.graphics.Window;
+import eu.mar21.rain.core.utils.Logger;
 import eu.mar21.rain.core.utils.Resources;
 
 public class Intro extends Scene {
@@ -45,5 +46,7 @@ public class Intro extends Scene {
         Resources.PAINT_ALPHA.setAlpha(this.alpha);
 
         c.drawBitmap(Resources.LOGO, (float) (c.getWidth() / 2 - Resources.LOGO.getWidth() / 2), (float) (c.getHeight() / 2 - Resources.LOGO.getHeight() / 2), Resources.PAINT_ALPHA);
+
+        Logger.draw(c);
     }
 }

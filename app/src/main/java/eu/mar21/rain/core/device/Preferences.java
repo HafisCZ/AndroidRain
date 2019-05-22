@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import eu.mar21.rain.core.utils.Logger;
+
 public class Preferences {
 
     // Params
@@ -12,6 +14,8 @@ public class Preferences {
 
     // Methods
     public static void init(Activity activity, String prefix) {
+        Logger.log("Loading preferences ...");
+
         PREFERENCES = activity.getSharedPreferences(prefix, Context.MODE_PRIVATE);
         PREFIX = prefix;
     }

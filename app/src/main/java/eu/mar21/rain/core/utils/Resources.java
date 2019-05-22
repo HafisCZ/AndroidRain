@@ -14,6 +14,7 @@ public class Resources {
 
     public static Paint PAINT = new Paint();
     public static Paint PAINT_ALPHA = new Paint();
+    public static Paint PAINT_LIGHTNING = new Paint();
     public static Paint PAINT_DEBUG = new Paint();
     public static Paint PAINT_M_W_0020_L = new Paint();
     public static Paint PAINT_M_W_0020_R = new Paint();
@@ -27,12 +28,17 @@ public class Resources {
     public static Paint PAINT_2F8FBC8F = new Paint();
     public static Paint PAINT_108FBC8F = new Paint();
     public static Paint PAINT_2FFFBC8F = new Paint();
+    public static Paint PAINT_FF6495ED = new Paint();
+    public static Paint PAINT_FF7CFC00 = new Paint();
+    public static Paint PAINT_FFADFF2F = new Paint();
+    public static Paint PAINT_FFADD8E6 = new Paint();
     public static Paint PAINT_0 = new Paint();
     public static Paint PAINT_M_Y_0050_R = new Paint();
     public static Paint PAINT_M_Y_0030_C = new Paint();
     public static Paint PAINT_M_GRAY_0030_C = new Paint();
     public static Paint PAINT_M_W_0030_C = new Paint();
     public static Paint PAINT_0_STROKE = new Paint();
+    public static Paint PAINT_FFF0F8FF_STROKE = new Paint();
     public static Paint PAINT_A000FF00_STROKE = new Paint();
     public static Paint PAINT_A0FFFF00_STROKE = new Paint();
     public static Paint PAINT_M_A4FFFFFF_0030 = new Paint();
@@ -58,7 +64,10 @@ public class Resources {
     public static float RES_MULTX = 1.0f;
     public static float RES_MULTY = 1.0f;
 
+    // Methods
     public static void loadCore(android.content.res.Resources r, WindowManager wm) {
+        Logger.log("Loading core resources ...");
+
         DisplayMetrics dm = new DisplayMetrics();
         wm.getDefaultDisplay().getRealMetrics(dm);
 
@@ -70,16 +79,20 @@ public class Resources {
 
         LOGO = BitmapFactory.decodeResource(r, R.drawable.logo);
 
-        PAINT_DEBUG.setColor(0xFFFFFFFF);
+        PAINT_DEBUG.setColor(0x7DFFFFFF);
         PAINT_DEBUG.setTypeface(Typeface.MONOSPACE);
         PAINT_DEBUG.setTextSize(20);
     }
 
     public static void loadExtras(android.content.res.Resources r) {
+        Logger.log("Loading backgrounds ...");
+
         for (int i = 0; i < 8; i++) {
             Bitmap temp = BitmapFactory.decodeResource(r, R.drawable.b0 + i);
             BACKGROUND[i] = Bitmap.createScaledBitmap(temp, (int) (SCREEN_WIDTH * 1.1), (int) SCREEN_HEIGHT, true);
         }
+
+        Logger.log("Loading sprites ...");
 
         for (int i = 0; i < 9; i++) {
             PLAYER[i] = BitmapFactory.decodeResource(r, R.drawable.player0 + i);
@@ -109,6 +122,8 @@ public class Resources {
         BARS[4] = BitmapFactory.decodeResource(r, R.drawable.energybar0);
         BARS[5] = BitmapFactory.decodeResource(r, R.drawable.energybar1);
 
+        Logger.log("Extracting sprites ...");
+
         for (int i = 0; i < BARS.length; i++) {
             BARS[i] = Bitmap.createScaledBitmap(BARS[i], (int) (BARS[i].getWidth() * 0.9), (int) (BARS[i].getHeight() * 0.9), true);
         }
@@ -116,6 +131,8 @@ public class Resources {
         for (int i = 0; i < ICONS.length; i++) {
             ICONS[i] = Bitmap.createScaledBitmap(ICONS[i], (int) (ICONS[i].getWidth() * 0.9), (int) (ICONS[i].getHeight() * 0.9), true);
         }
+
+        Logger.log("Preparing paints ...");
 
         PAINT_M_W_0020_L.setTypeface(Typeface.MONOSPACE);
         PAINT_M_W_0020_L.setColor(Color.WHITE);
@@ -165,6 +182,14 @@ public class Resources {
         PAINT_2F8FBC8F.setColor(0x2F8FBC8F);
         PAINT_2FFFBC8F.setColor(0x2FFFBC8F);
         PAINT_108FBC8F.setColor(0x108FBC8F);
+        PAINT_LIGHTNING.setColor(0xFFFFFFFF);
+        PAINT_FF6495ED.setColor(0xFF6495ED);
+        PAINT_FFADD8E6.setColor(0xFFADD8E6);
+        PAINT_FF7CFC00.setColor(0xFF7CFC00);
+        PAINT_FFADFF2F.setColor(0xFFADFF2F);
+
+        PAINT_FFF0F8FF_STROKE.setColor(0xFFF0F8FF);
+        PAINT_FFF0F8FF_STROKE.setStyle(Paint.Style.STROKE);
 
         PAINT_0_STROKE.setColor(0);
         PAINT_0_STROKE.setStyle(Paint.Style.STROKE);
