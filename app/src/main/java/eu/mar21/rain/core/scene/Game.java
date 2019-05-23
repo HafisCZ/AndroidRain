@@ -1,12 +1,7 @@
 package eu.mar21.rain.core.scene;
 
-import android.content.Context;
 import android.graphics.Canvas;
-import android.hardware.Sensor;
-import android.hardware.SensorManager;
 
-import eu.mar21.rain.core.Application;
-import eu.mar21.rain.core.device.input.InputListener;
 import eu.mar21.rain.core.graphics.Window;
 import eu.mar21.rain.core.level.Level;
 import eu.mar21.rain.core.scene.menu.Menu;

@@ -2,7 +2,6 @@ package eu.mar21.rain.core.entity.item;
 
 import eu.mar21.rain.core.graphics.sprite.Sprite;
 import eu.mar21.rain.core.level.Level;
-import eu.mar21.rain.core.level.data.Statistics;
 import eu.mar21.rain.core.utils.Resources;
 
 public class Energy extends Item {
@@ -15,9 +14,7 @@ public class Energy extends Item {
     // Methods
     @Override
     public void effect() {
-        this.level.getData().addEnergy();
-
-        Statistics.STAT_ENERGY_COLLECTED.add(1);
+        this.level.getData().applyEnergy(1);
     }
 
 }

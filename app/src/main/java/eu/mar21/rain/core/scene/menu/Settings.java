@@ -5,7 +5,7 @@ import android.graphics.Canvas;
 import eu.mar21.rain.core.device.input.InputListener;
 import eu.mar21.rain.core.device.input.InputStyle;
 import eu.mar21.rain.core.graphics.Window;
-import eu.mar21.rain.core.level.data.Statistics;
+import eu.mar21.rain.core.level.data.Data;
 import eu.mar21.rain.core.scene.Scene;
 import eu.mar21.rain.core.ui.Button;
 import eu.mar21.rain.core.ui.Panel;
@@ -61,8 +61,8 @@ public class Settings extends Scene {
         gsub1.add(new Text("CLEAR").setPosition(0.5f, 0.8f).setForeground(Resources.PAINT_M_W_0050_C));
 
         gsub1.onClick(v -> {
-            Statistics.reset();
-            Statistics.save();
+            Data.reset();
+            Data.save();
             begin();
         });
 

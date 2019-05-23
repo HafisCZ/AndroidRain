@@ -4,9 +4,7 @@ import android.graphics.Canvas;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 
 import eu.mar21.rain.core.device.input.InputListener;
 import eu.mar21.rain.core.device.input.TouchZone;
@@ -24,8 +22,7 @@ import eu.mar21.rain.core.entity.spawner.GenericSpawner;
 import eu.mar21.rain.core.entity.spawner.RainSpawner;
 import eu.mar21.rain.core.entity.spawner.Spawner;
 import eu.mar21.rain.core.entity.spawner.StarSpawner;
-import eu.mar21.rain.core.graphics.Notification;
-import eu.mar21.rain.core.level.data.PlayerData;
+import eu.mar21.rain.core.level.data.LevelData;
 import eu.mar21.rain.core.utils.Resources;
 
 public class Level {
@@ -36,10 +33,8 @@ public class Level {
     private final List<Spawner> spawners = new ArrayList<>();
     private final List<Particle> particles = new ArrayList<>();
 
-    private Queue<Notification> notifications = new LinkedList<>();
-
     // Level data
-    private PlayerData data;
+    private LevelData data;
     private InputListener input;
 
     // Params
@@ -62,11 +57,9 @@ public class Level {
     public void reset() {
         this.exit = false;
 
-        this.input.reset();
         this.mobs.clear();
         this.items.clear();
         this.spawners.clear();
-        this.notifications.clear();
 
         for (Iterator<Particle> iterator = this.particles.iterator(); iterator.hasNext();) {
             Particle p = iterator.next();
@@ -76,16 +69,15 @@ public class Level {
             }
         }
 
-        this.data = new PlayerData(this);
+        this.data = new LevelData(this);
         this.player = new Player(this, (Resources.SCREEN_WIDTH - Resources.PLAYER[0].getWidth()) / 2, Resources.SCREEN_HEIGHT);
 
-        this.spawners.add(new GenericSpawner(this, 20 * 60, 10 * 60, 1, A -> add(new FlashParticle(this, 10))));
+        this.spawners.add(new GenericSpawner(this, 0, 0, Resources.SCREEN_WIDTH, 0, 20 * 60, 10 * 60, 1, (L, X, Y) -> add(new FlashParticle(this, X, 10))));
+
         this.spawners.add(new AcidSpawner(this,0, -50, Resources.SCREEN_WIDTH, 0,  20, 5, 2));
         this.spawners.add(new ArmorSpawner(this,0, -50, Resources.SCREEN_WIDTH, 0,  (60 * 60) >> 1, 10 * 60, 1));
         this.spawners.add(new EnergySpawner(this,0, -50, Resources.SCREEN_WIDTH, 0,  60, 60, 1));
         this.spawners.add(new StarSpawner(this,0, -50, Resources.SCREEN_WIDTH, 0,  20 * 60, 0, 1));
-
-        this.notifications.add(new Notification(Notification.NotificationStyle.PLAIN, "NEW GAME", null));
     }
 
     public void add(Spawner s) {
@@ -104,15 +96,11 @@ public class Level {
         this.particles.add(p);
     }
 
-    public void showNotification(Notification notification) {
-        this.notifications.add(notification);
-    }
-
     public InputListener getInput() {
         return this.input;
     }
 
-    public PlayerData getData() {
+    public LevelData getData() {
         return this.data;
     }
 
@@ -142,10 +130,6 @@ public class Level {
         if (this.player != null) {
             this.player.draw(c);
             this.data.draw(c);
-        }
-
-        if (!this.notifications.isEmpty()) {
-            this.notifications.peek().draw(c);
         }
     }
 
@@ -219,19 +203,9 @@ public class Level {
             if (this.player != null) {
                 this.data.tick();
 
-                if (this.data.getPlayerHealth() <= 0) {
-                    this.data.saveTime();
+                if (this.data.isDead()) {
                     this.data.save();
                     this.exit = true;
-                }
-            }
-
-            if (!this.notifications.isEmpty()) {
-                Notification n = this.notifications.peek();
-
-                n.update();
-                if(n.isRemoved()) {
-                    this.notifications.remove();
                 }
             }
         }

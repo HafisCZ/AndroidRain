@@ -2,9 +2,8 @@ package eu.mar21.rain.core.scene.menu;
 
 import android.graphics.Canvas;
 
-import eu.mar21.rain.core.device.input.InputListener;
 import eu.mar21.rain.core.graphics.Window;
-import eu.mar21.rain.core.level.data.Statistics;
+import eu.mar21.rain.core.level.data.Data;
 import eu.mar21.rain.core.scene.Scene;
 import eu.mar21.rain.core.ui.Button;
 import eu.mar21.rain.core.ui.Image;
@@ -48,10 +47,10 @@ public class Shop extends Scene {
         String[] starsLabels = { "INSTANT XP", "SHIELD", "XP BOOST", "FREE POINT" };
         for (int i = 0; i < 4; i++) {
             this.stars[i] = (Button) new Button(listItem1, starsLabels[i], 0.05f + 0.25f * i, 0.2f, 0.15f, 0.15f).setBackground(Resources.PAINT_0).setForeground(Resources.PAINT_M_W_0030_C).onClick(v -> {
-                if (Statistics.PLAYER_POINTS.get() > 0 && Statistics.UPGRADE_RANDOM.get() < 5) {
-                    Statistics.PLAYER_POINTS.add(-1);
-                    Statistics.UPGRADE_RANDOM.add(1);
-                    Statistics.save();
+                if (Data.PLAYER_POINTS.get() > 0 && Data.UPGRADE_RANDOM.get() < 5) {
+                    Data.PLAYER_POINTS.add(-1);
+                    Data.UPGRADE_RANDOM.add(1);
+                    Data.save();
 
                     begin();
                 }
@@ -66,11 +65,11 @@ public class Shop extends Scene {
         }
 
         panels[0].onClick(v -> {
-            if (Statistics.PLAYER_POINTS.get() > 0) {
-                if (Statistics.PLAYER_HEALTH.get() < 10) {
-                    Statistics.PLAYER_POINTS.add(-1);
-                    Statistics.PLAYER_HEALTH.add(1);
-                    Statistics.save();
+            if (Data.PLAYER_POINTS.get() > 0) {
+                if (Data.PLAYER_HEALTH.get() < 10) {
+                    Data.PLAYER_POINTS.add(-1);
+                    Data.PLAYER_HEALTH.add(1);
+                    Data.save();
 
                     begin();
                 }
@@ -78,11 +77,11 @@ public class Shop extends Scene {
         });
 
         panels[1].onClick(v -> {
-            if (Statistics.PLAYER_POINTS.get() > 0) {
-                if (Statistics.PLAYER_SHIELDS.get() < Statistics.PLAYER_HEALTH.get()) {
-                    Statistics.PLAYER_POINTS.add(-1);
-                    Statistics.PLAYER_SHIELDS.add(1);
-                    Statistics.save();
+            if (Data.PLAYER_POINTS.get() > 0) {
+                if (Data.PLAYER_SHIELDS.get() < Data.PLAYER_HEALTH.get()) {
+                    Data.PLAYER_POINTS.add(-1);
+                    Data.PLAYER_SHIELDS.add(1);
+                    Data.save();
 
                     begin();
                 }
@@ -90,11 +89,11 @@ public class Shop extends Scene {
         });
 
         skills[0].onClick(v -> {
-            if (Statistics.PLAYER_POINTS.get() > 0) {
-                if (Statistics.UPGRADE_SKILL_SHOCK.get() < 1) {
-                    Statistics.PLAYER_POINTS.add(-1);
-                    Statistics.UPGRADE_SKILL_SHOCK.add(1);
-                    Statistics.save();
+            if (Data.PLAYER_POINTS.get() > 0) {
+                if (Data.UPGRADE_SKILL_SHOCK.get() < 1) {
+                    Data.PLAYER_POINTS.add(-1);
+                    Data.UPGRADE_SKILL_SHOCK.add(1);
+                    Data.save();
 
                     begin();
                 }
@@ -102,11 +101,11 @@ public class Shop extends Scene {
         });
 
         skills[1].onClick(v -> {
-            if (Statistics.PLAYER_POINTS.get() > 0) {
-                if (Statistics.UPGRADE_SKILL_SHIELD.get() < 1) {
-                    Statistics.PLAYER_POINTS.add(-1);
-                    Statistics.UPGRADE_SKILL_SHIELD.add(1);
-                    Statistics.save();
+            if (Data.PLAYER_POINTS.get() > 0) {
+                if (Data.UPGRADE_SKILL_SHIELD.get() < 1) {
+                    Data.PLAYER_POINTS.add(-1);
+                    Data.UPGRADE_SKILL_SHIELD.add(1);
+                    Data.save();
 
                     begin();
                 }
@@ -114,11 +113,11 @@ public class Shop extends Scene {
         });
 
         skills[2].onClick(v -> {
-            if (Statistics.PLAYER_POINTS.get() > 0) {
-                if (Statistics.UPGRADE_SKILL_XPBOOST.get() < 1) {
-                    Statistics.PLAYER_POINTS.add(-1);
-                    Statistics.UPGRADE_SKILL_XPBOOST.add(1);
-                    Statistics.save();
+            if (Data.PLAYER_POINTS.get() > 0) {
+                if (Data.UPGRADE_SKILL_XPBOOST.get() < 1) {
+                    Data.PLAYER_POINTS.add(-1);
+                    Data.UPGRADE_SKILL_XPBOOST.add(1);
+                    Data.save();
 
                     begin();
                 }
@@ -126,11 +125,11 @@ public class Shop extends Scene {
         });
 
         skills[3].onClick(v -> {
-            if (Statistics.PLAYER_POINTS.get() > 0) {
-                if (Statistics.UPGRADE_ENERGY_MULT.get() < 1) {
-                    Statistics.PLAYER_POINTS.add(-1);
-                    Statistics.UPGRADE_ENERGY_MULT.add(1);
-                    Statistics.save();
+            if (Data.PLAYER_POINTS.get() > 0) {
+                if (Data.UPGRADE_ENERGY_MULT.get() < 1) {
+                    Data.PLAYER_POINTS.add(-1);
+                    Data.UPGRADE_ENERGY_MULT.add(1);
+                    Data.save();
 
                     begin();
                 }
@@ -155,28 +154,28 @@ public class Shop extends Scene {
     @Override
     public void begin() {
         this.title.get().subList(2, this.title.get().size()).clear();
-        new Text(this.title, Integer.toString(Statistics.PLAYER_POINTS.get())).setPosition(0.95f, 0.8f).setForeground(Resources.PAINT_M_Y_0050_R);
+        new Text(this.title, Integer.toString(Data.PLAYER_POINTS.get())).setPosition(0.95f, 0.8f).setForeground(Resources.PAINT_M_Y_0050_R);
 
         for (Panel p : this.panels) {
             p.get().subList(1, p.get().size()).clear();
         }
 
-        ((Text) this.panels[0].get().get(0)).setForeground(Statistics.PLAYER_HEALTH.get() < 10 && Statistics.PLAYER_POINTS.get() > 0 ? Resources.PAINT_M_Y_0030_C : (Statistics.PLAYER_HEALTH.get() == 10 ? Resources.PAINT_M_GRAY_0030_C : Resources.PAINT_M_W_0030_C));
-        ((Text) this.panels[1].get().get(0)).setForeground(Statistics.PLAYER_SHIELDS.get() < 10 && Statistics.PLAYER_POINTS.get() > 0 ? Resources.PAINT_M_Y_0030_C : (Statistics.PLAYER_SHIELDS.get() == 10 ? Resources.PAINT_M_GRAY_0030_C : Resources.PAINT_M_W_0030_C));
-        ((Text) this.skills[0].get().get(0)).setForeground(Statistics.UPGRADE_SKILL_SHOCK.get() < 1 && Statistics.PLAYER_POINTS.get() > 0 ? Resources.PAINT_M_Y_0030_C : (Statistics.UPGRADE_SKILL_SHOCK.get() == 1 ? Resources.PAINT_M_GRAY_0030_C : Resources.PAINT_M_W_0030_C));
-        ((Text) this.skills[1].get().get(0)).setForeground(Statistics.UPGRADE_SKILL_SHIELD.get() < 1 && Statistics.PLAYER_POINTS.get() > 0 ? Resources.PAINT_M_Y_0030_C : (Statistics.UPGRADE_SKILL_SHIELD.get() == 1 ? Resources.PAINT_M_GRAY_0030_C : Resources.PAINT_M_W_0030_C));
-        ((Text) this.skills[2].get().get(0)).setForeground(Statistics.UPGRADE_SKILL_XPBOOST.get() < 1 && Statistics.PLAYER_POINTS.get() > 0 ? Resources.PAINT_M_Y_0030_C : (Statistics.UPGRADE_SKILL_XPBOOST.get() == 1 ? Resources.PAINT_M_GRAY_0030_C : Resources.PAINT_M_W_0030_C));
-        ((Text) this.skills[3].get().get(0)).setForeground(Statistics.UPGRADE_ENERGY_MULT.get() < 1 && Statistics.PLAYER_POINTS.get() > 0 ? Resources.PAINT_M_Y_0030_C : (Statistics.UPGRADE_ENERGY_MULT.get() == 1 ? Resources.PAINT_M_GRAY_0030_C : Resources.PAINT_M_W_0030_C));
+        ((Text) this.panels[0].get().get(0)).setForeground(Data.PLAYER_HEALTH.get() < 10 && Data.PLAYER_POINTS.get() > 0 ? Resources.PAINT_M_Y_0030_C : (Data.PLAYER_HEALTH.get() == 10 ? Resources.PAINT_M_GRAY_0030_C : Resources.PAINT_M_W_0030_C));
+        ((Text) this.panels[1].get().get(0)).setForeground(Data.PLAYER_SHIELDS.get() < 10 && Data.PLAYER_POINTS.get() > 0 ? Resources.PAINT_M_Y_0030_C : (Data.PLAYER_SHIELDS.get() == 10 ? Resources.PAINT_M_GRAY_0030_C : Resources.PAINT_M_W_0030_C));
+        ((Text) this.skills[0].get().get(0)).setForeground(Data.UPGRADE_SKILL_SHOCK.get() < 1 && Data.PLAYER_POINTS.get() > 0 ? Resources.PAINT_M_Y_0030_C : (Data.UPGRADE_SKILL_SHOCK.get() == 1 ? Resources.PAINT_M_GRAY_0030_C : Resources.PAINT_M_W_0030_C));
+        ((Text) this.skills[1].get().get(0)).setForeground(Data.UPGRADE_SKILL_SHIELD.get() < 1 && Data.PLAYER_POINTS.get() > 0 ? Resources.PAINT_M_Y_0030_C : (Data.UPGRADE_SKILL_SHIELD.get() == 1 ? Resources.PAINT_M_GRAY_0030_C : Resources.PAINT_M_W_0030_C));
+        ((Text) this.skills[2].get().get(0)).setForeground(Data.UPGRADE_SKILL_XPBOOST.get() < 1 && Data.PLAYER_POINTS.get() > 0 ? Resources.PAINT_M_Y_0030_C : (Data.UPGRADE_SKILL_XPBOOST.get() == 1 ? Resources.PAINT_M_GRAY_0030_C : Resources.PAINT_M_W_0030_C));
+        ((Text) this.skills[3].get().get(0)).setForeground(Data.UPGRADE_ENERGY_MULT.get() < 1 && Data.PLAYER_POINTS.get() > 0 ? Resources.PAINT_M_Y_0030_C : (Data.UPGRADE_ENERGY_MULT.get() == 1 ? Resources.PAINT_M_GRAY_0030_C : Resources.PAINT_M_W_0030_C));
 
         for (int i = 0; i < 4; i++) {
-            this.stars[i].setForeground(Statistics.UPGRADE_RANDOM.get() >= i + 2 ? Resources.PAINT_M_GRAY_0030_C : (Statistics.UPGRADE_RANDOM.get() >= i + 1 && Statistics.PLAYER_POINTS.get() > 0 ? Resources.PAINT_M_Y_0030_C : Resources.PAINT_M_W_0030_C));
+            this.stars[i].setForeground(Data.UPGRADE_RANDOM.get() >= i + 2 ? Resources.PAINT_M_GRAY_0030_C : (Data.UPGRADE_RANDOM.get() >= i + 1 && Data.PLAYER_POINTS.get() > 0 ? Resources.PAINT_M_Y_0030_C : Resources.PAINT_M_W_0030_C));
         }
 
-        for (int i = 0; i < Statistics.PLAYER_HEALTH.get(); i++) {
+        for (int i = 0; i < Data.PLAYER_HEALTH.get(); i++) {
             new Image(this.panels[0], Resources.ICONS[0]).setPosition(0.25f + 0.075f * i, 0.5f).center(true);
         }
 
-        for (int i = 0; i < Statistics.PLAYER_SHIELDS.get(); i++) {
+        for (int i = 0; i < Data.PLAYER_SHIELDS.get(); i++) {
             new Image(this.panels[1], Resources.SHIELD).setPosition(0.25f + 0.075f * i, 0.5f).center(true);
         }
     }

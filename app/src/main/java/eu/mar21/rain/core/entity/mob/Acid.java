@@ -41,7 +41,7 @@ public class Acid extends Mob {
         }
 
         if (this.level.isCollidingPlayerAABB(this)) {
-            this.level.getData().damage();
+            this.level.getData().applyDamage();
 
             this.y -= this.sy;
             spawnParticles(-1.0);

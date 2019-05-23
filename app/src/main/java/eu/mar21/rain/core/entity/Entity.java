@@ -71,6 +71,10 @@ public abstract class Entity {
         return (e.x + e.sx > this.x) && (this.x + this.sx > e.x) && (e.y + e.sy > this.y) && (this.y + this.sy > e.y);
     }
 
+    public final boolean isCollidingAABB(double x, double y) {
+        return (x > this.x) && (this.x + this.sx > x) && (y > this.y) && (this.y + this.sy > y);
+    }
+
     public final boolean isRemoved() {
         return this.removed;
     }

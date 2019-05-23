@@ -1,11 +1,8 @@
 package eu.mar21.rain.core.entity.mob;
 
 import eu.mar21.rain.core.device.input.TouchZone;
-import eu.mar21.rain.core.graphics.Notification;
 import eu.mar21.rain.core.graphics.sprite.AnimatedSprite;
 import eu.mar21.rain.core.level.Level;
-import eu.mar21.rain.core.level.data.Skill;
-import eu.mar21.rain.core.level.data.Statistics;
 import eu.mar21.rain.core.utils.Direction;
 import eu.mar21.rain.core.utils.Resources;
 
@@ -59,18 +56,16 @@ public class Player extends Mob {
                 this.airborn = true;
                 this.dy = LIMIT_DY * Resources.RES_MULTY;
 
-                Statistics.STAT_TOTAL_JUMPS.add(1);
+                this.level.getData().applyJump();
             }
         }
 
         if (this.level.getInput().isPressed(TouchZone.QUAD_LU)) {
-            this.level.getData().useSkill(this);
+            this.level.getData().applySkill();
         }
 
         if (this.level.getInput().isPressed(TouchZone.QUAD_RU)) {
-            if (this.level.getData().selectNextSkill()) {
-                this.level.showNotification(new Notification(Notification.NotificationStyle.PLAIN,"SKILL SELECTED", Skill.values()[this.level.getData().getSelectedSkill()].name()));
-            }
+            this.level.getData().selectSkill();
         }
 
         this.x += this.dx;

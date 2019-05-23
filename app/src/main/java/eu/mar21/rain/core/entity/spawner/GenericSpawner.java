@@ -1,23 +1,23 @@
 package eu.mar21.rain.core.entity.spawner;
 
 import eu.mar21.rain.core.level.Level;
-import eu.mar21.rain.core.utils.Consumer;
+import eu.mar21.rain.core.utils.TriConsumer;
 
 public class GenericSpawner extends Spawner {
 
     // Params
-    private final Consumer<Level> action;
+    private final TriConsumer<Level, Double, Double> action;
 
     // Constructor
-    public GenericSpawner(Level level, int rate, int rnd, int count, Consumer<Level> action) {
-        super(level, 0, 0, 0, 0, rate, rnd, count);
+    public GenericSpawner(Level level, double x, double y, double w, double h, int rate, int rnd, int count, TriConsumer<Level, Double, Double> action) {
+        super(level, x, y, w, h, rate, rnd, count);
 
         this.action = action;
     }
 
     // Methods
     public void spawn() {
-        this.action.accept(this.level);
+        this.action.accept(this.level, getRndX(), getRndY());
     }
 
 }
