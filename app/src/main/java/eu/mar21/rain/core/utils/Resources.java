@@ -33,6 +33,8 @@ public class Resources {
     public static Paint PAINT_FF7CFC00 = new Paint();
     public static Paint PAINT_FFADFF2F = new Paint();
     public static Paint PAINT_FFADD8E6 = new Paint();
+    public static Paint PAINT_0FF4F442 = new Paint();
+    public static Paint PAINT_0E9BF442 = new Paint();
     public static Paint PAINT_0 = new Paint();
     public static Paint PAINT_M_Y_0050_R = new Paint();
     public static Paint PAINT_M_Y_0030_C = new Paint();
@@ -41,6 +43,7 @@ public class Resources {
     public static Paint PAINT_0_STROKE = new Paint();
     public static Paint PAINT_FFF0F8FF_STROKE = new Paint();
     public static Paint PAINT_A000FF00_STROKE = new Paint();
+    public static Paint PAINT_0E9BF442_STROKE = new Paint();
     public static Paint PAINT_A0FFFF00_STROKE = new Paint();
     public static Paint PAINT_M_A4FFFFFF_0030 = new Paint();
     public static Paint PAINT_M_A4FFFFFF_0020 = new Paint();
@@ -191,12 +194,17 @@ public class Resources {
         PAINT_FFADD8E6.setColor(0xFFADD8E6);
         PAINT_FF7CFC00.setColor(0xFF7CFC00);
         PAINT_FFADFF2F.setColor(0xFFADFF2F);
+        PAINT_0FF4F442.setColor(0x30F4F442);
+        PAINT_0E9BF442.setColor(0x209BF442);
 
         PAINT_FFF0F8FF_STROKE.setColor(0xFFF0F8FF);
         PAINT_FFF0F8FF_STROKE.setStyle(Paint.Style.STROKE);
 
         PAINT_0_STROKE.setColor(0);
         PAINT_0_STROKE.setStyle(Paint.Style.STROKE);
+
+        PAINT_0E9BF442_STROKE.setColor(0x509BF442);
+        PAINT_0E9BF442_STROKE.setStyle(Paint.Style.STROKE);
 
         PAINT_A0FFFF00_STROKE.setColor(0xA0FFFF00);
         PAINT_A0FFFF00_STROKE.setStyle(Paint.Style.STROKE);

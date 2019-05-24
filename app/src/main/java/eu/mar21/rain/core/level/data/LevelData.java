@@ -92,8 +92,6 @@ public class LevelData implements Drawable {
 
         this.yoff = Resources.BARS[0].getHeight() + 5;
         this.xoff = Resources.ICONS[0].getWidth();
-
-        awardIf(Data.ACH_LEVEL1, true);
     }
 
     // Methods
@@ -102,8 +100,7 @@ public class LevelData implements Drawable {
             Data.STAT_LONGEST_GAME.set((int) this.time);
         }
 
-        awardIf(Data.ACH_MAXHEALTH, Data.PLAYER_HEALTH.get() >= 10);
-
+        Award.save();
         Data.save();
     }
 
@@ -111,15 +108,10 @@ public class LevelData implements Drawable {
         Data.STAT_LIGHTNING_HIT.add(1);
 
         applyEnergy(10 + RANDOM.nextInt(20));
-
-        awardIf(Data.ACH_LIGHTNINGROD0, Data.STAT_LIGHTNING_HIT.get() >= 1);
-        awardIf(Data.ACH_LIGHTNINGROD1, Data.STAT_LIGHTNING_HIT.get() >= 100);
     }
 
     public void applyDamage() {
         Data.STAT_DMG_TAKEN.add(1);
-
-        awardIf(Data.ACH_DAMAGE1K, Data.STAT_DMG_TAKEN.get() >= 1000);
 
         if (this.shield > 0) {
             this.shield--;
@@ -130,8 +122,6 @@ public class LevelData implements Drawable {
 
     public void applyRandom() {
         Data.STAT_RANDOM_COLLECTED.add(1);
-
-        awardIf(Data.ACH_STAR1K, Data.STAT_RANDOM_COLLECTED.get() >= 1000);
 
         int rnd = RANDOM.nextInt(Data.UPGRADE_RANDOM.get());
         if (rnd == 1) {
@@ -168,8 +158,6 @@ public class LevelData implements Drawable {
 
     public void applyJump() {
         Data.STAT_TOTAL_JUMPS.add(1);
-
-        awardIf(Data.ACH_JUMP1K, Data.STAT_TOTAL_JUMPS.get() >= 1000);
     }
 
     public void applyExperienceMultiplier(int multiplier, int duration) {
@@ -178,11 +166,17 @@ public class LevelData implements Drawable {
         this.boosts.add(new Tuple<>(duration, multiplier));
     }
 
-    private void awardIf(Data data, boolean pre) {
-        if (pre && data.get() == 0) {
-            data.set(1);
+    private void tryAward(Award award) {
+        Award a = award.tryAward();
+        if (a != null) {
+            showNotification(Notification.NotificationStyle.YELLOW,  a.getLabel(), "Achievement received!");
+        }
+    }
 
-            showNotification(Notification.NotificationStyle.YELLOW,  data.getLabel(), "Achievement received!");
+    private void tryAward(Award award, boolean val) {
+        Award a = award.tryAward(val);
+        if (a != null) {
+            showNotification(Notification.NotificationStyle.YELLOW,  a.getLabel(), "Achievement received!");
         }
     }
 
@@ -258,8 +252,6 @@ public class LevelData implements Drawable {
         Data.PLAYER_SCORE.add(25);
         Data.STAT_ENERGY_COLLECTED.add(1);
 
-        awardIf(Data.ACH_NODE1K, Data.STAT_ENERGY_COLLECTED.get() >= 1000);
-
         if (this.energyDecay <= 0 && this.skill != null) {
             this.energy += this.energyMultiplier * amount;
             if (this.energy >= this.skill.getPowerRequired()) {
@@ -271,9 +263,6 @@ public class LevelData implements Drawable {
     public void applyShield() {
         Data.PLAYER_SCORE.add(100);
         Data.STAT_SHIELDS_COLLECTED.add(1);
-
-        awardIf(Data.ACH_MAXARMOR, this.shield >= 10);
-        awardIf(Data.ACH_SHIELD1K, Data.STAT_SHIELDS_COLLECTED.get() >= 1000);
 
         if (this.shield < this.health) {
             this.shield++;
@@ -296,7 +285,6 @@ public class LevelData implements Drawable {
             this.time++;
 
             Data.PLAYER_SCORE.add(2);
-            awardIf(Data.ACH_SCORE100K, Data.PLAYER_SCORE.get() >= 100000);
 
             Tuple<Integer, Integer> boost = this.boosts.peek();
             if (boost != null) {
@@ -317,13 +305,19 @@ public class LevelData implements Drawable {
 
                 this.experienceNeeded = (int) (EXP_POOL * Math.pow(EXP_POOL_EXPONENT, Data.PLAYER_LEVEL.get()));
 
-                awardIf(Data.ACH_LEVEL5, Data.PLAYER_LEVEL.get() >= 5);
-                awardIf(Data.ACH_LEVEL10, Data.PLAYER_LEVEL.get() >= 10);
-                awardIf(Data.ACH_LEVEL25, Data.PLAYER_LEVEL.get() >= 25);
-                awardIf(Data.ACH_LEVEL50, Data.PLAYER_LEVEL.get() >= 50);
-
                 showNotification(Notification.NotificationStyle.YELLOW,"LEVEL UP!", "YOU REACHED LEVEL " + Data.PLAYER_LEVEL.get());
             }
+
+            tryAward(Award.HEALTH);
+            tryAward(Award.DAMAGE_1K);
+            tryAward(Award.JUMP_666);
+            tryAward(Award.LEVEL_1);
+            tryAward(Award.NODE_1K);
+            tryAward(Award.SHIELD_1K);
+            tryAward(Award.STAR_1K);
+            tryAward(Award.STRIKE_1);
+            tryAward(Award.SCORE_100K);
+            tryAward(Award.SHIELD_FULL, this.shield >= 10);
         }
 
         if (this.energyDecay > 0) {

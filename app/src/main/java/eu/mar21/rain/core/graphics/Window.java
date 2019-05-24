@@ -13,7 +13,6 @@ import java.util.Map;
 
 import eu.mar21.rain.core.Application;
 import eu.mar21.rain.core.device.input.InputListener;
-import eu.mar21.rain.core.device.input.TouchZone;
 import eu.mar21.rain.core.graphics.utils.FrameCounter;
 import eu.mar21.rain.core.scene.Scene;
 import eu.mar21.rain.core.utils.Logger;

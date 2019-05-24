@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import eu.mar21.rain.core.device.input.InputListener;
 import eu.mar21.rain.core.device.input.InputStyle;
 import eu.mar21.rain.core.graphics.Window;
+import eu.mar21.rain.core.level.data.Award;
 import eu.mar21.rain.core.level.data.Data;
 import eu.mar21.rain.core.scene.Scene;
 import eu.mar21.rain.core.ui.Button;
@@ -55,15 +56,18 @@ public class Settings extends Scene {
         sub1.add(new Text("STATISTICS").setPosition(0.05f, 0.2f).setForeground(Resources.PAINT_M_W_0030_L));
         this.view.add(sub1);
 
-        Panel gsub1 = new Panel(0.05f, 0.5f, 1.0f / 3.0f - 0.05f, 0.5f).setBackground(Resources.PAINT_2FFFBC8F);
-        sub1.add(gsub1);
-
-        gsub1.add(new Text("CLEAR").setPosition(0.5f, 0.8f).setForeground(Resources.PAINT_M_W_0050_C));
-
+        Panel gsub1 = new Panel(sub1, 0.05f, 0.5f, 1.0f / 3.0f - 0.05f, 0.5f).setBackground(Resources.PAINT_2FFFBC8F);
+        new Text(gsub1, "CLEAR").setPosition(0.5f, 0.8f).setForeground(Resources.PAINT_M_W_0050_C);
         gsub1.onClick(v -> {
             Data.reset();
             Data.save();
-            begin();
+        });
+
+        Panel gsub2 = new Panel(sub1, 1.0f / 3.0f + 0.05f, 0.5f, 2.0f / 3.0f - 0.05f, 0.5f).setBackground(Resources.PAINT_2FFFBC8F);
+        new Text(gsub2, "RESET AWARDS").setPosition(0.5f, 0.8f).setForeground(Resources.PAINT_M_W_0050_C);
+        gsub2.onClick(v -> {
+            Award.reset();
+            Award.save();
         });
 
         this.view.setListener(this.window.getListener());

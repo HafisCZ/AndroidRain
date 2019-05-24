@@ -3,6 +3,7 @@ package eu.mar21.rain.core.scene.menu;
 import android.graphics.Canvas;
 
 import eu.mar21.rain.core.graphics.Window;
+import eu.mar21.rain.core.level.data.Award;
 import eu.mar21.rain.core.level.data.Data;
 import eu.mar21.rain.core.scene.Scene;
 import eu.mar21.rain.core.ui.Button;
@@ -26,10 +27,18 @@ public class Stat extends Scene {
         new Text(p, Integer.toString(var)).setPosition(1, 0.8f).setForeground(Resources.PAINT_M_W_0020_R);
     }
 
-    private void entry(View v, Data data, float col, float row) {
-        Panel p = new Panel(v, 0.05f + col * 0.5f, 0.07f + row * 0.13f, 0.4f, 0.12f).setBackground(data.get() > 0 ? Resources.PAINT_2F8FBC8F : Resources.PAINT_0);
-        new Text(p, data.getLabel()).setPosition(0.02f, 0.4f).setForeground(Resources.PAINT_M_W_0020_L);
-        new Text(p, data.getDescription()).setPosition(0.02f, 0.8f).setForeground(Resources.PAINT_M_LGRAY_0015_L);
+    private void entry(View v, Award award, float col, float row) {
+        Panel p = new Panel(v, 0.05f + col * 0.5f, 0.07f + row * 0.13f, 0.4f, 0.12f);
+
+        if (award.isAwarded()) {
+            p.setBackground(Resources.PAINT_0FF4F442);
+        } else {
+            p.setBackground(Resources.PAINT_0E9BF442_STROKE);
+            new Panel(p, 0, 0, award.getCompletion(), 1).setBackground(Resources.PAINT_0E9BF442);
+        }
+
+        new Text(p, award.getLabel()).setPosition(0.02f, 0.4f).setForeground(Resources.PAINT_M_W_0020_L);
+        new Text(p, award.getDescription()).setPosition(0.02f, 0.8f).setForeground(Resources.PAINT_M_LGRAY_0015_L);
     }
 
     @Override
@@ -60,22 +69,17 @@ public class Stat extends Scene {
         entry(p0, "Damage", Data.STAT_DMG_TAKEN.get(), 1, 4);
         entry(p0, "Lightning hits", Data.STAT_LIGHTNING_HIT.get(), 1, 5);
 
-        entry(p1, Data.ACH_LEVEL1, 0, 0);
-        entry(p1, Data.ACH_LEVEL5, 0, 2);
-        entry(p1, Data.ACH_LEVEL10, 0, 3);
-        entry(p1, Data.ACH_LEVEL25, 0, 4);
-        entry(p1, Data.ACH_LEVEL50, 0, 5);
-        entry(p1, Data.ACH_SCORE100K, 1, 0);
-        entry(p1, Data.ACH_MAXHEALTH, 1, 2);
+        entry(p1, Award.LEVEL_1.get(), 0, 0);
+        entry(p1, Award.SCORE_100K.get(), 0, 2);
+        entry(p1, Award.HEALTH.get(), 1, 0);
+        entry(p1, Award.SHIELD_FULL.get(), 1, 1);
+        entry(p1, Award.JUMP_666.get(), 1, 2);
 
-        entry(p2, Data.ACH_MAXARMOR, 0, 0);
-        entry(p2, Data.ACH_JUMP1K, 0, 1);
-        entry(p2, Data.ACH_LIGHTNINGROD0, 0, 3);
-        entry(p2, Data.ACH_LIGHTNINGROD1, 0, 4);
-        entry(p2, Data.ACH_NODE1K, 1, 0);
-        entry(p2, Data.ACH_STAR1K, 1, 1);
-        entry(p2, Data.ACH_SHIELD1K, 1, 2);
-        entry(p2, Data.ACH_DAMAGE1K, 1, 3);
+        entry(p2, Award.NODE_1K.get(), 0, 0);
+        entry(p2, Award.STAR_1K.get(), 0, 1);
+        entry(p2, Award.SHIELD_1K.get(), 0, 2);
+        entry(p2, Award.DAMAGE_1K.get(), 0, 3);
+        entry(p2, Award.STRIKE_1.get(), 1, 0);
 
         this.view.setListener(this.window.getListener());
     }
