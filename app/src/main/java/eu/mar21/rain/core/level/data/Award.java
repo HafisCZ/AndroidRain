@@ -11,7 +11,7 @@ public enum Award {
     LEVEL_1("Get wet", "Play the game", Data.PLAYER_LEVEL, 1, LEVEL_5),
 
     SCORE_1M("A million", "Reach 1M score", Data.PLAYER_SCORE, 1000000, null),
-    SCORE_500K("Halfway there", "Reach 250K score", Data.PLAYER_SCORE, 500000, SCORE_1M),
+    SCORE_500K("Halfway there", "Reach 500K score", Data.PLAYER_SCORE, 500000, SCORE_1M),
     SCORE_100K("100K club", "Reach 100K score", Data.PLAYER_SCORE, 100000, SCORE_500K),
 
     JUMP_7777("Lucky paw", "Jump 7777 times", Data.STAT_TOTAL_JUMPS, 7777, null),
@@ -29,7 +29,7 @@ public enum Award {
     SHIELD_5K("Armorer II", "Collect 5 000 shields", Data.STAT_SHIELDS_COLLECTED, 5000, SHIELD_10K),
     SHIELD_1K("Armorer I", "Collect 1 000 shields", Data.STAT_SHIELDS_COLLECTED, 1000, SHIELD_5K),
 
-    SHIELD_FULL("Knight", "Have full shields", null, 0, null),
+    SHIELD_FULL("Knight", "Have full shields", Data.STAT_SHIELDS_MAX, 10, null),
 
     DAMAGE_10K("Meat target III", "Get hit 10 000 times", Data.STAT_DMG_TAKEN, 10000, null),
     DAMAGE_5K("Meat target II", "Get hit 5 000 times", Data.STAT_DMG_TAKEN, 5000, DAMAGE_10K),
@@ -98,17 +98,6 @@ public enum Award {
         if (this.awarded && this.follow != null) {
             return this.follow.tryAward();
         } else if (!this.awarded && this.data.get() >= this.req) {
-            this.awarded = true;
-            return this;
-        } else {
-            return null;
-        }
-    }
-
-    public Award tryAward(boolean aw) {
-        if (this.awarded && this.follow != null) {
-            return this.follow.tryAward(aw);
-        } else if (!this.awarded && aw) {
             this.awarded = true;
             return this;
         } else {

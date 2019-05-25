@@ -16,7 +16,7 @@ public class Shop extends Scene {
 
     // Params
     private Panel title;
-    private Panel[] panels = new Panel[2];
+    private Panel panels;
     private Panel[] skills = new Panel[4];
     private Button[] stars = new Button[4];
 
@@ -57,30 +57,17 @@ public class Shop extends Scene {
             });
         }
 
-        panels[0] = new Panel(listItem0, 0.1f, 0.15f, 0.8f, 0.1f).setBackground(Resources.PAINT_0);
-        panels[1] = new Panel(listItem0,0.1f, 0.30f, 0.8f, 0.1f).setBackground(Resources.PAINT_0);
+        panels = new Panel(listItem0, 0.1f, 0.15f, 0.8f, 0.1f).setBackground(Resources.PAINT_0);
 
         for (int i = 0; i < 4; i++) {
             skills[i] = new Panel(listItem0, 0.1f + 0.3f * (i % 3), 0.5f + (float) (i / 3) * 0.25f, 0.2f, 0.2f * listItem0.getScale()).setBackground(Resources.PAINT_0);
         }
 
-        panels[0].onClick(v -> {
+        panels.onClick(v -> {
             if (Data.PLAYER_POINTS.get() > 0) {
                 if (Data.PLAYER_HEALTH.get() < 10) {
                     Data.PLAYER_POINTS.add(-1);
                     Data.PLAYER_HEALTH.add(1);
-                    Data.save();
-
-                    begin();
-                }
-            }
-        });
-
-        panels[1].onClick(v -> {
-            if (Data.PLAYER_POINTS.get() > 0) {
-                if (Data.PLAYER_SHIELDS.get() < Data.PLAYER_HEALTH.get()) {
-                    Data.PLAYER_POINTS.add(-1);
-                    Data.PLAYER_SHIELDS.add(1);
                     Data.save();
 
                     begin();
@@ -136,8 +123,7 @@ public class Shop extends Scene {
             }
         });
 
-        new Text(panels[0], "HEALTH").setPosition(0.1f, 0.8f).setForeground(Resources.PAINT_M_W_0030_C);
-        new Text(panels[1], "SHIELD").setPosition(0.1f, 0.8f).setForeground(Resources.PAINT_M_W_0030_C);
+        new Text(panels, "HEALTH").setPosition(0.1f, 0.8f).setForeground(Resources.PAINT_M_W_0030_C);
 
         new Text(skills[0], "SHOCK").setPosition(0.5f, 0.2f).setForeground(Resources.PAINT_M_W_0030_C);
         new Text(skills[1], "BONUS SHIELD").setPosition(0.5f, 0.2f).setForeground(Resources.PAINT_M_W_0030_C);
@@ -156,12 +142,9 @@ public class Shop extends Scene {
         this.title.get().subList(2, this.title.get().size()).clear();
         new Text(this.title, Integer.toString(Data.PLAYER_POINTS.get())).setPosition(0.95f, 0.8f).setForeground(Resources.PAINT_M_Y_0050_R);
 
-        for (Panel p : this.panels) {
-            p.get().subList(1, p.get().size()).clear();
-        }
+        panels.get().subList(1, panels.get().size()).clear();
 
-        ((Text) this.panels[0].get().get(0)).setForeground(Data.PLAYER_HEALTH.get() < 10 && Data.PLAYER_POINTS.get() > 0 ? Resources.PAINT_M_Y_0030_C : (Data.PLAYER_HEALTH.get() == 10 ? Resources.PAINT_M_GRAY_0030_C : Resources.PAINT_M_W_0030_C));
-        ((Text) this.panels[1].get().get(0)).setForeground(Data.PLAYER_SHIELDS.get() < 10 && Data.PLAYER_POINTS.get() > 0 ? Resources.PAINT_M_Y_0030_C : (Data.PLAYER_SHIELDS.get() == 10 ? Resources.PAINT_M_GRAY_0030_C : Resources.PAINT_M_W_0030_C));
+        ((Text) this.panels.get().get(0)).setForeground(Data.PLAYER_HEALTH.get() < 10 && Data.PLAYER_POINTS.get() > 0 ? Resources.PAINT_M_Y_0030_C : (Data.PLAYER_HEALTH.get() == 10 ? Resources.PAINT_M_GRAY_0030_C : Resources.PAINT_M_W_0030_C));
         ((Text) this.skills[0].get().get(0)).setForeground(Data.UPGRADE_SKILL_SHOCK.get() < 1 && Data.PLAYER_POINTS.get() > 0 ? Resources.PAINT_M_Y_0030_C : (Data.UPGRADE_SKILL_SHOCK.get() == 1 ? Resources.PAINT_M_GRAY_0030_C : Resources.PAINT_M_W_0030_C));
         ((Text) this.skills[1].get().get(0)).setForeground(Data.UPGRADE_SKILL_SHIELD.get() < 1 && Data.PLAYER_POINTS.get() > 0 ? Resources.PAINT_M_Y_0030_C : (Data.UPGRADE_SKILL_SHIELD.get() == 1 ? Resources.PAINT_M_GRAY_0030_C : Resources.PAINT_M_W_0030_C));
         ((Text) this.skills[2].get().get(0)).setForeground(Data.UPGRADE_SKILL_XPBOOST.get() < 1 && Data.PLAYER_POINTS.get() > 0 ? Resources.PAINT_M_Y_0030_C : (Data.UPGRADE_SKILL_XPBOOST.get() == 1 ? Resources.PAINT_M_GRAY_0030_C : Resources.PAINT_M_W_0030_C));
@@ -172,11 +155,7 @@ public class Shop extends Scene {
         }
 
         for (int i = 0; i < Data.PLAYER_HEALTH.get(); i++) {
-            new Image(this.panels[0], Resources.ICONS[0]).setPosition(0.25f + 0.075f * i, 0.5f).center(true);
-        }
-
-        for (int i = 0; i < Data.PLAYER_SHIELDS.get(); i++) {
-            new Image(this.panels[1], Resources.SHIELD).setPosition(0.25f + 0.075f * i, 0.5f).center(true);
+            new Image(this.panels, Resources.ICONS[0]).setPosition(0.25f + 0.075f * i, 0.5f).center(true);
         }
     }
 

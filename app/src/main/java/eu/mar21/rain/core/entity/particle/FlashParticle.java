@@ -31,8 +31,8 @@ public class FlashParticle extends Particle {
         while (ly < Resources.SCREEN_HEIGHT) {
             points.add(new Float[]{ (float) lx, (float) ly });
 
-            lx += (RANDOM.nextBoolean() ? 1 : -1) * RANDOM.nextDouble() * Resources.SCREEN_WIDTH / 10.0;
-            ly += RANDOM.nextDouble() * Resources.SCREEN_HEIGHT / 2.0;
+            lx += (RANDOM.nextBoolean() ? 1 : -1) * RANDOM.nextDouble() * Resources.SCREEN_WIDTH / 15.0;
+            ly += Resources.SCREEN_HEIGHT / 15.0 + RANDOM.nextDouble() * Resources.SCREEN_HEIGHT / 2.0;
         }
 
         points.add(new Float[]{ (float) lx, (float) Resources.SCREEN_HEIGHT });

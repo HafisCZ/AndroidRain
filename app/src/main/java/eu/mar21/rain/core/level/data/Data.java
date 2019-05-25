@@ -14,13 +14,13 @@ public enum Data {
     STAT_LONGEST_GAME(0),
     STAT_SKILL_ACTIVATIONS(0),
     STAT_LIGHTNING_HIT(0),
+    STAT_SHIELDS_MAX(0),
 
     // Player data
     PLAYER_SCORE(0),
     PLAYER_LEVEL(1),
     PLAYER_POINTS(0),
     PLAYER_HEALTH(3),
-    PLAYER_SHIELDS(0),
 
     // Shop upgrades
     UPGRADE_RANDOM(1),

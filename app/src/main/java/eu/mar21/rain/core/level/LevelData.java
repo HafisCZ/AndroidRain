@@ -1,4 +1,4 @@
-package eu.mar21.rain.core.level.data;
+package eu.mar21.rain.core.level;
 
 import android.graphics.Canvas;
 
@@ -8,11 +8,17 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Random;
 
+import eu.mar21.rain.core.graphics.Announcement;
 import eu.mar21.rain.core.graphics.Drawable;
 import eu.mar21.rain.core.graphics.Notification;
 import eu.mar21.rain.core.graphics.sprite.Sprite;
-import eu.mar21.rain.core.level.Level;
+import eu.mar21.rain.core.level.data.Award;
+import eu.mar21.rain.core.level.data.Data;
+import eu.mar21.rain.core.level.data.Skill;
+import eu.mar21.rain.core.level.event.Event;
+import eu.mar21.rain.core.level.event.StormEvent;
 import eu.mar21.rain.core.utils.Resources;
+import eu.mar21.rain.core.utils.Timer;
 import eu.mar21.rain.core.utils.Tuple;
 
 public class LevelData implements Drawable {
@@ -25,6 +31,7 @@ public class LevelData implements Drawable {
 
     // Params
     private final Queue<Notification> notifications = new LinkedList<>();
+    private final Queue<Announcement> announcements = new LinkedList<>();
     private final Queue<Tuple<Integer, Integer>> boosts = new LinkedList<>();
     private final Level level;
 
@@ -35,8 +42,10 @@ public class LevelData implements Drawable {
     private int energyMultiplier;
     private int experience;
     private int experienceNeeded;
-    private int counter;
     private long time;
+
+    private int eventChance;
+    private Event event;
 
     private int skillIndex;
     private Skill skill;
@@ -52,6 +61,8 @@ public class LevelData implements Drawable {
     private int xoff;
     private int yoff;
 
+    private Timer updateTimer;
+
     // Constructor
     public LevelData(Level level) {
         this.level = level;
@@ -64,7 +75,8 @@ public class LevelData implements Drawable {
         this.experience = 0;
         this.experienceNeeded = (int) (EXP_POOL * Math.pow(EXP_POOL_EXPONENT, Data.PLAYER_LEVEL.get()));
         this.time = 0;
-        this.counter = 0;
+
+        this.event = null;
 
         this.skillIndex = 0;
         this.skill = null;
@@ -92,6 +104,59 @@ public class LevelData implements Drawable {
 
         this.yoff = Resources.BARS[0].getHeight() + 5;
         this.xoff = Resources.ICONS[0].getWidth();
+
+        this.updateTimer = new Timer(60, () -> {
+            this.time++;
+
+            Data.PLAYER_SCORE.add(2);
+
+            Tuple<Integer, Integer> boost = this.boosts.peek();
+            if (boost != null) {
+                if (--boost.first < 1) {
+                    this.boosts.remove();
+                }
+
+                applyExperience(boost.second);
+            } else {
+                applyExperience(1);
+            }
+
+            if (this.experience >= this.experienceNeeded) {
+                this.experience = 0;
+
+                Data.PLAYER_LEVEL.add(1);
+                Data.PLAYER_POINTS.add(1);
+
+                this.experienceNeeded = (int) (EXP_POOL * Math.pow(EXP_POOL_EXPONENT, Data.PLAYER_LEVEL.get()));
+
+                showNotification(Notification.NotificationStyle.YELLOW,"LEVEL UP!", "You reached level " + Data.PLAYER_LEVEL.get());
+            }
+
+            tryAward(Award.HEALTH);
+            tryAward(Award.DAMAGE_1K);
+            tryAward(Award.JUMP_666);
+            tryAward(Award.LEVEL_1);
+            tryAward(Award.NODE_1K);
+            tryAward(Award.SHIELD_1K);
+            tryAward(Award.STAR_1K);
+            tryAward(Award.STRIKE_1);
+            tryAward(Award.SCORE_100K);
+            tryAward(Award.SHIELD_FULL);
+
+            if (this.time % 60 == 0) {
+                if (RANDOM.nextInt(11 - this.eventChance) == 0) {
+                    this.eventChance = 0;
+
+                    int rnd = RANDOM.nextInt(1);
+                    if (rnd == 0) {
+                        startEvent(new StormEvent(this.level));
+                        showAnnouncement("Thunderstorm", "Event started");
+                    }
+                } else {
+                    this.eventChance += 1;
+                }
+            }
+        });
     }
 
     // Methods
@@ -102,6 +167,13 @@ public class LevelData implements Drawable {
 
         Award.save();
         Data.save();
+    }
+
+    private void startEvent(Event event) {
+        if (this.event == null) {
+            this.event = event;
+            this.event.onStart();
+        }
     }
 
     public void applyLightning() {
@@ -128,7 +200,7 @@ public class LevelData implements Drawable {
             int exp = 5 + RANDOM.nextInt(this.experienceNeeded / 5);
             applyExperience(exp);
 
-            showNotification(Notification.NotificationStyle.GREEN,"ITEM RECEIVED", experience + " EXP");
+            showNotification(Notification.NotificationStyle.GREEN,"ITEM RECEIVED", exp + " EXP");
         } else if (rnd == 2) {
             applyShield();
 
@@ -173,13 +245,6 @@ public class LevelData implements Drawable {
         }
     }
 
-    private void tryAward(Award award, boolean val) {
-        Award a = award.tryAward(val);
-        if (a != null) {
-            showNotification(Notification.NotificationStyle.YELLOW,  a.getLabel(), "Achievement received!");
-        }
-    }
-
     @Override
     public void draw(Canvas c) {
         c.drawText("" + Data.PLAYER_SCORE.get(), (float) (c.getWidth() / 2.0), 30.0f, Resources.PAINT_M_Y_20_C);
@@ -219,10 +284,22 @@ public class LevelData implements Drawable {
         if (!this.notifications.isEmpty()) {
             this.notifications.peek().draw(c);
         }
+
+        Announcement a = this.announcements.peek();
+        if (a != null) {
+            a.draw(c);
+            if (a.isRemoved()) {
+                this.announcements.remove();
+            }
+        }
     }
 
     private void showNotification(Notification.NotificationStyle s, String label, String description) {
         this.notifications.add(new Notification(s, label, description));
+    }
+
+    private void showAnnouncement(String label, String description) {
+        this.announcements.add(new Announcement(label, description));
     }
 
     public void applySkill() {
@@ -267,6 +344,10 @@ public class LevelData implements Drawable {
         if (this.shield < this.health) {
             this.shield++;
         }
+
+        if (this.shield > Data.STAT_SHIELDS_MAX.get()) {
+            Data.STAT_SHIELDS_MAX.set(this.shield);
+        }
     }
 
     private void applyExperience(int amount) {
@@ -280,45 +361,7 @@ public class LevelData implements Drawable {
     }
 
     public void tick() {
-        if (++this.counter > 60) {
-            this.counter = 0;
-            this.time++;
-
-            Data.PLAYER_SCORE.add(2);
-
-            Tuple<Integer, Integer> boost = this.boosts.peek();
-            if (boost != null) {
-                if (--boost.first < 1) {
-                    this.boosts.remove();
-                }
-
-                applyExperience(boost.second);
-            } else {
-                applyExperience(1);
-            }
-
-            if (this.experience >= this.experienceNeeded) {
-                this.experience = 0;
-
-                Data.PLAYER_LEVEL.add(1);
-                Data.PLAYER_POINTS.add(1);
-
-                this.experienceNeeded = (int) (EXP_POOL * Math.pow(EXP_POOL_EXPONENT, Data.PLAYER_LEVEL.get()));
-
-                showNotification(Notification.NotificationStyle.YELLOW,"LEVEL UP!", "YOU REACHED LEVEL " + Data.PLAYER_LEVEL.get());
-            }
-
-            tryAward(Award.HEALTH);
-            tryAward(Award.DAMAGE_1K);
-            tryAward(Award.JUMP_666);
-            tryAward(Award.LEVEL_1);
-            tryAward(Award.NODE_1K);
-            tryAward(Award.SHIELD_1K);
-            tryAward(Award.STAR_1K);
-            tryAward(Award.STRIKE_1);
-            tryAward(Award.SCORE_100K);
-            tryAward(Award.SHIELD_FULL, this.shield >= 10);
-        }
+        this.updateTimer.tick();
 
         if (this.energyDecay > 0) {
             this.energyDecay--;
@@ -330,6 +373,17 @@ public class LevelData implements Drawable {
 
             if (n.isRemoved()) {
                 this.notifications.remove();
+            }
+        }
+
+        if (this.event != null) {
+            this.event.onUpdate();
+
+            if (this.event.isRemoved()) {
+                this.event.onRemoval();
+                this.event = null;
+
+                showAnnouncement("Event ended", null);
             }
         }
     }

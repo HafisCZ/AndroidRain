@@ -22,7 +22,6 @@ import eu.mar21.rain.core.entity.spawner.GenericSpawner;
 import eu.mar21.rain.core.entity.spawner.RainSpawner;
 import eu.mar21.rain.core.entity.spawner.Spawner;
 import eu.mar21.rain.core.entity.spawner.StarSpawner;
-import eu.mar21.rain.core.level.data.LevelData;
 import eu.mar21.rain.core.utils.Resources;
 
 public class Level {

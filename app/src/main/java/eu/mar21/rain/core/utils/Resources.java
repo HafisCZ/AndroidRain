@@ -15,6 +15,8 @@ public class Resources {
     public static Paint PAINT = new Paint();
     public static Paint PAINT_ALPHA = new Paint();
     public static Paint PAINT_LIGHTNING = new Paint();
+    public static Paint PAINT_ANNOUNCEMENT = new Paint();
+    public static Paint PAINT_ANNOUNCEMENT_2 = new Paint();
     public static Paint PAINT_DEBUG = new Paint();
     public static Paint PAINT_M_W_0020_L = new Paint();
     public static Paint PAINT_M_LGRAY_0015_L = new Paint();
@@ -151,6 +153,12 @@ public class Resources {
 
         PAINT_M_W_0050_C.set(PAINT_M_W_0020_C);
         PAINT_M_W_0050_C.setTextSize(0.05f * (float) SCREEN_WIDTH);
+
+        PAINT_ANNOUNCEMENT.set(PAINT_M_W_0050_C);
+        PAINT_ANNOUNCEMENT.setTextSize(0.03f * (float) SCREEN_WIDTH);
+
+        PAINT_ANNOUNCEMENT_2.set(PAINT_M_W_0050_C);
+        PAINT_ANNOUNCEMENT_2.setTextSize(0.01f * (float) SCREEN_WIDTH);
 
         PAINT_M_W_0100_C.set(PAINT_M_W_0020_C);
         PAINT_M_W_0100_C.setTextSize(0.1f * (float) SCREEN_WIDTH);
