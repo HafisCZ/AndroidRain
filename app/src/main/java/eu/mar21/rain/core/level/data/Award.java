@@ -41,6 +41,8 @@ public enum Award {
     STRIKE_25("Feel the power", "Get hit by lightning 25 times", Data.STAT_LIGHTNING_HIT, 25, STRIKE_100),
     STRIKE_1("Feels good", "Get hit by lightning", Data.STAT_LIGHTNING_HIT, 1, STRIKE_25),
 
+    EVENT_1("Eventfull", "Participate in an event", Data.STAT_EVENTS, 1, null),
+
     EMPTY("", "", null, 0, null);
 
     // Params

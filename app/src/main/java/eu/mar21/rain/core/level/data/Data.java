@@ -15,6 +15,8 @@ public enum Data {
     STAT_SKILL_ACTIVATIONS(0),
     STAT_LIGHTNING_HIT(0),
     STAT_SHIELDS_MAX(0),
+    STAT_EVENTS(0),
+    STAT_TIME_PLAYED(0),
 
     // Player data
     PLAYER_SCORE(0),
@@ -27,6 +29,8 @@ public enum Data {
     UPGRADE_SKILL_SHOCK(0),
     UPGRADE_SKILL_XPBOOST(0),
     UPGRADE_SKILL_SHIELD(0),
+    UPGRADE_BATTERY(0),
+    UPGRADE_BATTERY_DECAY_RATE(0),
     UPGRADE_ENERGY_MULT(0);
 
     // Params

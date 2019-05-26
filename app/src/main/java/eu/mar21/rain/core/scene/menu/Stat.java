@@ -22,9 +22,16 @@ public class Stat extends Scene {
 
     // Methods
     private void entry(View v, String label, int var, float col, float row) {
-        Panel p = new Panel(v, 0.05f + col * 0.5f, 0.15f + row * 0.1f, 0.4f, 0.1f).setBackground(Resources.PAINT_0);
+        Panel p = new Panel(v, 0.05f + col * 0.5f, 0.07f + row * 0.1f, 0.4f, 0.1f).setBackground(Resources.PAINT_0);
         new Text(p, label).setPosition(0, 0.8f).setForeground(Resources.PAINT_M_W_0020_L);
         new Text(p, Integer.toString(var)).setPosition(1, 0.8f).setForeground(Resources.PAINT_M_W_0020_R);
+    }
+
+    private void entry(View v, String label, int var, String extra, float col, float row) {
+        Panel p = new Panel(v, 0.05f + col * 0.5f, 0.07f + row * 0.1f, 0.4f, 0.1f).setBackground(Resources.PAINT_0);
+        new Text(p, label).setPosition(0, 0.8f).setForeground(Resources.PAINT_M_W_0020_L);
+        new Text(p, Integer.toString(var)).setPosition(0.98f - 0.03f * extra.length(), 0.8f).setForeground(Resources.PAINT_M_W_0020_R);
+        new Text(p, extra).setPosition(1, 0.8f).setForeground(Resources.PAINT_M_W_0020_R);
     }
 
     private void entry(View v, Award award, float col, float row) {
@@ -60,8 +67,10 @@ public class Stat extends Scene {
         entry(p0, "Level", Data.PLAYER_LEVEL.get(), 0, 0);
         entry(p0, "Score", Data.PLAYER_SCORE.get(), 0, 1);
         entry(p0, "Experience", Data.STAT_TOTAL_EXP.get(), 0, 2);
-        entry(p0, "Longest game", Data.STAT_LONGEST_GAME.get(), 0, 3);
-        entry(p0, "Skills used", Data.STAT_SKILL_ACTIVATIONS.get(), 0, 4);
+        entry(p0, "Longest game", Data.STAT_LONGEST_GAME.get(), "s", 0, 3);
+        entry(p0, "Time played", Data.STAT_TIME_PLAYED.get(), "s",  0, 4);
+        entry(p0, "Skills used", Data.STAT_SKILL_ACTIVATIONS.get(), 0, 5);
+        entry(p0, "Events started", Data.STAT_EVENTS.get(), 0, 6);
         entry(p0, "Nodes", Data.STAT_ENERGY_COLLECTED.get(), 1, 0);
         entry(p0, "Shields", Data.STAT_SHIELDS_COLLECTED.get(), 1, 1);
         entry(p0, "Stars", Data.STAT_RANDOM_COLLECTED.get(), 1, 2);
@@ -70,7 +79,8 @@ public class Stat extends Scene {
         entry(p0, "Lightning hits", Data.STAT_LIGHTNING_HIT.get(), 1, 5);
 
         entry(p1, Award.LEVEL_1.get(), 0, 0);
-        entry(p1, Award.SCORE_100K.get(), 0, 2);
+        entry(p1, Award.SCORE_100K.get(), 0, 1);
+        entry(p1, Award.EVENT_1.get(), 0, 3);
         entry(p1, Award.HEALTH.get(), 1, 0);
         entry(p1, Award.SHIELD_FULL.get(), 1, 1);
         entry(p1, Award.JUMP_666.get(), 1, 2);

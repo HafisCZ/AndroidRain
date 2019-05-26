@@ -105,11 +105,11 @@ public class Level {
 
     public void draw(Canvas c) {
         if (!this.exit) {
-            for (int i = 0; i < 8; i++) {
+            for (int i = 0; i < 7; i++) {
                 c.drawBitmap(Resources.BACKGROUND[i], (int) ((getPlayer().getCX() - Resources.SCREEN_WIDTH / 2) / (Resources.SCREEN_WIDTH / 8) * - Math.pow(1.55, i) - 100 / 2), 0, null);
             }
         } else {
-            for (int i = 0; i < 8; i++) {
+            for (int i = 0; i < 7; i++) {
                 c.drawBitmap(Resources.BACKGROUND[i], -50,0, null);
             }
         }

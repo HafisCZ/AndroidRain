@@ -3,34 +3,38 @@ package eu.mar21.rain.core.level.data;
 import eu.mar21.rain.core.entity.particle.ShockParticle;
 import eu.mar21.rain.core.level.Level;
 import eu.mar21.rain.core.utils.Resources;
-import eu.mar21.rain.core.utils.TriConsumer;
+import eu.mar21.rain.core.utils.functional.TriConsumer;
 
 public enum Skill {
 
-    SHOCKWAVE((X, Y, L) -> L.add(new ShockParticle(L, X, Resources.SCREEN_HEIGHT)), 5, 15),
-    SHIELD_SPAWN((X, Y, L) -> L.getData().applyShield(), 1, 40),
-    EXPERIENCE_SPAWN((X, Y, L) -> L.getData().applyExperienceMultiplier(2, 60), 60, 60);
+    // Values
+    SHOCKWAVE((L, X, Y) -> L.add(new ShockParticle(L, X, Resources.SCREEN_HEIGHT)), 1, 5),
+    SHIELD_SPAWN((L, X, Y) -> L.getData().applyShield(), 2, 1),
+    EXPERIENCE_SPAWN((L, X, Y) -> L.getData().applyExperienceMultiplier(2 * Data.UPGRADE_SKILL_XPBOOST.get(), 60), 3, 60);
 
-    private final TriConsumer<Double, Double, Level> effect;
-    private final int duration;
+    // Params
+    private final TriConsumer<Level, Double, Double> effect;
     private final int power;
+    private final int decay;
 
-    Skill(TriConsumer<Double, Double, Level> consumer, int duration, int power) {
+    // Constructor
+    Skill(TriConsumer<Level, Double, Double> effect, int power, int decay) {
+        this.effect = effect;
         this.power = power;
-        this.effect = consumer;
-        this.duration = duration;
+        this.decay = decay;
     }
 
-    public int getPowerRequired() {
-        return power;
+    // Methods
+    public int getPower() {
+        return this.power;
     }
 
-    public void applyEffect(double x, double y, Level level) {
-        effect.accept(x, y, level);
+    public int getDecay() {
+        return this.decay;
     }
 
-    public int getDuration() {
-        return duration;
+    public void applyEffect(Level level, double x, double y) {
+        this.effect.accept(level, x, y);
     }
 
 }

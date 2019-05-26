@@ -31,17 +31,16 @@ public class Menu extends Scene {
     public void init() {
         this.view = new Panel(0, 0, 1, 1).setBackground(Resources.PAINT_0);
 
-        Panel panels[] = new Panel[5];
-        for (int i = 0; i < 5; i++) {
-            panels[i] = new Panel(0.1f, 0.1f + 0.17f * i, 0.4f, 0.15f).setBackground(Resources.PAINT_0F8FBC8F);
-            this.view.add(panels[i]);
+        Panel[] panels = new Panel[5];
+        for (int i = 0; i < panels.length; i++) {
+            panels[i] = new Panel(this.view, 0.1f, 0.1f + 0.17f * i, 0.4f, 0.15f).setBackground(Resources.PAINT_0F8FBC8F);
         }
 
-        panels[0].add(new Text("PLAY").setForeground(Resources.PAINT_M_W_0050_L).setPosition(0.1f, 0.7f));
-        panels[1].add(new Text("SHOP").setForeground(Resources.PAINT_M_W_0050_L).setPosition(0.1f, 0.7f));
-        panels[2].add(new Text("STATISTICS").setForeground(Resources.PAINT_M_W_0050_L).setPosition(0.1f, 0.7f));
-        panels[3].add(new Text("OPTIONS").setForeground(Resources.PAINT_M_W_0050_L).setPosition(0.1f, 0.7f));
-        panels[4].add(new Text("EXIT").setForeground(Resources.PAINT_M_W_0050_L).setPosition(0.1f, 0.7f));
+        new Text(panels[0], "PLAY").setForeground(Resources.PAINT_M_W_0050_L).setPosition(0.1f, 0.7f);
+        new Text(panels[1], "SHOP").setForeground(Resources.PAINT_M_W_0050_L).setPosition(0.1f, 0.7f);
+        new Text(panels[2], "STATISTICS").setForeground(Resources.PAINT_M_W_0050_L).setPosition(0.1f, 0.7f);
+        new Text(panels[3], "OPTIONS").setForeground(Resources.PAINT_M_W_0050_L).setPosition(0.1f, 0.7f);
+        new Text(panels[4], "EXIT").setForeground(Resources.PAINT_M_W_0050_L).setPosition(0.1f, 0.7f);
 
         panels[0].onClick(v -> window.request(Game.class));
         panels[1].onClick(v -> window.request(Shop.class));

@@ -2,41 +2,32 @@ package eu.mar21.rain.core.level.event;
 
 import eu.mar21.rain.core.entity.particle.FlashParticle;
 import eu.mar21.rain.core.level.Level;
+import eu.mar21.rain.core.utils.Number;
 import eu.mar21.rain.core.utils.Resources;
+import eu.mar21.rain.core.utils.Timer;
 
 public class StormEvent extends Event {
 
     // Params
-    private int ticks;
-    private int decay;
+    private final Timer timer;
+    private final Timer light;
 
     // Constructor
     public StormEvent(Level level) {
         super(level);
+
+        this.timer = new Timer(this::remove, Number.between(900, 1801));
+        this.light = new Timer(() -> this.level.add(new FlashParticle(this.level, Number.between(0, Resources.SCREEN_WIDTH), 10)), Number.between(30, 181));
     }
 
     // Methods
     @Override
-    public void onStart() {
-        this.ticks = 60 * (10 + RANDOM.nextInt(20));
-        this.decay = 0;
-    }
-
-    @Override
     public void onUpdate() {
-        if (--this.decay < 0) {
-            this.level.add(new FlashParticle(this.level, Resources.SCREEN_WIDTH * RANDOM.nextDouble(), 10));
-            this.decay = 30 + RANDOM.nextInt(150);
+        this.timer.tick();
+
+        if (this.light.tick()) {
+            this.light.set(Number.between(30, 181));
         }
-
-        if (--this.ticks < 0) {
-            remove();
-        }
-    }
-
-    @Override
-    public void onRemoval() {
-
     }
 
 }

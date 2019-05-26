@@ -51,11 +51,13 @@ public class Resources {
     public static Paint PAINT_M_A4FFFFFF_0020 = new Paint();
     public static Paint PAINT_M_Y_20_C = new Paint();
 
-    public static Bitmap[] BACKGROUND = new Bitmap[8];
+    public static Bitmap[] BATTERY = new Bitmap[12];
+
+    public static Bitmap[] BACKGROUND = new Bitmap[7];
     public static Bitmap[] PLAYER = new Bitmap[9];
     public static Bitmap[] ACID = new Bitmap[4];
     public static Bitmap[] ICONS = new Bitmap[3];
-    public static Bitmap[] BARS = new Bitmap[6];
+    public static Bitmap[] BARS = new Bitmap[4];
     public static Bitmap[] SKILLS = new Bitmap[3];
 
     public static Bitmap LOGO;
@@ -93,8 +95,8 @@ public class Resources {
     public static void loadExtras(android.content.res.Resources r) {
         Logger.log("Loading backgrounds ...");
 
-        for (int i = 0; i < 8; i++) {
-            Bitmap temp = BitmapFactory.decodeResource(r, R.drawable.b0 + i);
+        for (int i = 0; i < 7; i++) {
+            Bitmap temp = BitmapFactory.decodeResource(r, R.drawable.b1 + i);
             BACKGROUND[i] = Bitmap.createScaledBitmap(temp, (int) (SCREEN_WIDTH * 1.1), (int) SCREEN_HEIGHT, true);
         }
 
@@ -125,8 +127,10 @@ public class Resources {
         BARS[1] = BitmapFactory.decodeResource(r, R.drawable.healthbar);
         BARS[2] = BitmapFactory.decodeResource(r, R.drawable.experiencebar);
         BARS[3] = BitmapFactory.decodeResource(r, R.drawable.armorbar);
-        BARS[4] = BitmapFactory.decodeResource(r, R.drawable.energybar0);
-        BARS[5] = BitmapFactory.decodeResource(r, R.drawable.energybar1);
+
+        for (int i = 0; i < 12; i++) {
+            BATTERY[i] = BitmapFactory.decodeResource(r, R.drawable.battery_a + i);
+        }
 
         Logger.log("Extracting sprites ...");
 

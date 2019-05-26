@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import eu.mar21.rain.core.device.input.InputListener;
-import eu.mar21.rain.core.utils.Consumer;
 import eu.mar21.rain.core.utils.Resources;
+import eu.mar21.rain.core.utils.functional.Consumer;
 
 public abstract class View {
 

@@ -20,9 +20,9 @@ public abstract class Event {
     }
 
     // Methods
-    public abstract void onStart();
+    public void onStart() {}
     public abstract void onUpdate();
-    public abstract void onRemoval();
+    public void onExit() {}
 
     public void remove() {
         this.removed = true;

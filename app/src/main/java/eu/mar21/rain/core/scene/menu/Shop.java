@@ -17,7 +17,7 @@ public class Shop extends Scene {
     // Params
     private Panel title;
     private Panel panels;
-    private Panel[] skills = new Panel[4];
+    private Panel[] skills = new Panel[5];
     private Button[] stars = new Button[4];
 
     // Constructor
@@ -59,7 +59,7 @@ public class Shop extends Scene {
 
         panels = new Panel(listItem0, 0.1f, 0.15f, 0.8f, 0.1f).setBackground(Resources.PAINT_0);
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 5; i++) {
             skills[i] = new Panel(listItem0, 0.1f + 0.3f * (i % 3), 0.5f + (float) (i / 3) * 0.25f, 0.2f, 0.2f * listItem0.getScale()).setBackground(Resources.PAINT_0);
         }
 
@@ -123,12 +123,25 @@ public class Shop extends Scene {
             }
         });
 
+        skills[4].onClick(v -> {
+            if (Data.PLAYER_POINTS.get() > 0) {
+                if (Data.UPGRADE_BATTERY.get() < 3) {
+                    Data.PLAYER_POINTS.add(-1);
+                    Data.UPGRADE_BATTERY.add(1);
+                    Data.save();
+
+                    begin();
+                }
+            }
+        });
+
         new Text(panels, "HEALTH").setPosition(0.1f, 0.8f).setForeground(Resources.PAINT_M_W_0030_C);
 
         new Text(skills[0], "SHOCK").setPosition(0.5f, 0.2f).setForeground(Resources.PAINT_M_W_0030_C);
         new Text(skills[1], "BONUS SHIELD").setPosition(0.5f, 0.2f).setForeground(Resources.PAINT_M_W_0030_C);
         new Text(skills[2], "XP BOOST").setPosition(0.5f, 0.2f).setForeground(Resources.PAINT_M_W_0030_C);
         new Text(skills[3], "DOUBLE POWER").setPosition(0.5f, 0.2f).setForeground(Resources.PAINT_M_W_0030_C);
+        new Text(skills[4], "BATTERY").setPosition(0.5f, 0.2f).setForeground(Resources.PAINT_M_W_0030_C);
 
         new Image(skills[0], Resources.SKILLS[0]).setPosition(0.5f, 0.7f).center(true);
         new Image(skills[1], Resources.SKILLS[1]).setPosition(0.5f, 0.7f).center(true);
