@@ -7,6 +7,7 @@ import eu.mar21.rain.core.device.input.InputStyle;
 import eu.mar21.rain.core.graphics.Window;
 import eu.mar21.rain.core.level.data.Award;
 import eu.mar21.rain.core.level.data.Data;
+import eu.mar21.rain.core.level.data.Upgrade;
 import eu.mar21.rain.core.scene.Scene;
 import eu.mar21.rain.core.ui.Button;
 import eu.mar21.rain.core.ui.Panel;
@@ -16,7 +17,7 @@ import eu.mar21.rain.core.utils.Resources;
 public class Settings extends Scene {
 
     // Params
-    private Button[] buttons= new Button[3];
+    private Button[] buttons= new Button[4];
 
     // Constructor
     public Settings(Window w) {
@@ -53,19 +54,30 @@ public class Settings extends Scene {
         });
 
         Panel sub1 = new Panel(0.1f, 0.6f, 0.8f, 0.3f).setBackground(Resources.PAINT_0);
-        sub1.add(new Text("STATISTICS").setPosition(0.05f, 0.2f).setForeground(Resources.PAINT_M_W_0030_L));
+        sub1.add(new Text("DEBUG").setPosition(0.05f, 0.2f).setForeground(Resources.PAINT_M_W_0030_L));
         this.view.add(sub1);
 
-        Panel gsub1 = new Panel(sub1, 0.05f, 0.5f, 1.0f / 3.0f - 0.05f, 0.5f).setBackground(Resources.PAINT_2FFFBC8F);
-        new Text(gsub1, "CLEAR").setPosition(0.5f, 0.8f).setForeground(Resources.PAINT_M_W_0050_C);
-        gsub1.onClick(v -> {
-            Data.reset();
+        buttons[3] = (Button) new Button(sub1, "SHOW LOG", 0.05f, 0.5f, 1.0f / 3.0f - 0.05f, 0.5f).setBackground(Resources.PAINT_2FFFBC8F).setForeground(Resources.PAINT_M_W_0030_C).onClick(v -> {
+            Data.DEBUG.set(Data.DEBUG.get() == 1 ? 0 : 1);
             Data.save();
+            begin();
         });
 
-        Panel gsub2 = new Panel(sub1, 1.0f / 3.0f + 0.05f, 0.5f, 2.0f / 3.0f - 0.05f, 0.5f).setBackground(Resources.PAINT_2FFFBC8F);
-        new Text(gsub2, "RESET AWARDS").setPosition(0.5f, 0.8f).setForeground(Resources.PAINT_M_W_0050_C);
-        gsub2.onClick(v -> {
+        new Button(sub1, "AWARDS", 0.05f + 1.0f / 3.0f, 0.5f, 0.5f / 3.0f - 0.05f, 0.5f).setBackground(Resources.PAINT_2FFFBC8F).setForeground(Resources.PAINT_M_W_0030_C).onClick(v -> {
+            Award.reset();
+            Award.save();
+        });
+
+        new Button(sub1, "SHOP", 0.05f + 1.5f / 3.0f, 0.5f, 0.5f / 3.0f - 0.05f, 0.5f).setBackground(Resources.PAINT_2FFFBC8F).setForeground(Resources.PAINT_M_W_0030_C).onClick(v -> {
+            Upgrade.reset();
+            Upgrade.save();
+        });
+
+        new Button(sub1, "CLEAR DATA", 0.05f + 2.0f / 3.0f, 0.5f, 1.0f / 3.0f - 0.05f, 0.5f).setBackground(Resources.PAINT_2FFFBC8F).setForeground(Resources.PAINT_M_W_0030_C).onClick(v -> {
+            Data.reset();
+            Data.save();
+            Upgrade.reset();
+            Upgrade.save();
             Award.reset();
             Award.save();
         });
@@ -78,6 +90,7 @@ public class Settings extends Scene {
         this.buttons[0].setBackground(InputListener.getDirectionSource() == InputStyle.TAP ? Resources.PAINT_2F8FBC8F : Resources.PAINT_0F8FBC8F);
         this.buttons[1].setBackground(InputListener.getDirectionSource() == InputStyle.SWIPE ? Resources.PAINT_2F8FBC8F : Resources.PAINT_0F8FBC8F);
         this.buttons[2].setBackground(InputListener.getDirectionSource() == InputStyle.SENSOR ? Resources.PAINT_2F8FBC8F : Resources.PAINT_0F8FBC8F);
+        this.buttons[3].setBackground(Data.DEBUG.get() == 1 ? Resources.PAINT_2F8FBC8F : Resources.PAINT_2FFFBC8F);
     }
 
     @Override

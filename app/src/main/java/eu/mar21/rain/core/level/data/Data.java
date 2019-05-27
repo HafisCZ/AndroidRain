@@ -4,6 +4,8 @@ import eu.mar21.rain.core.device.Preferences;
 
 public enum Data {
 
+    DEBUG(0),
+
     // Statistics
     STAT_DMG_TAKEN(0),
     STAT_TOTAL_EXP(0),
@@ -21,17 +23,7 @@ public enum Data {
     // Player data
     PLAYER_SCORE(0),
     PLAYER_LEVEL(1),
-    PLAYER_POINTS(0),
-    PLAYER_HEALTH(3),
-
-    // Shop upgrades
-    UPGRADE_RANDOM(1),
-    UPGRADE_SKILL_SHOCK(0),
-    UPGRADE_SKILL_XPBOOST(0),
-    UPGRADE_SKILL_SHIELD(0),
-    UPGRADE_BATTERY(0),
-    UPGRADE_BATTERY_DECAY_RATE(0),
-    UPGRADE_ENERGY_MULT(0);
+    PLAYER_POINTS(0);
 
     // Params
     private int val;

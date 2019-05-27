@@ -17,6 +17,7 @@ public class Resources {
     public static Paint PAINT_LIGHTNING = new Paint();
     public static Paint PAINT_ANNOUNCEMENT = new Paint();
     public static Paint PAINT_ANNOUNCEMENT_2 = new Paint();
+    public static Paint PAINT_NOTIFICATION = new Paint();
     public static Paint PAINT_DEBUG = new Paint();
     public static Paint PAINT_M_W_0020_L = new Paint();
     public static Paint PAINT_M_LGRAY_0015_L = new Paint();
@@ -66,6 +67,7 @@ public class Resources {
     public static Bitmap STAR;
     public static Bitmap ENERGY;
     public static Bitmap SHIELD;
+    public static Bitmap POLE;
 
     public static double SCREEN_WIDTH;
     public static double SCREEN_HEIGHT;
@@ -127,6 +129,7 @@ public class Resources {
         BARS[1] = BitmapFactory.decodeResource(r, R.drawable.healthbar);
         BARS[2] = BitmapFactory.decodeResource(r, R.drawable.experiencebar);
         BARS[3] = BitmapFactory.decodeResource(r, R.drawable.armorbar);
+        POLE = BitmapFactory.decodeResource(r, R.drawable.pole);
 
         for (int i = 0; i < 12; i++) {
             BATTERY[i] = BitmapFactory.decodeResource(r, R.drawable.battery_a + i);
@@ -230,5 +233,7 @@ public class Resources {
 
         PAINT_M_A4FFFFFF_0020.set(PAINT_M_A4FFFFFF_0030);
         PAINT_M_A4FFFFFF_0020.setTextSize(20);
+
+        PAINT_NOTIFICATION.set(PAINT_M_W_0020_C);
     }
 }

@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import java.util.ArrayList;
 import java.util.List;
 
+import eu.mar21.rain.core.entity.mob.LightningPole;
 import eu.mar21.rain.core.level.Level;
 import eu.mar21.rain.core.utils.Resources;
 
@@ -13,11 +14,12 @@ public class FlashParticle extends Particle {
     // Params
     private int alpha;
     private int decay;
+    private boolean topole;
 
     private List<Float[]> points;
 
     // Constructor
-    public FlashParticle(Level level, double x, int decay) {
+    public FlashParticle(Level level, double x, double y, int decay) {
         super(level, 0, 0, Resources.SCREEN_WIDTH, Resources.SCREEN_HEIGHT);
 
         this.alpha = 155;
@@ -26,23 +28,34 @@ public class FlashParticle extends Particle {
         this.points = new ArrayList<>();
 
         double lx = x;
-        double ly = 0;
+        double ly = y;
 
-        while (ly < Resources.SCREEN_HEIGHT) {
+        LightningPole pole = this.level.getPole();
+        if (pole != null) {
+            pole.strike();
+            this.topole = true;
+
+            ly = pole.getY();
+            lx = pole.getCX();
+        } else {
+            this.topole = false;
+        }
+
+        while (ly > 0) {
             points.add(new Float[]{ (float) lx, (float) ly });
 
             lx += (RANDOM.nextBoolean() ? 1 : -1) * RANDOM.nextDouble() * Resources.SCREEN_WIDTH / 15.0;
-            ly += Resources.SCREEN_HEIGHT / 15.0 + RANDOM.nextDouble() * Resources.SCREEN_HEIGHT / 2.0;
+            ly -= Resources.SCREEN_HEIGHT / 15.0 + RANDOM.nextDouble() * Resources.SCREEN_HEIGHT / 2.0;
         }
 
-        points.add(new Float[]{ (float) lx, (float) Resources.SCREEN_HEIGHT });
+        points.add(new Float[]{ (float) lx, 0.0f });
     }
 
     // Methods
     @Override
     public void tick() {
         if (this.alpha == 155) {
-            if (this.level.getPlayer().isCollidingAABB(this.points.get(this.points.size() - 1)[0], this.level.getPlayer().getCY())) {
+            if (!this.topole && this.level.getPlayer().isCollidingAABB(this.points.get(0)[0], this.level.getPlayer().getCY())) {
                 this.level.getData().applyLightning();
             }
         }

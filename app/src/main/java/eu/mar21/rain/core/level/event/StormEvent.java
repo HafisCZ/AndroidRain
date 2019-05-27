@@ -16,8 +16,8 @@ public class StormEvent extends Event {
     public StormEvent(Level level) {
         super(level);
 
-        this.timer = new Timer(this::remove, Number.between(900, 1801));
-        this.light = new Timer(() -> this.level.add(new FlashParticle(this.level, Number.between(0, Resources.SCREEN_WIDTH), 10)), Number.between(30, 181));
+        this.timer = new Timer(this::remove, Number.between(900, 2701));
+        this.light = new Timer(() -> this.level.add(new FlashParticle(this.level, Number.between(0, Resources.SCREEN_WIDTH), Resources.SCREEN_HEIGHT, 10)), Number.between(30, 181));
     }
 
     // Methods

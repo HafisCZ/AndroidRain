@@ -46,7 +46,5 @@ public class Intro extends Scene {
         Resources.PAINT_ALPHA.setAlpha(this.alpha);
 
         c.drawBitmap(Resources.LOGO, (float) (c.getWidth() / 2 - Resources.LOGO.getWidth() / 2), (float) (c.getHeight() / 2 - Resources.LOGO.getHeight() / 2), Resources.PAINT_ALPHA);
-
-        Logger.draw(c);
     }
 }

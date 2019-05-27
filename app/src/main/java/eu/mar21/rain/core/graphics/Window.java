@@ -14,6 +14,7 @@ import java.util.Map;
 import eu.mar21.rain.core.Application;
 import eu.mar21.rain.core.device.input.InputListener;
 import eu.mar21.rain.core.graphics.utils.FrameCounter;
+import eu.mar21.rain.core.level.data.Data;
 import eu.mar21.rain.core.scene.Scene;
 import eu.mar21.rain.core.utils.Logger;
 import eu.mar21.rain.core.utils.Resources;
@@ -108,6 +109,10 @@ public class Window extends View {
             }
 
             this.requested = false;
+        }
+
+        if (Data.DEBUG.get() == 1) {
+            Logger.draw(c);
         }
 
         invalidate();

@@ -10,6 +10,7 @@ import eu.mar21.rain.core.device.input.InputListener;
 import eu.mar21.rain.core.device.input.TouchZone;
 import eu.mar21.rain.core.entity.Entity;
 import eu.mar21.rain.core.entity.item.Item;
+import eu.mar21.rain.core.entity.mob.LightningPole;
 import eu.mar21.rain.core.entity.mob.Mob;
 import eu.mar21.rain.core.entity.mob.Player;
 import eu.mar21.rain.core.entity.particle.FlashParticle;
@@ -33,7 +34,7 @@ public class Level {
     private final List<Particle> particles = new ArrayList<>();
 
     // Level data
-    private LevelData data;
+    private LevelController data;
     private InputListener input;
 
     // Params
@@ -68,10 +69,10 @@ public class Level {
             }
         }
 
-        this.data = new LevelData(this);
+        this.data = new LevelController(this);
         this.player = new Player(this, (Resources.SCREEN_WIDTH - Resources.PLAYER[0].getWidth()) / 2, Resources.SCREEN_HEIGHT);
 
-        this.spawners.add(new GenericSpawner(this, 0, 0, Resources.SCREEN_WIDTH, 0, 20 * 60, 10 * 60, 1, (L, X, Y) -> add(new FlashParticle(this, X, 10))));
+        this.spawners.add(new GenericSpawner(this, 0, 0, Resources.SCREEN_WIDTH, 0, 20 * 60, 10 * 60, 1, (L, X, Y) -> add(new FlashParticle(this, X, Resources.SCREEN_HEIGHT, 10))));
 
         this.spawners.add(new AcidSpawner(this,0, -50, Resources.SCREEN_WIDTH, 0,  20, 5, 2));
         this.spawners.add(new ArmorSpawner(this,0, -50, Resources.SCREEN_WIDTH, 0,  (60 * 60) >> 1, 10 * 60, 1));
@@ -99,7 +100,7 @@ public class Level {
         return this.input;
     }
 
-    public LevelData getData() {
+    public LevelController getData() {
         return this.data;
     }
 
@@ -142,6 +143,16 @@ public class Level {
 
     public Player getPlayer() {
         return this.player;
+    }
+
+    public LightningPole getPole() {
+        for (Mob m : this.mobs) {
+            if (m instanceof LightningPole) {
+                return (LightningPole) m;
+            }
+        }
+
+        return null;
     }
 
     public boolean isCollidingPlayerAABB(Entity e) {

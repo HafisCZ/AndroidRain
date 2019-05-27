@@ -1,5 +1,6 @@
 package eu.mar21.rain.core.level;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import eu.mar21.rain.core.graphics.sprite.Sprite;
 import eu.mar21.rain.core.level.data.Award;
 import eu.mar21.rain.core.level.data.Data;
 import eu.mar21.rain.core.level.data.Skill;
+import eu.mar21.rain.core.level.data.Upgrade;
 import eu.mar21.rain.core.level.event.Event;
 import eu.mar21.rain.core.level.event.StormEvent;
 import eu.mar21.rain.core.utils.Number;
@@ -22,7 +24,7 @@ import eu.mar21.rain.core.utils.Resources;
 import eu.mar21.rain.core.utils.Timer;
 import eu.mar21.rain.core.utils.functional.Tuple;
 
-public class LevelData implements Drawable {
+public class LevelController implements Drawable {
 
     // Default params
     private static final Random RANDOM = new Random();
@@ -64,18 +66,26 @@ public class LevelData implements Drawable {
     private Timer eventTimer;
 
     // Constructor
-    public LevelData(Level level) {
+    public LevelController(Level level) {
         this.level = level;
 
         this.time = 0;
 
-        this.health = Data.PLAYER_HEALTH.get();
+        this.health = 1;
         this.armor = 0;
         this.experience = 0;
         this.experienceAdv = (int) (EXP_POOL * Math.pow(EXP_POOL_EXPONENT, Data.PLAYER_LEVEL.get()));
 
-        for (int i = 0; i < Data.UPGRADE_BATTERY.get(); i++) {
-            this.battery.add(new Tuple<>(0, 0));
+        for (int i = Upgrade.BATTERY_5.ordinal(); i <= Upgrade.BATTERY.ordinal(); i++) {
+            if (Upgrade.values()[i].isOwned()) {
+                this.battery.add(new Tuple<>(0, 0));
+            }
+        }
+
+        for (int i = Upgrade.HEALTH_EXTRA_9.ordinal(); i <= Upgrade.HEALTH_EXTRA.ordinal(); i++) {
+            if (Upgrade.values()[i].isOwned()) {
+                this.health++;
+            }
         }
 
         this.eventChance = 1;
@@ -84,9 +94,10 @@ public class LevelData implements Drawable {
         this.skillIndex = 0;
         this.skill = null;
 
-        if (Data.UPGRADE_SKILL_SHOCK.get() > 0) this.skills.add(Skill.SHOCKWAVE);
-        if (Data.UPGRADE_SKILL_XPBOOST.get() > 0) this.skills.add(Skill.EXPERIENCE_SPAWN);
-        if (Data.UPGRADE_SKILL_SHIELD.get() > 0) this.skills.add(Skill.SHIELD_SPAWN);
+        if (Upgrade.SKILL_SHOCK.isOwned()) this.skills.add(Skill.SHOCKWAVE);
+        if (Upgrade.SKILL_EXP.isOwned()) this.skills.add(Skill.EXPERIENCE_SPAWN);
+        if (Upgrade.SKILL_ARMOR.isOwned()) this.skills.add(Skill.SHIELD_SPAWN);
+        if (Upgrade.SKILL_LIGHTNING_POLE.isOwned()) this.skills.add(Skill.LIGHTNING_POLE);
 
         this.iconFrame = new Sprite(Resources.SKILLF);
         this.iconSkills = new Sprite(Resources.SKILL, 1, 4);
@@ -135,7 +146,7 @@ public class LevelData implements Drawable {
 
                 this.experienceAdv = (int) (EXP_POOL * Math.pow(EXP_POOL_EXPONENT, Data.PLAYER_LEVEL.get()));
 
-                showNotification(Notification.NotificationStyle.YELLOW,"LEVEL UP!", "You reached level " + Data.PLAYER_LEVEL.get());
+                showAnnouncement("Level " + Data.PLAYER_LEVEL.get() + " reached", "New items unlocked");
             }
 
             tryAward(Award.HEALTH);
@@ -190,7 +201,10 @@ public class LevelData implements Drawable {
     public void applyLightning() {
         Data.STAT_LIGHTNING_HIT.add(1);
 
-        applyEnergy(10 + RANDOM.nextInt(20));
+        if (Upgrade.BATTERY_LIGHTNING.isOwned()) {
+            applyEnergy(10 + RANDOM.nextInt(20));
+        }
+
         applyDamage();
     }
 
@@ -207,35 +221,32 @@ public class LevelData implements Drawable {
     public void applyRandom() {
         Data.STAT_RANDOM_COLLECTED.add(1);
 
-        int rnd = RANDOM.nextInt(Data.UPGRADE_RANDOM.get());
-        if (rnd == 1) {
-            int exp = 5 + RANDOM.nextInt(this.experienceAdv / 5);
-            applyExperience(exp);
+        int rnd = Number.between(0, 5);
 
-            showNotification(Notification.NotificationStyle.GREEN,"ITEM RECEIVED", exp + " EXP");
-        } else if (rnd == 2) {
-            applyShield();
-
-            showNotification(Notification.NotificationStyle.GREEN,"ITEM RECEIVED", "SHIELD");
-        } else if (rnd == 3) {
+        if (Upgrade.STAR_XP_BOOST.isOwned() && rnd == 0) {
             int mul = 2 + RANDOM.nextInt(Data.PLAYER_LEVEL.get());
             int mdr = 10 + RANDOM.nextInt(Data.PLAYER_LEVEL.get());
             applyExperienceMultiplier(mul, mdr);
 
-            showNotification(Notification.NotificationStyle.GREEN, "ITEM RECEIVED", mul + "X EXP FOR " + mdr + " SECONDS");
-        } else {
-            if (rnd == 4 && RANDOM.nextInt(20) == 0) {
+            showNotification("+ " + mdr + "s " + mul + "X XP");
+        } else if (Upgrade.STAR_XP_INSTANT.isOwned() && rnd == 1) {
+            int exp = 5 + RANDOM.nextInt(this.experienceAdv / 5);
+            applyExperience(exp);
+
+            showNotification("+ " + exp + " XP");
+        } else if (Upgrade.STAR_ARMOR.isOwned() && rnd == 2) {
+            applyShield();
+
+            showNotification("+ SHIELD");
+        } else{
+            if (Upgrade.STAR_POINT.isOwned() && rnd == 3 && Number.between(0, 20) == 0) {
                 Data.PLAYER_POINTS.add(1);
-                showNotification(Notification.NotificationStyle.YELLOW, "ITEM RECEIVED", "LEVEL POINT");
-
-                return;
-            }
-
-            if (this.skill != null) {
+                showNotification("+ POINT");
+            } else {
                 int eng = Number.between(1, 11);
                 applyEnergy(eng);
 
-                showNotification(Notification.NotificationStyle.GREEN, "ITEM RECEIVED", eng + " ENERGY");
+                showNotification("+ " + eng + " POWER");
             }
         }
     }
@@ -253,7 +264,7 @@ public class LevelData implements Drawable {
     private void tryAward(Award award) {
         Award a = award.tryAward();
         if (a != null) {
-            showNotification(Notification.NotificationStyle.YELLOW,  a.getLabel(), "Achievement received!");
+            showAnnouncement(a.getLabel(), "Award received");
         }
     }
 
@@ -279,7 +290,7 @@ public class LevelData implements Drawable {
         }
 
         for (int i = 0; i < this.battery.size(); i++) {
-            this.iconBattery[this.battery.get(i).second > 0 ? 11 : this.battery.get(i).first].draw(c, xoff * 5 + i * xoff * 1.8, yoff * 3 + 10);
+            this.iconBattery[this.battery.get(i).second > 0 ? 11 : this.battery.get(i).first].draw(c, Resources.SCREEN_WIDTH - (xoff * 2 + (this.battery.size() - i - 1) * xoff * 1.8), 10);
         }
 
         if (this.skill != null) {
@@ -290,7 +301,7 @@ public class LevelData implements Drawable {
         }
 
         if (!this.notifications.isEmpty()) {
-            this.notifications.peek().draw(c);
+            this.notifications.peek().draw(c, this.level.getPlayer().getCX(), this.level.getPlayer().getY() - 10.0);
         }
 
         Announcement a = this.announcements.peek();
@@ -302,8 +313,8 @@ public class LevelData implements Drawable {
         }
     }
 
-    private void showNotification(Notification.NotificationStyle s, String label, String description) {
-        this.notifications.add(new Notification(s, label, description));
+    private void showNotification(String label) {
+        this.notifications.add(new Notification(label));
     }
 
     private void showAnnouncement(String label, String description) {
@@ -331,7 +342,7 @@ public class LevelData implements Drawable {
 
                 for (int i = 0; i < bats.size(); i++) {
                     bats.get(i).first = 0;
-                    bats.get(i).second = (60 * this.skill.getDecay()) / (1 + Data.UPGRADE_BATTERY_DECAY_RATE.get());
+                    bats.get(i).second = 60 * this.skill.getDecay();
                 }
             }
         }
@@ -343,8 +354,6 @@ public class LevelData implements Drawable {
             this.skill = null;
         } else {
             this.skill = this.skills.get(this.skillIndex - 1);
-
-            showNotification(Notification.NotificationStyle.PLAIN,"SKILL SELECTED", this.skill.name());
         }
     }
 
@@ -384,7 +393,7 @@ public class LevelData implements Drawable {
         }
     }
 
-    private void applyExperience(int amount) {
+    public void applyExperience(int amount) {
         Data.STAT_TOTAL_EXP.add(amount);
 
         this.experience += amount;
@@ -405,12 +414,8 @@ public class LevelData implements Drawable {
         }
 
         Notification n = this.notifications.peek();
-        if (n != null) {
-            n.update();
-
-            if (n.isRemoved()) {
-                this.notifications.remove();
-            }
+        if (n != null && n.isRemoved()) {
+            this.notifications.remove();
         }
 
         if (this.event != null) {

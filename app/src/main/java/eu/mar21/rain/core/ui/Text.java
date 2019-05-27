@@ -27,6 +27,11 @@ public class Text extends View {
         return this;
     }
 
+    public Text setText(String text) {
+        this.text = text;
+        return this;
+    }
+
     public Text setPosition(float x, float y) {
         this.x = x;
         this.y = y;
