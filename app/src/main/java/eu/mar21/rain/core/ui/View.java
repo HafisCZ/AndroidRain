@@ -86,7 +86,7 @@ public abstract class View {
     }
 
     public void show(Canvas c) {
-        show(c, 0, 0, (float) Resources.SCREEN_WIDTH, (float) Resources.SCREEN_HEIGHT);
+        show(c, 0, 0, (float) Resources.WIDTH, (float) Resources.HEIGHT);
     }
 
     protected void show(Canvas c, float fx, float fy, float fw, float fh) {

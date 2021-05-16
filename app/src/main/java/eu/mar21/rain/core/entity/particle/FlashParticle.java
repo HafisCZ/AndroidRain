@@ -20,7 +20,7 @@ public class FlashParticle extends Particle {
 
     // Constructor
     public FlashParticle(Level level, double x, double y, int decay) {
-        super(level, 0, 0, Resources.SCREEN_WIDTH, Resources.SCREEN_HEIGHT);
+        super(level, 0, 0, Resources.WIDTH, Resources.HEIGHT);
 
         this.alpha = 155;
         this.decay = decay;
@@ -32,6 +32,8 @@ public class FlashParticle extends Particle {
 
         LightningPole pole = this.level.getPole();
         if (pole != null) {
+            this.level.getData().applyPoleStrike();
+
             pole.strike();
             this.topole = true;
 
@@ -44,8 +46,8 @@ public class FlashParticle extends Particle {
         while (ly > 0) {
             points.add(new Float[]{ (float) lx, (float) ly });
 
-            lx += (RANDOM.nextBoolean() ? 1 : -1) * RANDOM.nextDouble() * Resources.SCREEN_WIDTH / 15.0;
-            ly -= Resources.SCREEN_HEIGHT / 15.0 + RANDOM.nextDouble() * Resources.SCREEN_HEIGHT / 2.0;
+            lx += (RANDOM.nextBoolean() ? 1 : -1) * RANDOM.nextDouble() * Resources.WIDTH / 15.0;
+            ly -= Resources.HEIGHT / 15.0 + RANDOM.nextDouble() * Resources.HEIGHT / 2.0;
         }
 
         points.add(new Float[]{ (float) lx, 0.0f });
@@ -70,7 +72,7 @@ public class FlashParticle extends Particle {
     @Override
     public void draw(Canvas c) {
         Resources.PAINT_LIGHTNING.setAlpha(this.alpha);
-        c.drawRect(0, 0, (float) Resources.SCREEN_WIDTH, (float) Resources.SCREEN_HEIGHT, Resources.PAINT_LIGHTNING);
+        c.drawRect(0, 0, (float) Resources.WIDTH, (float) Resources.HEIGHT, Resources.PAINT_LIGHTNING);
 
         Resources.PAINT_LIGHTNING.setAlpha(200);
         for (int i = 1; i < this.points.size(); i++) {

@@ -31,7 +31,7 @@ public class RainParticle extends Particle {
         this.x += this.dx;
         this.y += this.dy;
 
-        if (this.y > Resources.SCREEN_HEIGHT || (this.level.getPlayer() != null && this.level.getPlayer().isCollidingAABB(this))) {
+        if (this.y > Resources.HEIGHT || (this.level.getPlayer() != null && this.level.getPlayer().isCollidingAABB(this))) {
             remove();
         }
     }

@@ -9,7 +9,7 @@ public enum Award {
     LEVEL_25("Expert", "Reach level 25", () -> Data.PLAYER_LEVEL.get() / 25.0f, LEVEL_50),
     LEVEL_10("Player", "Reach level 10", () -> Data.PLAYER_LEVEL.get() / 10.0f, LEVEL_25),
     LEVEL_5("Casual", "Reach level 5", () -> Data.PLAYER_LEVEL.get() / 5.0f, LEVEL_10),
-    LEVEL_1("Get wet", "Play the game", () -> Data.PLAYER_LEVEL.get() / 1.0f, LEVEL_5),
+    LEVEL_1("Get wet", "Play the game", () -> Data.STAT_GAMES_PLAYED.get() / 1.0f, LEVEL_5),
 
     SCORE_1M("A million", "Reach 1M score", () -> Data.PLAYER_SCORE.get() / 1000000.0f, null),
     SCORE_500K("Halfway there", "Reach 500K score", () -> Data.PLAYER_SCORE.get() / 500000.0f, SCORE_1M),
@@ -18,19 +18,21 @@ public enum Award {
     JUMP_7777("Lucky paw", "Jump 7777 times", () -> Data.STAT_TOTAL_JUMPS.get() / 7777.0f, null),
     JUMP_666("Rabbit", "Jump 666 times", () -> Data.STAT_TOTAL_JUMPS.get() / 666.0f, JUMP_7777),
 
-    NODE_10K("Powerhouse III", "Collect 10 000 nodes", () -> Data.STAT_ENERGY_COLLECTED.get() / 10000.0f, null),
+    NODE_50K("Powerhouse IV", "Collect 50 000 nodes", () -> Data.STAT_ENERGY_COLLECTED.get() / 50000.0f, null),
+    NODE_10K("Powerhouse III", "Collect 10 000 nodes", () -> Data.STAT_ENERGY_COLLECTED.get() / 10000.0f, NODE_50K),
     NODE_5K("Powerhouse II", "Collect 5 000 nodes", () -> Data.STAT_ENERGY_COLLECTED.get() / 5000.0f, NODE_10K),
     NODE_1K("Powerhouse I", "Collect 1 000 nodes", () -> Data.STAT_ENERGY_COLLECTED.get() / 1000.0f, NODE_5K),
 
     STAR_10K("Change machine III", "Collect 10 000 stars", () -> Data.STAT_RANDOM_COLLECTED.get() / 10000.0f, null),
     STAR_5K("Chance machine II", "Collect 5 000 stars", () -> Data.STAT_RANDOM_COLLECTED.get() / 5000.0f, STAR_10K),
     STAR_1K("Chance machine I", "Collect 1 000 stars", () -> Data.STAT_RANDOM_COLLECTED.get() / 1000.0f, STAR_5K),
+    STAR_1("?", "?", () -> Data.STAT_RANDOM_COLLECTED.get() / 1.0f, STAR_1K),
 
     SHIELD_10K("Armorer III", "Collect 10 000 shields", () -> Data.STAT_SHIELDS_COLLECTED.get() / 10000.0f, null),
     SHIELD_5K("Armorer II", "Collect 5 000 shields", () -> Data.STAT_SHIELDS_COLLECTED.get() / 5000.0f, SHIELD_10K),
     SHIELD_1K("Armorer I", "Collect 1 000 shields", () -> Data.STAT_SHIELDS_COLLECTED.get() / 1000.0f, SHIELD_5K),
 
-    SHIELD_FULL("Knight", "Have full shields", () -> Data.STAT_SHIELDS_MAX.get() / 10.0f, null),
+    SHIELD_FULL("Knight", "Have all 10 shields", () -> Data.STAT_SHIELDS_MAX.get() / 10.0f, null),
 
     DAMAGE_10K("Meat target III", "Get hit 10 000 times", () -> Data.STAT_DMG_TAKEN.get() / 10000.0f, null),
     DAMAGE_5K("Meat target II", "Get hit 5 000 times", () -> Data.STAT_DMG_TAKEN.get() / 5000.0f, DAMAGE_10K),

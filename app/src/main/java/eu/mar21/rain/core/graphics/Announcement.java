@@ -31,17 +31,17 @@ public class Announcement implements Drawable {
         Resources.PAINT_ANNOUNCEMENT.setAlpha(this.alpha);
 
         if (this.description == null) {
-            c.drawText(this.label, (float) Resources.SCREEN_WIDTH / 2.0f, (float) Resources.SCREEN_HEIGHT / 5.0f, Resources.PAINT_ANNOUNCEMENT);
+            c.drawText(this.label, (float) Resources.WIDTH / 2.0f, (float) Resources.HEIGHT / 5.0f, Resources.PAINT_ANNOUNCEMENT);
         } else {
             Resources.PAINT_ANNOUNCEMENT_2.setAlpha(this.alpha);
-            c.drawText(this.label, (float) Resources.SCREEN_WIDTH / 2.0f, (float) Resources.SCREEN_HEIGHT / 5.0f - (float) Resources.SCREEN_HEIGHT / 50.0f, Resources.PAINT_ANNOUNCEMENT);
-            c.drawText(this.description, (float) Resources.SCREEN_WIDTH / 2.0f, (float) Resources.SCREEN_HEIGHT / 5.0f + (float) Resources.SCREEN_HEIGHT / 50.0f, Resources.PAINT_ANNOUNCEMENT_2);
+            c.drawText(this.label, (float) Resources.WIDTH / 2.0f, (float) Resources.HEIGHT / 5.0f - (float) Resources.HEIGHT / 50.0f, Resources.PAINT_ANNOUNCEMENT);
+            c.drawText(this.description, (float) Resources.WIDTH / 2.0f, (float) Resources.HEIGHT / 5.0f + (float) Resources.HEIGHT / 50.0f, Resources.PAINT_ANNOUNCEMENT_2);
         }
 
-        float y0 = (float) Resources.SCREEN_HEIGHT / 8.0f;
-        float y1 = 1.5f * (float) (Resources.SCREEN_HEIGHT / 5.0 - y0) + y0;
+        float y0 = (float) Resources.HEIGHT / 8.0f;
+        float y1 = 1.5f * (float) (Resources.HEIGHT / 5.0 - y0) + y0;
 
-        float x0 = (float) Resources.SCREEN_WIDTH / 4.0f;
+        float x0 = (float) Resources.WIDTH / 4.0f;
         float x1 = 3.0f * x0;
         float sx = 2.0f * x0;
         float a = (float) this.alpha / 170.0f;

@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 import eu.mar21.rain.core.device.input.InputListener;
 import eu.mar21.rain.core.device.input.TouchZone;
@@ -50,7 +51,7 @@ public class Level {
         this.exit = false;
         this.frozen = false;
 
-        this.rain = new RainSpawner(this, 0.0, -20.0, Resources.SCREEN_WIDTH, 0.0, 1, 0, 5);
+        this.rain = new RainSpawner(this, 0.0, -20.0, Resources.WIDTH, 0.0, 1, 0, 5);
     }
 
     // Methods
@@ -70,14 +71,14 @@ public class Level {
         }
 
         this.data = new LevelController(this);
-        this.player = new Player(this, (Resources.SCREEN_WIDTH - Resources.PLAYER[0].getWidth()) / 2, Resources.SCREEN_HEIGHT);
+        this.player = new Player(this, (Resources.WIDTH - Resources.PLAYER[0].getWidth()) / 2, Resources.HEIGHT);
 
-        this.spawners.add(new GenericSpawner(this, 0, 0, Resources.SCREEN_WIDTH, 0, 20 * 60, 10 * 60, 1, (L, X, Y) -> add(new FlashParticle(this, X, Resources.SCREEN_HEIGHT, 10))));
+        this.spawners.add(new GenericSpawner(this, 0, 0, Resources.WIDTH, 0, 20 * 60, 10 * 60, 1, (L, X, Y) -> add(new FlashParticle(this, X, Resources.HEIGHT, 10))));
 
-        this.spawners.add(new AcidSpawner(this,0, -50, Resources.SCREEN_WIDTH, 0,  20, 5, 2));
-        this.spawners.add(new ArmorSpawner(this,0, -50, Resources.SCREEN_WIDTH, 0,  (60 * 60) >> 1, 10 * 60, 1));
-        this.spawners.add(new EnergySpawner(this,0, -50, Resources.SCREEN_WIDTH, 0,  60, 60, 1));
-        this.spawners.add(new StarSpawner(this,0, -50, Resources.SCREEN_WIDTH, 0,  20 * 60, 0, 1));
+        this.spawners.add(new AcidSpawner(this,0, -50, Resources.WIDTH, 0,  20, 5, 2));
+        this.spawners.add(new ArmorSpawner(this,0, -50, Resources.WIDTH, 0,  (60 * 60) >> 1, 10 * 60, 1));
+        this.spawners.add(new EnergySpawner(this,0, -50, Resources.WIDTH, 0,  60, 60, 1));
+        this.spawners.add(new StarSpawner(this,0, -50, Resources.WIDTH, 0,  20 * 60, 0, 1));
     }
 
     public void add(Spawner s) {
@@ -107,7 +108,7 @@ public class Level {
     public void draw(Canvas c) {
         if (!this.exit) {
             for (int i = 0; i < 7; i++) {
-                c.drawBitmap(Resources.BACKGROUND[i], (int) ((getPlayer().getCX() - Resources.SCREEN_WIDTH / 2) / (Resources.SCREEN_WIDTH / 8) * - Math.pow(1.55, i) - 100 / 2), 0, null);
+                c.drawBitmap(Resources.BACKGROUND[i], (int) ((getPlayer().getCX() - Resources.WIDTH / 2) / (Resources.WIDTH / 8) * - Math.pow(1.55, i) - 100 / 2), 0, null);
             }
         } else {
             for (int i = 0; i < 7; i++) {
@@ -115,19 +116,11 @@ public class Level {
             }
         }
 
-        for (Particle p : this.particles) {
-            p.draw(c);
-        }
+        this.particles.forEach(P -> P.draw(c));
+        this.mobs.forEach(M -> M.draw(c));
+        this.items.forEach(I -> I.draw(c));
 
-        for (Mob m : this.mobs) {
-            m.draw(c);
-        }
-
-        for (Item i : this.items) {
-            i.draw(c);
-        }
-
-        if (this.player != null) {
+        if (Objects.nonNull(this.player)) {
             this.player.draw(c);
             this.data.draw(c);
         }

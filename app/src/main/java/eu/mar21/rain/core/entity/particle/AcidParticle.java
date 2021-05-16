@@ -42,25 +42,25 @@ public class AcidParticle extends Particle {
         this.y += this.dy;
 
         if (this.dx > 0) {
-            this.dx = Math.max(0, this.dx - DEFAULT_DX_STEP * Resources.RES_MULTX);
+            this.dx = Math.max(0, this.dx - DEFAULT_DX_STEP * Resources.MX);
         } else if (this.dx < 0) {
-            this.dx = Math.min(0, this.dx + DEFAULT_DX_STEP * Resources.RES_MULTX);
+            this.dx = Math.min(0, this.dx + DEFAULT_DX_STEP * Resources.MX);
         }
 
         if (this.x < 0) {
             this.x = 0;
             this.dx *= -1;
-        } else if (this.x + this.sx > Resources.SCREEN_WIDTH) {
-            this.x = Resources.SCREEN_WIDTH - this.sx;
+        } else if (this.x + this.sx > Resources.WIDTH) {
+            this.x = Resources.WIDTH - this.sx;
             this.dx *= -1;
         }
 
-        if (this.y + this.sy > Resources.SCREEN_HEIGHT) {
-            this.y = Resources.SCREEN_HEIGHT - this.sy;
+        if (this.y + this.sy > Resources.HEIGHT) {
+            this.y = Resources.HEIGHT - this.sy;
             this.despawnEnabled = true;
             this.dy = 0;
         } else {
-            this.dy += DEFAULT_DY_STEP * Resources.RES_MULTY;
+            this.dy += DEFAULT_DY_STEP * Resources.MY;
         }
 
         if (this.despawnEnabled && --this.despawn <= 0) {

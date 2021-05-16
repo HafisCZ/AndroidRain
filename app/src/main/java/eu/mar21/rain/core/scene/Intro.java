@@ -3,7 +3,6 @@ package eu.mar21.rain.core.scene;
 import android.graphics.Canvas;
 
 import eu.mar21.rain.core.graphics.Window;
-import eu.mar21.rain.core.utils.Logger;
 import eu.mar21.rain.core.utils.Resources;
 
 public class Intro extends Scene {

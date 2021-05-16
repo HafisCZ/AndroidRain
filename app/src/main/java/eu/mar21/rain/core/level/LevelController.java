@@ -1,6 +1,5 @@
 package eu.mar21.rain.core.level;
 
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
 import java.util.ArrayList;
@@ -17,6 +16,7 @@ import eu.mar21.rain.core.level.data.Award;
 import eu.mar21.rain.core.level.data.Data;
 import eu.mar21.rain.core.level.data.Skill;
 import eu.mar21.rain.core.level.data.Upgrade;
+import eu.mar21.rain.core.level.event.AcidEvent;
 import eu.mar21.rain.core.level.event.Event;
 import eu.mar21.rain.core.level.event.StormEvent;
 import eu.mar21.rain.core.utils.Number;
@@ -122,6 +122,8 @@ public class LevelController implements Drawable {
         this.yoff = Resources.BARS[0].getHeight() + 5;
         this.xoff = Resources.ICONS[0].getWidth();
 
+        Data.STAT_GAMES_PLAYED.add(1);
+
         this.updateTimer = new Timer(() -> {
             this.time++;
 
@@ -146,7 +148,7 @@ public class LevelController implements Drawable {
 
                 this.experienceAdv = (int) (EXP_POOL * Math.pow(EXP_POOL_EXPONENT, Data.PLAYER_LEVEL.get()));
 
-                showAnnouncement("Level " + Data.PLAYER_LEVEL.get() + " reached", "New items unlocked");
+                showAnnouncement("Level " + Data.PLAYER_LEVEL.get() + " reached", null);
             }
 
             tryAward(Award.HEALTH);
@@ -155,7 +157,7 @@ public class LevelController implements Drawable {
             tryAward(Award.LEVEL_1);
             tryAward(Award.NODE_1K);
             tryAward(Award.SHIELD_1K);
-            tryAward(Award.STAR_1K);
+            tryAward(Award.STAR_1);
             tryAward(Award.STRIKE_1);
             tryAward(Award.SCORE_100K);
             tryAward(Award.SHIELD_FULL);
@@ -163,16 +165,21 @@ public class LevelController implements Drawable {
         }, 60);
 
         this.eventTimer = new Timer(() -> {
-            if (Number.between(0, 10) < this.eventChance) {
-                this.eventChance = 1;
+            if (this.event == null) {
+                if (Number.between(0, 10) < this.eventChance) {
+                    this.eventChance = 1;
 
-                int rnd = RANDOM.nextInt(1);
-                if (rnd == 0) {
-                    startEvent(new StormEvent(this.level));
-                    showAnnouncement("Thunderstorm", "Event started");
+                    int rnd = Number.between(0, 2);
+                    if (rnd == 0) {
+                        startEvent(new StormEvent(this.level));
+                        showAnnouncement("Thunderstorm", "Event started");
+                    } else {
+                        startEvent(new AcidEvent(this.level));
+                        showAnnouncement("Heavy rain", "Event started");
+                    }
+                } else {
+                    this.eventChance++;
                 }
-            } else {
-                this.eventChance++;
             }
         }, 3600);
     }
@@ -187,6 +194,12 @@ public class LevelController implements Drawable {
 
         Award.save();
         Data.save();
+    }
+
+    public void applyPoleStrike() {
+        if (Upgrade.SKILL_LIGHTNING_POLE_CHARGE.isOwned()) {
+            applyEnergy(2);
+        }
     }
 
     private void startEvent(Event event) {
@@ -261,6 +274,12 @@ public class LevelController implements Drawable {
         this.boosts.add(new Tuple<>(duration, multiplier));
     }
 
+    public void applySkillExpMult(int mul, int mdr) {
+        this.boosts.add(new Tuple<>(mdr, mul));
+
+        showNotification("+ " + mdr + "s " + mul + "X XP");
+    }
+
     private void tryAward(Award award) {
         Award a = award.tryAward();
         if (a != null) {
@@ -290,7 +309,7 @@ public class LevelController implements Drawable {
         }
 
         for (int i = 0; i < this.battery.size(); i++) {
-            this.iconBattery[this.battery.get(i).second > 0 ? 11 : this.battery.get(i).first].draw(c, Resources.SCREEN_WIDTH - (xoff * 2 + (this.battery.size() - i - 1) * xoff * 1.8), 10);
+            this.iconBattery[this.battery.get(i).second > 0 ? 11 : this.battery.get(i).first].draw(c, Resources.WIDTH - (xoff * 2 + (this.battery.size() - i - 1) * xoff * 1.8), 10);
         }
 
         if (this.skill != null) {
@@ -393,10 +412,28 @@ public class LevelController implements Drawable {
         }
     }
 
+    public void applySkillShield() {
+        if (this.armor < this.health) {
+            this.armor++;
+        }
+
+        if (this.armor > Data.STAT_SHIELDS_MAX.get()) {
+            Data.STAT_SHIELDS_MAX.set(this.armor);
+        }
+
+        showNotification("+ SHIELD");
+    }
+
     public void applyExperience(int amount) {
         Data.STAT_TOTAL_EXP.add(amount);
 
         this.experience += amount;
+    }
+
+    public void applySkillExpInst(int exp) {
+        this.experience += exp;
+
+        showNotification("+ " + exp + " XP");
     }
 
     public boolean isDead() {
@@ -410,6 +447,30 @@ public class LevelController implements Drawable {
         for (Tuple<Integer, Integer> bat : this.battery) {
             if (bat.second > 0) {
                 bat.second--;
+            }
+        }
+
+        if (Upgrade.BATTERY_BALANCE.isOwned()) {
+            int total = 0;
+
+            for (Tuple<Integer, Integer> bat : this.battery) {
+                if (bat.second > 0) {
+                    bat.second--;
+                } else {
+                    total += bat.first;
+                    bat.first = 0;
+                }
+            }
+
+            for (Tuple<Integer, Integer> bat : this.battery) {
+                if (bat.second <= 0) {
+                    bat.first += Math.min(10, total);
+                    total -= bat.first;
+
+                    if (total == 0) {
+                        break;
+                    }
+                }
             }
         }
 

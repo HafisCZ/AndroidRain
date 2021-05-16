@@ -19,6 +19,7 @@ public enum Data {
     STAT_SHIELDS_MAX(0),
     STAT_EVENTS(0),
     STAT_TIME_PLAYED(0),
+    STAT_GAMES_PLAYED(0),
 
     // Player data
     PLAYER_SCORE(0),

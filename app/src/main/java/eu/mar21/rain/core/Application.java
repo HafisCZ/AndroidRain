@@ -8,7 +8,6 @@ import android.view.WindowManager;
 
 import eu.mar21.rain.core.device.Preferences;
 import eu.mar21.rain.core.graphics.Window;
-import eu.mar21.rain.core.level.data.Data;
 import eu.mar21.rain.core.scene.Game;
 import eu.mar21.rain.core.scene.Intro;
 import eu.mar21.rain.core.scene.menu.Menu;

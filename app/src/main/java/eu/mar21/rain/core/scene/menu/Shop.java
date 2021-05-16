@@ -5,12 +5,10 @@ import android.graphics.Canvas;
 import java.util.ArrayList;
 
 import eu.mar21.rain.core.graphics.Window;
-import eu.mar21.rain.core.level.data.Award;
 import eu.mar21.rain.core.level.data.Data;
 import eu.mar21.rain.core.level.data.Upgrade;
 import eu.mar21.rain.core.scene.Scene;
 import eu.mar21.rain.core.ui.Button;
-import eu.mar21.rain.core.ui.Image;
 import eu.mar21.rain.core.ui.List;
 import eu.mar21.rain.core.ui.Panel;
 import eu.mar21.rain.core.ui.Text;
@@ -49,17 +47,25 @@ public class Shop extends Scene {
             p.setBackground(Resources.PAINT_0F8FBC8F);
         }
 
-        new Text(p, "" + upgrade.getCost()).setPosition(0.99f, 0.4f).setForeground(Resources.PAINT_M_W_0020_R);
-        new Text(p, upgrade.getLabel()).setPosition(0.02f, 0.4f).setForeground(Resources.PAINT_M_W_0020_L);
-        new Text(p, upgrade.getDescription()).setPosition(0.02f, 0.8f).setForeground(Resources.PAINT_M_LGRAY_0015_L);
+        if (upgrade.isKnown()) {
+            new Text(p, "" + upgrade.getCost()).setPosition(0.99f, 0.4f).setForeground(Resources.PAINT_M_W_0020_R);
+            new Text(p, upgrade.getLabel()).setPosition(0.02f, 0.4f).setForeground(Resources.PAINT_M_W_0020_L);
+            new Text(p, upgrade.getDescription()).setPosition(0.02f, 0.8f).setForeground(Resources.PAINT_M_LGRAY_0015_L);
+        } else {
+            new Text(p, "?").setPosition(0.02f, 0.4f).setForeground(Resources.PAINT_M_W_0020_L);
+        }
 
         this.panels.add(new Tuple<>(base, p));
     }
 
     private void entryUpdate(Upgrade upgrade, Panel p) {
         p.get().clear();
-        new Text(p, upgrade.getLabel()).setPosition(0.02f, 0.4f).setForeground(Resources.PAINT_M_W_0020_L);
-        new Text(p, upgrade.getDescription()).setPosition(0.02f, 0.8f).setForeground(Resources.PAINT_M_LGRAY_0015_L);
+        if (upgrade.isKnown()) {
+            new Text(p, upgrade.getLabel()).setPosition(0.02f, 0.4f).setForeground(Resources.PAINT_M_W_0020_L);
+            new Text(p, upgrade.getDescription()).setPosition(0.02f, 0.8f).setForeground(Resources.PAINT_M_LGRAY_0015_L);
+        } else {
+            new Text(p, "?").setPosition(0.02f, 0.4f).setForeground(Resources.PAINT_M_W_0020_L);
+        }
 
         if (upgrade.isOwned()) {
             p.setBackground(Resources.PAINT_0FF4F442);
@@ -67,7 +73,9 @@ public class Shop extends Scene {
             new Text(p, "" + upgrade.getCost()).setPosition(0.99f, 0.4f).setForeground(Resources.PAINT_M_W_0020_R);
             p.setBackground(Resources.PAINT_2F8FBC8F);
         } else {
-            new Text(p, "" + upgrade.getCost()).setPosition(0.99f, 0.4f).setForeground(Resources.PAINT_M_W_0020_R);
+            if (upgrade.isKnown()) {
+                new Text(p, "" + upgrade.getCost()).setPosition(0.99f, 0.4f).setForeground(Resources.PAINT_M_W_0020_R);
+            }
             p.setBackground(Resources.PAINT_0F8FBC8F);
         }
     }
@@ -92,6 +100,7 @@ public class Shop extends Scene {
         entry(l0, Upgrade.HEALTH_EXTRA, 0, 0);
         entry(l0, Upgrade.BATTERY, 0, 2);
         entry(l0, Upgrade.BATTERY_LIGHTNING, 0, 3);
+        entry(l0, Upgrade.BATTERY_BALANCE, 0, 4);
         entry(l0, Upgrade.SKILL_SHOCK, 1, 0);
         entry(l0, Upgrade.SKILL_ARMOR, 1, 1);
         entry(l0, Upgrade.SKILL_EXP, 1, 2);
@@ -101,6 +110,7 @@ public class Shop extends Scene {
         entry(l1, Upgrade.STAR_XP_INSTANT, 0, 1);
         entry(l1, Upgrade.STAR_ARMOR, 0, 2);
         entry(l1, Upgrade.STAR_POINT, 0, 3);
+        entry(l1, Upgrade.MOVEMENT_EXTRA, 1, 0);
 
         this.view.setListener(this.window.getListener());
     }

@@ -4,22 +4,22 @@ import eu.mar21.rain.core.utils.Resources;
 
 public enum TouchZone {
 
-    ANY(0, 0, Resources.SCREEN_WIDTH, Resources.SCREEN_HEIGHT),
+    ANY(0, 0, Resources.WIDTH, Resources.HEIGHT),
 
-    QUAD_LU(0, 0, Resources.SCREEN_WIDTH / 3, Resources.SCREEN_HEIGHT / 2),
-    QUAD_CU(Resources.SCREEN_WIDTH / 3, 0, Resources.SCREEN_WIDTH / 3, Resources.SCREEN_HEIGHT / 2),
-    QUAD_RU(2 * Resources.SCREEN_WIDTH / 3, 0, Resources.SCREEN_WIDTH / 3, Resources.SCREEN_HEIGHT / 2),
+    QUAD_LU(0, 0, Resources.WIDTH / 3, Resources.HEIGHT / 2),
+    QUAD_CU(Resources.WIDTH / 3, 0, Resources.WIDTH / 3, Resources.HEIGHT / 2),
+    QUAD_RU(2 * Resources.WIDTH / 3, 0, Resources.WIDTH / 3, Resources.HEIGHT / 2),
 
-    QUAD_LD(0, Resources.SCREEN_HEIGHT / 2, Resources.SCREEN_WIDTH / 2, Resources.SCREEN_HEIGHT / 2),
-    QUAD_RD(Resources.SCREEN_WIDTH / 2, Resources.SCREEN_HEIGHT / 2, Resources.SCREEN_WIDTH / 2, Resources.SCREEN_HEIGHT / 2),
+    QUAD_LD(0, Resources.HEIGHT / 2, Resources.WIDTH / 2, Resources.HEIGHT / 2),
+    QUAD_RD(Resources.WIDTH / 2, Resources.HEIGHT / 2, Resources.WIDTH / 2, Resources.HEIGHT / 2),
 
-    ROW_1(0, 0, Resources.SCREEN_WIDTH, Resources.SCREEN_HEIGHT / 4),
-    ROW_2(0, Resources.SCREEN_HEIGHT / 4, Resources.SCREEN_WIDTH, Resources.SCREEN_HEIGHT / 4),
-    ROW_3(0, Resources.SCREEN_HEIGHT / 2, Resources.SCREEN_WIDTH, Resources.SCREEN_HEIGHT / 4),
-    ROW_4(0, 3 * Resources.SCREEN_HEIGHT / 4, Resources.SCREEN_WIDTH, Resources.SCREEN_HEIGHT / 4),
+    ROW_1(0, 0, Resources.WIDTH, Resources.HEIGHT / 4),
+    ROW_2(0, Resources.HEIGHT / 4, Resources.WIDTH, Resources.HEIGHT / 4),
+    ROW_3(0, Resources.HEIGHT / 2, Resources.WIDTH, Resources.HEIGHT / 4),
+    ROW_4(0, 3 * Resources.HEIGHT / 4, Resources.WIDTH, Resources.HEIGHT / 4),
 
-    HALP_UP(0, 0, Resources.SCREEN_WIDTH, Resources.SCREEN_HEIGHT / 2),
-    HALF_DOWN(0, Resources.SCREEN_HEIGHT / 2, Resources.SCREEN_WIDTH, Resources.SCREEN_HEIGHT / 2);
+    HALP_UP(0, 0, Resources.WIDTH, Resources.HEIGHT / 2),
+    HALF_DOWN(0, Resources.HEIGHT / 2, Resources.WIDTH, Resources.HEIGHT / 2);
 
     // Params
     public final double x;

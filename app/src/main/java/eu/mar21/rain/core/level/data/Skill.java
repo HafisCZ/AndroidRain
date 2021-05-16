@@ -9,19 +9,18 @@ import eu.mar21.rain.core.utils.functional.TriConsumer;
 public enum Skill {
 
     // Values
-    SHOCKWAVE((L, X, Y) -> L.add(new ShockParticle(L, X, Resources.SCREEN_HEIGHT)), 1, 5),
-    SHIELD_SPAWN((L, X, Y) -> L.getData().applyShield(), 2, 1),
+    SHOCKWAVE((L, X, Y) -> L.add(new ShockParticle(L, X, Resources.HEIGHT)), 1, 5),
+    SHIELD_SPAWN((L, X, Y) -> L.getData().applySkillShield(), 2, 1),
     EXPERIENCE_SPAWN((L, X, Y) -> {
         if (Upgrade.SKILL_EXP_EXTRA.isOwned()) {
-            L.getData().applyExperience(4 * 60);
+            L.getData().applySkillExpInst(4 * 60);
         } else {
-            L.getData().applyExperienceMultiplier(2, 60);
+            L.getData().applySkillExpMult(2, 60);
         }
     }, 3, 60),
     LIGHTNING_POLE((L, X, Y) -> {
         L.add(new LightningPole(L, X, 20));
     }, 4, 60)
-
 
     ;
 

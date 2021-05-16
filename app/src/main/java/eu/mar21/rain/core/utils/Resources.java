@@ -69,10 +69,10 @@ public class Resources {
     public static Bitmap SHIELD;
     public static Bitmap POLE;
 
-    public static double SCREEN_WIDTH;
-    public static double SCREEN_HEIGHT;
-    public static float RES_MULTX = 1.0f;
-    public static float RES_MULTY = 1.0f;
+    public static double WIDTH;
+    public static double HEIGHT;
+    public static double MX = 1.0;
+    public static double MY = 1.0;
 
     // Methods
     public static void loadCore(android.content.res.Resources r, WindowManager wm) {
@@ -81,11 +81,11 @@ public class Resources {
         DisplayMetrics dm = new DisplayMetrics();
         wm.getDefaultDisplay().getRealMetrics(dm);
 
-        SCREEN_HEIGHT = dm.heightPixels;
-        SCREEN_WIDTH = dm.widthPixels;
+        HEIGHT = dm.heightPixels;
+        WIDTH = dm.widthPixels;
 
-        RES_MULTX = (float) SCREEN_WIDTH / 1280.0f;
-        RES_MULTY = (float) SCREEN_HEIGHT / 720.0f;
+        MX = WIDTH / 1280.0;
+        MY = HEIGHT / 720.0;
 
         LOGO = BitmapFactory.decodeResource(r, R.drawable.logo);
 
@@ -99,7 +99,7 @@ public class Resources {
 
         for (int i = 0; i < 7; i++) {
             Bitmap temp = BitmapFactory.decodeResource(r, R.drawable.b1 + i);
-            BACKGROUND[i] = Bitmap.createScaledBitmap(temp, (int) (SCREEN_WIDTH * 1.1), (int) SCREEN_HEIGHT, true);
+            BACKGROUND[i] = Bitmap.createScaledBitmap(temp, (int) (WIDTH * 1.1), (int) HEIGHT, true);
         }
 
         Logger.log("Loading sprites ...");
@@ -150,7 +150,7 @@ public class Resources {
         PAINT_M_W_0020_L.setTypeface(Typeface.MONOSPACE);
         PAINT_M_W_0020_L.setColor(Color.WHITE);
         PAINT_M_W_0020_L.setTextAlign(Paint.Align.LEFT);
-        PAINT_M_W_0020_L.setTextSize(0.02f * (float) SCREEN_WIDTH);
+        PAINT_M_W_0020_L.setTextSize(0.02f * (float) WIDTH);
 
         PAINT_M_W_0020_R.set(PAINT_M_W_0020_L);
         PAINT_M_W_0020_R.setTextAlign(Paint.Align.RIGHT);
@@ -159,16 +159,16 @@ public class Resources {
         PAINT_M_W_0020_C.setTextAlign(Paint.Align.CENTER);
 
         PAINT_M_W_0050_C.set(PAINT_M_W_0020_C);
-        PAINT_M_W_0050_C.setTextSize(0.05f * (float) SCREEN_WIDTH);
+        PAINT_M_W_0050_C.setTextSize(0.05f * (float) WIDTH);
 
         PAINT_ANNOUNCEMENT.set(PAINT_M_W_0050_C);
-        PAINT_ANNOUNCEMENT.setTextSize(0.03f * (float) SCREEN_WIDTH);
+        PAINT_ANNOUNCEMENT.setTextSize(0.03f * (float) WIDTH);
 
         PAINT_ANNOUNCEMENT_2.set(PAINT_M_W_0050_C);
-        PAINT_ANNOUNCEMENT_2.setTextSize(0.01f * (float) SCREEN_WIDTH);
+        PAINT_ANNOUNCEMENT_2.setTextSize(0.01f * (float) WIDTH);
 
         PAINT_M_W_0100_C.set(PAINT_M_W_0020_C);
-        PAINT_M_W_0100_C.setTextSize(0.1f * (float) SCREEN_WIDTH);
+        PAINT_M_W_0100_C.setTextSize(0.1f * (float) WIDTH);
 
         PAINT_M_W_0050_L.set(PAINT_M_W_0050_C);
         PAINT_M_W_0050_L.setTextAlign(Paint.Align.LEFT);
@@ -177,20 +177,20 @@ public class Resources {
         PAINT_M_LGRAY_0050_L.setColor(Color.LTGRAY);
 
         PAINT_M_LGRAY_0015_L.set(PAINT_M_LGRAY_0050_L);
-        PAINT_M_LGRAY_0015_L.setTextSize(0.015f * (float) SCREEN_WIDTH);
+        PAINT_M_LGRAY_0015_L.setTextSize(0.015f * (float) WIDTH);
 
         PAINT_M_W_0030_C.set(PAINT_M_W_0020_C);
-        PAINT_M_W_0030_C.setTextSize(0.03f * (float) SCREEN_WIDTH);
+        PAINT_M_W_0030_C.setTextSize(0.03f * (float) WIDTH);
 
         PAINT_M_W_0030_L.set(PAINT_M_W_0020_L);
-        PAINT_M_W_0030_L.setTextSize(0.03f * (float) SCREEN_WIDTH);
+        PAINT_M_W_0030_L.setTextSize(0.03f * (float) WIDTH);
 
         PAINT_M_Y_0050_R.set(PAINT_M_W_0050_C);
         PAINT_M_Y_0050_R.setTextAlign(Paint.Align.RIGHT);
         PAINT_M_Y_0050_R.setColor(Color.YELLOW);
 
         PAINT_M_Y_0030_C.set(PAINT_M_W_0020_C);
-        PAINT_M_Y_0030_C.setTextSize(0.03f * (float) SCREEN_WIDTH);
+        PAINT_M_Y_0030_C.setTextSize(0.03f * (float) WIDTH);
         PAINT_M_Y_0030_C.setColor(Color.YELLOW);
 
         PAINT_M_Y_20_C.set(PAINT_M_Y_0030_C);

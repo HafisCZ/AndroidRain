@@ -19,8 +19,8 @@ public class Acid extends Mob {
         super(level, x, y, Resources.ACID[0].getWidth(), Resources.ACID[0].getHeight() / 2.0, new AnimatedSprite(Resources.ACID, RANDOM.nextInt(ANIM_DELTA) + ANIM_DELTA, ANIM_GRP0), 0, -Resources.ACID[0].getHeight() / 2.0);
         ((AnimatedSprite) this.sprite).play(0);
 
-        this.dx = dx * Resources.RES_MULTX;
-        this.dy = dy * Resources.RES_MULTY;
+        this.dx = dx * Resources.MX;
+        this.dy = dy * Resources.MY;
     }
 
     public Acid(Level level, double x, double y) {
@@ -33,8 +33,8 @@ public class Acid extends Mob {
         this.x += this.dx;
         this.y += this.dy;
 
-        if (this.y + this.sy >= Resources.SCREEN_HEIGHT) {
-            this.y = Resources.SCREEN_HEIGHT - this.sy;
+        if (this.y + this.sy >= Resources.HEIGHT) {
+            this.y = Resources.HEIGHT - this.sy;
 
             remove();
             spawnParticles(0.0);

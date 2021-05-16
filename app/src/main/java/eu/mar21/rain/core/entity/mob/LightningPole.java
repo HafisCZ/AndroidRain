@@ -11,7 +11,7 @@ public class LightningPole extends Mob {
 
     // Constructor
     public LightningPole(Level level, double x, int durability) {
-        super(level, x, Resources.SCREEN_HEIGHT - Resources.POLE.getHeight(), Resources.POLE.getWidth(), Resources.POLE.getHeight(), new Sprite(Resources.POLE), 0, 0);
+        super(level, x, Resources.HEIGHT - Resources.POLE.getHeight(), Resources.POLE.getWidth(), Resources.POLE.getHeight(), new Sprite(Resources.POLE), 0, 0);
 
         this.durability = durability;
     }

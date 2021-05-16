@@ -86,7 +86,7 @@ public class Stat extends Scene {
         entry(p1, Award.JUMP_666.get(), 1, 2);
 
         entry(p2, Award.NODE_1K.get(), 0, 0);
-        entry(p2, Award.STAR_1K.get(), 0, 1);
+        entry(p2, Award.STAR_1.get(), 0, 1);
         entry(p2, Award.SHIELD_1K.get(), 0, 2);
         entry(p2, Award.DAMAGE_1K.get(), 0, 3);
         entry(p2, Award.STRIKE_1.get(), 1, 0);

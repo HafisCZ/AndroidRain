@@ -3,6 +3,7 @@ package eu.mar21.rain.core.entity.mob;
 import eu.mar21.rain.core.device.input.TouchZone;
 import eu.mar21.rain.core.graphics.sprite.AnimatedSprite;
 import eu.mar21.rain.core.level.Level;
+import eu.mar21.rain.core.level.data.Upgrade;
 import eu.mar21.rain.core.utils.Direction;
 import eu.mar21.rain.core.utils.Resources;
 
@@ -26,7 +27,7 @@ public class Player extends Mob {
     public Player(Level level, double x, double y) {
         super(level, x, y, Resources.PLAYER[0].getWidth(), Resources.PLAYER[0].getHeight(), new AnimatedSprite(Resources.PLAYER, ANIM_DELTA, ANIM_GRP0, ANIM_GRP1, ANIM_GRP2), 0.0, 0.0);
 
-        this.speed = LIMIT_DX_STEP * Resources.RES_MULTX;
+        this.speed = (Upgrade.MOVEMENT_EXTRA.isOwned() ? 1.5 : 1.0) * LIMIT_DX_STEP * Resources.MX;
         this.airborn = true;
     }
 
@@ -36,11 +37,11 @@ public class Player extends Mob {
         Direction direction = this.level.getInput().getDirection(TouchZone.ROW_4);
 
         if (direction == Direction.RIGHT) {
-            this.dx = Math.min(this.dx + this.speed, LIMIT_DX * Resources.RES_MULTX);
+            this.dx = Math.min(this.dx + this.speed, LIMIT_DX * Resources.MX);
         }
 
         if (direction == Direction.LEFT) {
-            this.dx = Math.max(this.dx - this.speed, -LIMIT_DX * Resources.RES_MULTX);
+            this.dx = Math.max(this.dx - this.speed, -LIMIT_DX * Resources.MX);
         }
 
         if (direction == Direction.NONE) {
@@ -54,7 +55,7 @@ public class Player extends Mob {
         if (this.level.getInput().isPressed(TouchZone.ROW_3)) {
             if (!this.airborn) {
                 this.airborn = true;
-                this.dy = LIMIT_DY * Resources.RES_MULTY;
+                this.dy = LIMIT_DY * Resources.MY;
 
                 this.level.getData().applyJump();
             }
@@ -72,22 +73,22 @@ public class Player extends Mob {
         this.y += this.dy;
 
         if (this.airborn) {
-            this.dy += LIMIT_DY_STEP * Resources.RES_MULTY;
+            this.dy += LIMIT_DY_STEP * Resources.MY;
         }
 
         if (this.x < 0) {
             this.x = 0;
             this.dx = 0;
-        } else if (this.x + this.sx > Resources.SCREEN_WIDTH) {
-            this.x = Resources.SCREEN_WIDTH - this.sx;
+        } else if (this.x + this.sx > Resources.WIDTH) {
+            this.x = Resources.WIDTH - this.sx;
             this.dx = 0;
         }
 
         if (this.y < 0) {
             this.y = 0;
             this.dy = 0;
-        } else if (this.y + this.sy > Resources.SCREEN_HEIGHT) {
-            this.y = Resources.SCREEN_HEIGHT - this.sy;
+        } else if (this.y + this.sy > Resources.HEIGHT) {
+            this.y = Resources.HEIGHT - this.sy;
             this.dy = 0;
 
             this.airborn = false;

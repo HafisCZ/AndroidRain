@@ -27,8 +27,8 @@ public abstract class Item extends Entity implements Drawable {
         this.ox = ox;
         this.oy = oy;
 
-        this.dx = dx * Resources.RES_MULTX;
-        this.dy = dy * Resources.RES_MULTY;
+        this.dx = dx * Resources.MX;
+        this.dy = dy * Resources.MY;
     }
 
     //Methods
@@ -37,7 +37,7 @@ public abstract class Item extends Entity implements Drawable {
         this.x += this.dx;
         this.y += this.dy;
 
-        if (this.y + this.sy > Resources.SCREEN_HEIGHT) {
+        if (this.y + this.sy > Resources.HEIGHT) {
             remove();
         }
 

@@ -21,10 +21,13 @@ public enum Upgrade {
     BATTERY_2("Power storage II", "An extra battery", 1, null, BATTERY_3),
     BATTERY("Power storage I", "A battery to store power inside", 1, null, BATTERY_2),
     BATTERY_LIGHTNING("Lightning trap", "Converts lightning into power", 2, BATTERY::isOwned, null),
+    BATTERY_BALANCE("Balancing circuits", "Keep power in left-most battery", 2, BATTERY::isOwned, null),
 
     SKILL_SHOCK("Shockwave emitter", "Creates a shockwave that destroys acid", 1, null, null),
     SKILL_ARMOR("Armorer", "Gain a piece of armor", 1, null, null),
-    SKILL_LIGHTNING_POLE("Lightning pole", "Deploy pole that catches 20 strikes", 5, () -> Data.STAT_LIGHTNING_HIT.get() >= 10, null),
+
+    SKILL_LIGHTNING_POLE_CHARGE("Charge collectors", "Each strike generates power", 2, null, null),
+    SKILL_LIGHTNING_POLE("Lightning pole", "Deploy pole that catches 20 strikes", 5, () -> Data.STAT_LIGHTNING_HIT.get() >= 10, SKILL_LIGHTNING_POLE_CHARGE),
 
     SKILL_EXP_EXTRA("Efficiency module", "Get twice as much at once", 2, null, null),
     SKILL_EXP("Booster", "Gain 60 seconds of extra experience", 2, null, SKILL_EXP_EXTRA),
@@ -32,7 +35,9 @@ public enum Upgrade {
     STAR_XP_BOOST("Multiplier", "Stars will drop experience multipliers", 1, null, null),
     STAR_XP_INSTANT("Experience", "Stars will drop experience", 1, null, null),
     STAR_ARMOR("Armor", "Stars will drop armor", 1, null, null),
-    STAR_POINT("Upgrade point", "Stars will drop upgrade points", 1, () -> STAR_XP_BOOST.owned && STAR_XP_INSTANT.owned && STAR_ARMOR.owned, null)
+    STAR_POINT("Upgrade point", "Stars will drop upgrade points", 1, () -> STAR_XP_BOOST.owned && STAR_XP_INSTANT.owned && STAR_ARMOR.owned, null),
+
+    MOVEMENT_EXTRA("Speed", "Move faster", 1, null, null)
 
     ;
 
@@ -67,6 +72,10 @@ public enum Upgrade {
 
     public boolean isAvailable() {
         return this.cost <= Data.PLAYER_POINTS.get() && (this.req == null || this.req.apply());
+    }
+
+    public boolean isKnown() {
+        return this.req == null || this.req.apply();
     }
 
     public int getCost() {
